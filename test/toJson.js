@@ -103,4 +103,12 @@ describe('toJson', function() {
     it('should make least common demoninator list', function(done) {
         parse('foo = { 1 a 1821.1.1 }', {'foo': ['1', 'a', '1821.1.1']}, done);
     });
+
+    it('should understand comments mean skip line', function(done) {
+        parse('# boo\r\n# baa\r\nfoo=a\r\n# bee', {'foo': 'a'}, done);
+    });
+
+    it('should understand simple objects', function(done) {
+        parse('foo={bar=val}', {'foo': { 'bar': 'val' }}, done);
+    });
 });
