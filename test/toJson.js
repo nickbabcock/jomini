@@ -1,32 +1,27 @@
 var para = require('../');
 var stream = require('stream');
-var streambuffers = require('stream-buffers');
 var expect = require('chai').expect
 
 function conversion(text, cb) {
     var s = new stream.Readable();
     s.push(text);
     s.push(null);
-    var buf = new streambuffers.WritableStreamBuffer()
     var p = para();
-    var res = s.pipe(p).pipe(buf);
-    //var res = s.pipe(para());
+    var res = s.pipe(p)
     p.on('finish', function() {
-        buf.end();
-        cb(buf.getContentsAsString("utf8"));
+        cb(p.obj);
     });
 }
 
 function parse(input, expected, cb) {
     conversion(input, function(actual) {
-        console.log(actual);
-        expect(JSON.parse(actual), actual).to.equal(JSON.parse(expected));
+        expect(actual).to.deep.equal(expected);
         cb()
     });
 }
 
 describe('toJson', function() {
-    it('should handle the empty case', function(done) {
-        parse('foo=bar', '{"foo":"bar":}', done);
+    it('should handle the simple case', function(done) {
+        parse('foo=bar', {"foo":"bar"}, done);
     });
 });
