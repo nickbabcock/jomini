@@ -24,4 +24,12 @@ describe('toJson', function() {
     it('should handle the simple case', function(done) {
         parse('foo=bar', {"foo":"bar"}, done);
     });
+
+    it('should handle the simple quoted case', function(done) {
+        parse('foo="bar"', {"foo":"bar"}, done);
+    });
+
+    it('should handle string list accumulation', function(done) {
+        parse('foo=bar\nfoo=qux', {"foo":["bar", "qux"]}, done);
+    });
 });
