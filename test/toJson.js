@@ -56,4 +56,51 @@ describe('toJson', function() {
     it('should handle negative decimal number', function(done) {
         parse('foo=-1.23', {'foo': -1.23}, done);
     });
+
+    it('should handle number list accumulation', function(done) {
+        parse('foo=1\nfoo=-1.23', {"foo":[1, -1.23]}, done);
+    });
+
+    it('should handle dates', function(done) {
+        parse('date=1821.1.1', {"date": "1821-01-01T00:00:00.000Z"}, done);
+    });
+
+    it('should handle quoted dates', function(done) {
+        parse('date="1821.1.1"', {"date": "1821-01-01T00:00:00.000Z"}, done);
+    });
+
+    it('should handle accumulated dates', function(done) {
+        parse('date="1821.1.1"\ndate=1821.2.1',
+            {"date":["1821-01-01T00:00:00.000Z", "1821-02-01T00:00:00.000Z"]},
+            done);
+    });
+
+    it('should handle consecutive strings', function(done) {
+        parse('foo = { bar baz }', {'foo': ['bar', 'baz']}, done);
+    });
+
+    it('should handle consecutive quoted strings', function(done) {
+        parse('foo = { "bar" "baz" }', {'foo': ['bar', 'baz']}, done);
+    });
+
+    it('should handle empty list', function(done) {
+        parse('foo = {}', {'foo': []}, done);
+    });
+
+    it('should handle space empty list', function(done) {
+        parse('foo = { }', {'foo': []}, done);
+    });
+
+    it('should handle consecutive numbers', function(done) {
+        parse('foo = { 1 -1.23 }', {'foo': [1, -1.23]}, done);
+    });
+
+    it('should handle consecutive dates', function(done) {
+        parse('foo = { 1821.1.1 1821.2.1 }', {'foo':
+            ["1821-01-01T00:00:00.000Z", "1821-02-01T00:00:00.000Z"]}, done);
+    });
+
+    it('should make least common demoninator list', function(done) {
+        parse('foo = { 1 a 1821.1.1 }', {'foo': ['1', 'a', '1821.1.1']}, done);
+    });
 });

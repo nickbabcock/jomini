@@ -13,6 +13,7 @@
     "stream-buffers": "^1.1.0"
   },
   "dependencies": {
+    "lodash": "^2.4.1",
     "through2": "^0.6.3"
   }
 }
