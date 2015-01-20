@@ -25,11 +25,35 @@ describe('toJson', function() {
         parse('foo=bar', {"foo":"bar"}, done);
     });
 
+    it('should handle whitespace', function(done) {
+        parse('\tfoo = bar ', {"foo":"bar"}, done);
+    });
+
     it('should handle the simple quoted case', function(done) {
         parse('foo="bar"', {"foo":"bar"}, done);
     });
 
     it('should handle string list accumulation', function(done) {
         parse('foo=bar\nfoo=qux', {"foo":["bar", "qux"]}, done);
+    });
+
+    it('should handle quoted string list accumulation', function(done) {
+        parse('foo="bar"\nfoo="qux"', {"foo":["bar", "qux"]}, done);
+    });
+
+    it('should handle whole numbers', function(done) {
+        parse('foo=1', {'foo': 1}, done);
+    });
+
+    it('should handle negative whole numbers', function(done) {
+        parse('foo=-1', {'foo': -1}, done);
+    });
+
+    it('should handle decimal number', function(done) {
+        parse('foo=1.23', {'foo': 1.23}, done);
+    });
+
+    it('should handle negative decimal number', function(done) {
+        parse('foo=-1.23', {'foo': -1.23}, done);
     });
 });
