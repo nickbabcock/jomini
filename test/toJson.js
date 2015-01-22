@@ -108,7 +108,11 @@ describe('toJson', function() {
         parse('# boo\r\n# baa\r\nfoo=a\r\n# bee', {'foo': 'a'}, done);
     });
 
-  /*  it('should understand simple objects', function(done) {
+    it('should understand simple objects', function(done) {
         parse('foo={bar=val}', {'foo': { 'bar': 'val' }}, done);
+    });
+
+/*    it('should understand nested list objects', function(done) {
+        parse('foo={bar={val}}', {'foo': { 'bar': ['val'] }}, done);
     });*/
 });
