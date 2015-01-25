@@ -45,6 +45,10 @@ describe('toJson', function() {
         parse('foo=1', {'foo': 1}, done);
     });
 
+    it('should handle zero', function(done) {
+        parse('foo=0', {'foo': 0}, done);
+    });
+
     it('should handle negative whole numbers', function(done) {
         parse('foo=-1', {'foo': -1}, done);
     });
@@ -114,6 +118,14 @@ describe('toJson', function() {
 
     it('should understand nested list objects', function(done) {
         parse('foo={bar={val}}', {'foo': { 'bar': ['val'] }}, done);
+    });
+
+    it('should understand objects with start spaces', function(done) {
+        parse('foo= { bar=val}', {'foo': { 'bar': 'val' }}, done);
+    });
+
+    it('should understand objects with end spaces', function(done) {
+        parse('foo={bar=val }', {'foo': { 'bar': 'val' }}, done);
     });
 
     it('should understand a simple EU4 header', function(done) {
