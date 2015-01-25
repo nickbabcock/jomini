@@ -112,7 +112,23 @@ describe('toJson', function() {
         parse('foo={bar=val}', {'foo': { 'bar': 'val' }}, done);
     });
 
-/*    it('should understand nested list objects', function(done) {
+    it('should understand nested list objects', function(done) {
         parse('foo={bar={val}}', {'foo': { 'bar': ['val'] }}, done);
-    });*/
+    });
+
+    it('should understand a simple EU4 header', function(done) {
+        var str = 'date=1640.7.1\r\nplayer="FRA"\r\nsavegame_version=' +
+            '\r\n{\r\n\tfirst=1\r\n\tsecond=9\r\n\tthird=2\r\n\tforth=0\r\n}'
+        var obj = {
+            date: "1640-07-01T00:00:00.000Z",
+            player: "FRA",
+            savegame_version: {
+                first: 1,
+                second: 9,
+                third: 2,
+                forth: 0
+            }
+        };
+        parse(str, obj, done);
+    });
 });
