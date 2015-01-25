@@ -143,4 +143,15 @@ describe('toJson', function() {
         };
         parse(str, obj, done);
     });
+
+    it('should understand EU4 gameplay settings', function(done) {
+        var str = 'gameplaysettings=\r\n{\r\n\tsetgameplayoptions=' +
+            '\r\n\t{\r\n\t\t1 1 2 0 1 0 0 0 1 1 1 1 \r\n\t}\r\n}'
+        var obj = {
+            gameplaysettings: {
+                setgameplayoptions: [1,1,2,0,1,0,0,0,1,1,1,1]
+            }
+        }
+        parse(str, obj, done);
+    });
 });
