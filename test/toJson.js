@@ -154,4 +154,32 @@ describe('toJson', function() {
         }
         parse(str, obj, done);
     });
+
+    it('should handle string list accumulation chunky', function(done) {
+        var p = new para();
+        p.write('foo=bar\n', 'utf8', function() {
+            p.write('foo=qux', 'utf8', function() {
+                p.end();
+            });          
+        });
+
+        p.on('finish', function() {
+            expect(p.obj).to.deep.equal({'foo': ['bar', 'qux']});
+            done();
+        });
+    });
+
+    it('should handle string list accumulate chunky break', function(done) {
+        var p = new para();
+        p.write('foo=bar\nf', 'utf8', function() {
+            p.write('oo=qux', 'utf8', function() {
+                p.end();
+            });          
+        });
+
+        p.on('finish', function() {
+            expect(p.obj).to.deep.equal({'foo': ['bar', 'qux']});
+            done();
+        });        
+    })
 });
