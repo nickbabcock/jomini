@@ -83,6 +83,10 @@ describe('toJson', function() {
         parse('foo = { bar baz }', {'foo': ['bar', 'baz']}, done);
     });
 
+    it('should handle consecutive strings no space', function(done) {
+        parse('foo={bar baz}', {'foo': ['bar', 'baz']}, done);
+    });
+
     it('should handle consecutive quoted strings', function(done) {
         parse('foo = { "bar" "baz" }', {'foo': ['bar', 'baz']}, done);
     });
@@ -221,6 +225,20 @@ describe('toJson', function() {
 
         p.on('finish', function() {
             expect(p.obj).to.deep.equal({'foo': ['bar', 'qux']});
+            done();
+        });
+    });
+
+    it('should handle a chunky list', function(done) {
+        var p = new para();
+        p.write('foo= {1 1', 'utf8', function() {
+            p.write('1 2}', 'utf8', function() {
+                p.end();
+            });
+        });
+
+        p.on('finish', function() {
+            expect(p.obj).to.deep.equal({'foo': [1, 11, 2]});
             done();
         });
     });
