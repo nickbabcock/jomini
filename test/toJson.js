@@ -242,4 +242,41 @@ describe('toJson', function() {
             done();
         });
     });
+
+    it('should handle back to backs', function(done) {
+        var p = new para();
+        var str1 = 'POR={type=0 max_demand=2.049 t_in=49.697 t_from=\r\n' +
+            '{ C00=5.421 C18=44.276 } }';
+        var str2 = 'SPA= { type=0 val=3.037 max_pow=1.447 max_demand=2.099 ' +
+            'province_power=1.447 t_in=44.642 t_from= { C01=1.794 C17=42.848 } }';
+
+        p.write(str1, 'utf8', function() {
+            p.write(str2, 'utf8', function() {
+                p.end();
+            });          
+        });
+
+        var expected = {
+            POR: {
+                type: 0,
+                max_demand: 2.049,
+                t_in: 49.697,
+                t_from: { 'C00': 5.421, 'C18': 44.276 }
+            },
+            SPA: {
+                type: 0,
+                val: 3.037,
+                max_pow: 1.447,
+                max_demand: 2.099,
+                province_power: 1.447,
+                t_in: 44.642,
+                t_from: { 'C01': 1.794, 'C17': 42.848 }
+            }
+        };
+
+        p.on('finish', function() {
+            expect(p.obj).to.deep.equal(expected);
+            done();
+        });
+    });
 });
