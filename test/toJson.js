@@ -155,7 +155,7 @@ describe('toJson', function() {
         parse(str, obj, done);
     });
 
-    it('should handle string list accumulation chunky', function(done) {
+    it('should handle string list accumulation chunky norm', function(done) {
         var p = new para();
         p.write('foo=bar\n', 'utf8', function() {
             p.write('foo=qux', 'utf8', function() {
