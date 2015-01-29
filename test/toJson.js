@@ -183,6 +183,20 @@ describe('toJson', function() {
         });
     });
     
+    it('should handle string list accumulate chunky space break', function(done) {
+        var p = new para();
+        p.write('foo = bar \n f', 'utf8', function() {
+            p.write('oo = qux', 'utf8', function() {
+                p.end();
+            });
+        });
+
+        p.on('finish', function() {
+            expect(p.obj).to.deep.equal({'foo': ['bar', 'qux']});
+            done();
+        });
+    });
+
     it('should handle string list accumulate chunky equal', function(done) {
         var p = new para();
         p.write('foo=bar\nfoo=', 'utf8', function() {
