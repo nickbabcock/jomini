@@ -180,6 +180,34 @@ describe('toJson', function() {
         p.on('finish', function() {
             expect(p.obj).to.deep.equal({'foo': ['bar', 'qux']});
             done();
-        });        
-    })
+        });
+    });
+    
+    it('should handle string list accumulate chunky equal', function(done) {
+        var p = new para();
+        p.write('foo=bar\nfoo=', 'utf8', function() {
+            p.write('qux', 'utf8', function() {
+                p.end();
+            });          
+        });
+
+        p.on('finish', function() {
+            expect(p.obj).to.deep.equal({'foo': ['bar', 'qux']});
+            done();
+        });
+    });
+
+    it('should handle string list accumulate chunky value', function(done) {
+        var p = new para();
+        p.write('foo=bar\nfoo=qu', 'utf8', function() {
+            p.write('x', 'utf8', function() {
+                p.end();
+            });          
+        });
+
+        p.on('finish', function() {
+            expect(p.obj).to.deep.equal({'foo': ['bar', 'qux']});
+            done();
+        });
+    });
 });
