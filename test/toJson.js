@@ -132,6 +132,22 @@ describe('toJson', function() {
         parse('foo={bar=val }', {'foo': { 'bar': 'val' }}, done);
     });
 
+    it('should understand a list of objects', function(done) {
+        var str = 'attachments={ { id=258579 type=4713 } ' +
+            ' { id=258722 type=4713 } }';
+        var obj = {
+            attachments: [{
+                id: 258579,
+                type: 4713
+            }, {
+                id: 258722,
+                type: 4713
+            }]
+        };
+
+        parse(str, obj, done);
+    });
+
     it('should understand a simple EU4 header', function(done) {
         var str = 'date=1640.7.1\r\nplayer="FRA"\r\nsavegame_version=' +
             '\r\n{\r\n\tfirst=1\r\n\tsecond=9\r\n\tthird=2\r\n\tforth=0\r\n}'
