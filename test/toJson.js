@@ -37,6 +37,10 @@ describe('toJson', function() {
     parse('foo=bar\nfoo=qux', {'foo':['bar', 'qux']}, done);
   });
 
+  it('should handle string list accumulation long', function(done) {
+    parse('foo=bar\nfoo=qux\nfoo=baz', {'foo':['bar', 'qux', 'baz']}, done);
+  });
+
   it('should handle quoted string list accumulation', function(done) {
     parse('foo="bar"\nfoo="qux"', {'foo':['bar', 'qux']}, done);
   });
@@ -67,6 +71,10 @@ describe('toJson', function() {
 
   it('should handle dates', function(done) {
     parse('date=1821.1.1', {'date': '1821-01-01T00:00:00.000Z'}, done);
+  });
+
+  it('should deceptive dates', function(done) {
+    parse('date=1821.a.1', {'date': '1821.a.1'}, done);
   });
 
   it('should handle quoted dates', function(done) {
@@ -173,6 +181,18 @@ describe('toJson', function() {
       }
     }
     parse(str, obj, done);
+  });
+
+  it('should handle a constructor without new', function(done) {
+    var p = para();
+    p.write('foo=bar\n', 'utf8', function() {
+      p.end();
+    });
+
+    p.on('finish', function() {
+      expect(p.obj).to.deep.equal({'foo': 'bar'});
+      done();
+    });
   });
 
   it('should handle string list accumulation chunky norm', function(done) {
