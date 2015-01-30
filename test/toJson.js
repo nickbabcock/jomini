@@ -315,4 +315,31 @@ describe('toJson', function() {
       done();
     });
   });
+
+  it('should understand a list of objects chunky', function(done) {
+    var p = new para();
+    var str1 = 'attachments={ { i';
+    var str2 = 'd=258579 type=4713 }  { id=258722 type=4713 } }';
+
+    p.write(str1, 'utf8', function() {
+      p.write(str2, 'utf8', function() {
+        p.end();
+      });
+    });
+
+    var obj = {
+      attachments: [{
+        id: 258579,
+        type: 4713
+      }, {
+        id: 258722,
+        type: 4713
+      }]
+    };
+
+    p.on('finish', function() {
+      expect(p.obj).to.deep.equal(obj);
+      done();
+    });
+  });
 });
