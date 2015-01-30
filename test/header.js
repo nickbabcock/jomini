@@ -1,6 +1,6 @@
 var Header = require('../').Header;
 var stream = require('stream');
-var expect = require('chai').expect
+var expect = require('chai').expect;
 
 describe('Header', function() {
   it('detect expected header', function(done) {

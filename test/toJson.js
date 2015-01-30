@@ -1,13 +1,13 @@
 var para = require('../');
 var stream = require('stream');
-var expect = require('chai').expect
+var expect = require('chai').expect;
 
 function conversion(text, cb) {
   var s = new stream.Readable();
   s.push(text);
   s.push(null);
   var p = para();
-  var res = s.pipe(p)
+  var res = s.pipe(p);
   p.on('finish', function() {
     cb(p.obj);
   });
@@ -16,7 +16,7 @@ function conversion(text, cb) {
 function parse(input, expected, cb) {
   conversion(input, function(actual) {
     expect(actual).to.deep.equal(expected);
-    cb()
+    cb();
   });
 }
 
@@ -158,7 +158,7 @@ describe('toJson', function() {
 
   it('should understand a simple EU4 header', function(done) {
     var str = 'date=1640.7.1\r\nplayer="FRA"\r\nsavegame_version=' +
-      '\r\n{\r\n\tfirst=1\r\n\tsecond=9\r\n\tthird=2\r\n\tforth=0\r\n}'
+      '\r\n{\r\n\tfirst=1\r\n\tsecond=9\r\n\tthird=2\r\n\tforth=0\r\n}';
     var obj = {
       date: '1640-07-01T00:00:00.000Z',
       player: 'FRA',
@@ -174,12 +174,12 @@ describe('toJson', function() {
 
   it('should understand EU4 gameplay settings', function(done) {
     var str = 'gameplaysettings=\r\n{\r\n\tsetgameplayoptions=' +
-      '\r\n\t{\r\n\t\t1 1 2 0 1 0 0 0 1 1 1 1 \r\n\t}\r\n}'
+      '\r\n\t{\r\n\t\t1 1 2 0 1 0 0 0 1 1 1 1 \r\n\t}\r\n}';
     var obj = {
       gameplaysettings: {
         setgameplayoptions: [1, 1, 2, 0, 1, 0, 0, 0, 1, 1, 1, 1]
       }
-    }
+    };
     parse(str, obj, done);
   });
 

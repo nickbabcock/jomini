@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var jscs = require('gulp-jscs');
 var mocha = require('gulp-mocha');
+var jshint = require('gulp-jshint');
 var istanbul = require('gulp-istanbul');
 
 gulp.task('test', function(cb) {
@@ -19,7 +20,14 @@ gulp.task('test', function(cb) {
         });
 });
 
-gulp.task('main', ['test'], function() {
+gulp.task('lint', function() {
+    return gulp.src(['lib/**/*.js', 'test/**/*.js'])
+        .pipe(jshint())
+        .pipe(jshint.reporter('jshint-stylish'))
+        .pipe(jshint.reporter('fail'));
+});
+
+gulp.task('main', ['test', 'lint'], function() {
     return gulp.src(['lib/*js']).pipe(jscs({
         preset: 'google' 
     }));
