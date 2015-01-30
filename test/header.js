@@ -26,4 +26,15 @@ describe('Header', function() {
       done();
     });
   });
+
+  it('should write through subsequent data', function(done) {
+    var head = new Header({header: 'EU4txt'});
+    head.write('EU4txt\nblah', 'utf8', function() {
+      head.write('blue', 'utf8', function() {
+        var actual = head.read().toString();
+        expect(actual).to.equal('\nblahblue');
+        done();
+      });
+    });
+  });
 });
