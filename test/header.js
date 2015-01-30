@@ -37,4 +37,15 @@ describe('Header', function() {
       });
     });
   });
+
+  it('should compensate for the missing new', function(done) {
+    var head = Header({header: 'EU4txt'});
+    head.write('EU4txt\nblah', 'utf8', function() {
+      head.write('blue', 'utf8', function() {
+        var actual = head.read().toString();
+        expect(actual).to.equal('\nblahblue');
+        done();
+      });
+    });
+  });
 });
