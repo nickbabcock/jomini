@@ -4,7 +4,7 @@
   "description": "Parses Paradox files into javascript objects",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "./node_modules/mocha/bin/mocha"
   },
   "author": "Nick Babcock <nbabcock19@hotmail.com> (nbsoftsolutions.com)",
   "license": "MIT",
@@ -17,7 +17,8 @@
     "gulp-mocha": "^2.0.0",
     "jshint-stylish": "^1.0.0",
     "lodash": "^2.4.1",
-    "through2": "^0.6.3"
+    "through2": "^0.6.3",
+    "mocha": "^2.1.0"
   },
   "testling": {
     "files": "test/*.js",
