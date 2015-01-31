@@ -6,6 +6,10 @@
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nickbabcock/jemini.git"
+  },
   "author": "Nick Babcock <nbabcock19@hotmail.com> (nbsoftsolutions.com)",
   "license": "MIT",
   "devDependencies": {
@@ -20,6 +24,14 @@
     "through2": "^0.6.3",
     "mocha": "^2.1.0"
   },
+  "homepage": "https://github.com/nickbabcock/jemini",
+  "keywords": [
+    "paradox",
+    "clauswitz",
+    "jemini",
+    "parser",
+    "javascript"
+  ],
   "testling": {
     "files": "test/*.js",
     "harness": "mocha-bdd",
