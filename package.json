@@ -1,7 +1,7 @@
 {
   "name": "para-json",
   "version": "0.0.1",
-  "description": "Converts Paradox files to their JSON equivalent",
+  "description": "Parses Paradox files into javascript objects",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
