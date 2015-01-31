@@ -49,6 +49,12 @@ and the result is an object with following representation
 }
 ```
 
+## Install
+
+```
+npm install --save jomini
+```
+
 ## EU4 Example
 
 Save games in EU4 have a header of `EU4txt`, which is generally discarded and
