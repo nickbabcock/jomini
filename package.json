@@ -4,7 +4,8 @@
   "description": "Parses Paradox files into javascript objects",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "./node_modules/mocha/bin/mocha",
+    "test-browser": "zuul -- test/*.js"
   },
   "repository": {
     "type": "git",
@@ -22,7 +23,8 @@
     "jshint-stylish": "^1.0.0",
     "lodash": "^2.4.1",
     "through2": "^0.6.3",
-    "mocha": "^2.1.0"
+    "mocha": "^2.1.0",
+    "zuul": "^1.17.0"
   },
   "homepage": "https://github.com/nickbabcock/jemini",
   "keywords": [
