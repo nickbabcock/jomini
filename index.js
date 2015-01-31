@@ -1,2 +1,3 @@
-exports = module.exports = require('./lib/para');
+exports = module.exports;
+exports.Parser = require('./lib/parser');
 exports.Header = require('./lib/header');

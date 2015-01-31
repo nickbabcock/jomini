@@ -1,4 +1,4 @@
-var para = require('../');
+var Parser = require('../').Parser;
 var stream = require('stream');
 var expect = require('chai').expect;
 
@@ -6,7 +6,7 @@ function conversion(text, cb) {
   var s = new stream.Readable();
   s.push(text);
   s.push(null);
-  var p = para();
+  var p = Parser();
   var res = s.pipe(p);
   p.on('finish', function() {
     cb(p.obj);
@@ -184,7 +184,7 @@ describe('toJson', function() {
   });
 
   it('should handle a constructor without new', function(done) {
-    var p = para();
+    var p = Parser();
     p.write('foo=bar\n', 'utf8', function() {
       p.end();
     });
@@ -196,7 +196,7 @@ describe('toJson', function() {
   });
 
   it('should handle string list accumulation chunky norm', function(done) {
-    var p = new para();
+    var p = new Parser();
     p.write('foo=bar\n', 'utf8', function() {
       p.write('foo=qux', 'utf8', function() {
         p.end();
@@ -210,7 +210,7 @@ describe('toJson', function() {
   });
 
   it('should handle string list accumulate chunky break', function(done) {
-    var p = new para();
+    var p = new Parser();
     p.write('foo=bar\nf', 'utf8', function() {
       p.write('oo=qux', 'utf8', function() {
         p.end();
@@ -224,7 +224,7 @@ describe('toJson', function() {
   });
 
   it('should handle string list accumulate chunky space break', function(done) {
-    var p = new para();
+    var p = new Parser();
     p.write('foo = bar \n f', 'utf8', function() {
       p.write('oo = qux', 'utf8', function() {
         p.end();
@@ -238,7 +238,7 @@ describe('toJson', function() {
   });
 
   it('should handle string list accumulate chunky equal', function(done) {
-    var p = new para();
+    var p = new Parser();
     p.write('foo=bar\nfoo=', 'utf8', function() {
       p.write('qux', 'utf8', function() {
         p.end();
@@ -252,7 +252,7 @@ describe('toJson', function() {
   });
 
   it('should handle string list accumulate chunky value', function(done) {
-    var p = new para();
+    var p = new Parser();
     p.write('foo=bar\nfoo=qu', 'utf8', function() {
       p.write('x', 'utf8', function() {
         p.end();
@@ -266,7 +266,7 @@ describe('toJson', function() {
   });
 
   it('should handle a chunky list', function(done) {
-    var p = new para();
+    var p = new Parser();
     p.write('foo= {1 1', 'utf8', function() {
       p.write('1 2}', 'utf8', function() {
         p.end();
@@ -280,7 +280,7 @@ describe('toJson', function() {
   });
 
   it('should handle back to backs', function(done) {
-    var p = new para();
+    var p = new Parser();
     var str1 = 'POR={type=0 max_demand=2.049 t_in=49.697 t_from=\r\n' +
       '{ C00=5.421 C18=44.276 } }';
     var str2 = 'SPA= { type=0 val=3.037 max_pow=1.447 max_demand=2.099 ' +
@@ -317,7 +317,7 @@ describe('toJson', function() {
   });
 
   it('should understand a list of objects chunky', function(done) {
-    var p = new para();
+    var p = new Parser();
     var str1 = 'attachments={ { i';
     var str2 = 'd=258579 type=4713 }  { id=258722 type=4713 } }';
 
