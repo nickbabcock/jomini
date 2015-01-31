@@ -1,6 +1,6 @@
 {
-  "name": "para-json",
-  "version": "0.0.1",
+  "name": "jemini",
+  "version": "0.1.0",
   "description": "Parses Paradox files into javascript objects",
   "main": "index.js",
   "scripts": {
