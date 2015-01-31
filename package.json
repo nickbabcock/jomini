@@ -4,8 +4,7 @@
   "description": "Parses Paradox files into javascript objects",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha",
-    "test-browser": "zuul -- test/*.js"
+    "test": "./node_modules/mocha/bin/mocha && zuul -- test/*.js"
   },
   "repository": {
     "type": "git",
