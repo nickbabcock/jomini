@@ -91,7 +91,7 @@ header.write(data, 'utf8', function() {
 });
 ```
 
-## `forceArray`
+## `toArray`
 
 Given
 
@@ -139,7 +139,7 @@ parsed is useful. When you're navigating the object structure you have two
 options for successful access. Whenever you are accessing an object that could
 be an array, do a type check and branch to the appropriate action, or use
 `forceArray` to make sure that the property on all objects defined by a path
-are arrays. The solution to the example would be `jemini.forceArray(obj,
+are arrays. The solution to the example would be `jemini.toArray(obj,
 'army.unit')`.
 
 ## Etymology
