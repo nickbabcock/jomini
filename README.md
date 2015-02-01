@@ -149,6 +149,12 @@ just like how Jomini the parser is related to Clausewitz the game engine
 
 ## Changelog
 
+`v0.1.2 Feb 1st 2015`
+
+- Implemented simplified `parse` API
+- Implemented `toArray` to force properties to be an array
+- Dates are now stored as dates in object and not ISO 8601 strings
+
 `v0.1.1 Jan 31st 2015`
 
 - Removed dependency on lodash
