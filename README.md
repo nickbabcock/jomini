@@ -25,6 +25,18 @@ Parse it with the following
 
 ```js
 var jomini = require('jomini');
+var str;
+jomini.parse(str, function(err, obj) {
+    // Access object with parser.obj
+    // Ex. parser.obj.savegame_version.first
+});
+
+```
+
+You can also use the `Parser` object so you can stream data.
+
+```js
+var jomini = require('jomini');
 var parser = new jomini.Parser();
 var streamer; /* Get a stream */
 streamer.pipe(parser);
