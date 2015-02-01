@@ -91,6 +91,57 @@ header.write(data, 'utf8', function() {
 });
 ```
 
+## `forceArray`
+
+Given
+
+```
+army=
+{
+    name="1st army"
+    unit={
+        name="1st unit"
+    }
+}
+army=
+{
+    name="2nd army"
+    unit={
+        name="1st unit"
+    }
+    unit={
+        name="2nd unit"
+    }
+}
+```
+
+The resulting parsed structure will be:
+
+```js
+army: [{
+    name: "1st army",
+    unit: {
+        name: "1st unit"
+    }
+}, {
+    name: "2nd army",
+    unit: [{
+        name: "1st unit"
+    }, {
+        name: "2nd unit"
+    }]
+}]
+```
+
+Notice that the first army has an object for `unit` whereas the second army
+has an array of `unit`. This is where domain knowledge of the document being
+parsed is useful. When you're navigating the object structure you have two
+options for successful access. Whenever you are accessing an object that could
+be an array, do a type check and branch to the appropriate action, or use
+`forceArray` to make sure that the property on all objects defined by a path
+are arrays. The solution to the example would be `jemini.forceArray(obj,
+'army.unit')`.
+
 ## Etymology
 
 [Antoine-Henri Jomini][Jomini] is related to [Carl von Clausewitz][Clausewitz]
