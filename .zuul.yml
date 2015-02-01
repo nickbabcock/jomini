@@ -6,5 +6,3 @@ browsers:
     version: latest
   - name: firefox
     version: 14..latest
-browserify:
-  - require: index.js
