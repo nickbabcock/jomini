@@ -1,6 +1,6 @@
 {
   "name": "jomini",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Parses Paradox files into javascript objects",
   "main": "index.js",
   "scripts": {

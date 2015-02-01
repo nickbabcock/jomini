@@ -85,6 +85,12 @@ header.write(data, 'utf8', function() {
 [Antoine-Henri Jomini][Jomini] is related to [Carl von Clausewitz][Clausewitz]
 just like how Jomini the parser is related to Clausewitz the game engine
 
+## Changelog
+
+`v0.1.1 Jan 31st 2015`
+
+- Removed dependency on lodash
+
 [Clausewitz engine]: http://en.wikipedia.org/wiki/Paradox_Development_Studio#Clausewitz_Engine
 [Clausewitz]: http://en.wikipedia.org/wiki/Carl_von_Clausewitz
 [Jomini]: http://en.wikipedia.org/wiki/Antoine-Henri_Jomini
