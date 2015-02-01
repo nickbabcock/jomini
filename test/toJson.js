@@ -70,7 +70,7 @@ describe('toJson', function() {
   });
 
   it('should handle dates', function(done) {
-    parse('date=1821.1.1', {'date': '1821-01-01T00:00:00.000Z'}, done);
+    parse('date=1821.1.1', {'date': new Date(Date.UTC(1821, 0, 1))}, done);
   });
 
   it('should deceptive dates', function(done) {
@@ -78,12 +78,12 @@ describe('toJson', function() {
   });
 
   it('should handle quoted dates', function(done) {
-    parse('date="1821.1.1"', {'date': '1821-01-01T00:00:00.000Z'}, done);
+    parse('date="1821.1.1"', {'date': new Date(Date.UTC(1821, 0, 1))}, done);
   });
 
   it('should handle accumulated dates', function(done) {
     parse('date="1821.1.1"\ndate=1821.2.1',
-      {'date':['1821-01-01T00:00:00.000Z', '1821-02-01T00:00:00.000Z']},
+      {'date':[new Date(Date.UTC(1821, 0, 1)), new Date(Date.UTC(1821, 1, 1))]},
       done);
   });
 
@@ -113,7 +113,7 @@ describe('toJson', function() {
 
   it('should handle consecutive dates', function(done) {
     parse('foo = { 1821.1.1 1821.2.1 }', {'foo':
-      ['1821-01-01T00:00:00.000Z', '1821-02-01T00:00:00.000Z']}, done);
+      [new Date(Date.UTC(1821, 0, 1)), new Date(Date.UTC(1821, 1, 1))]}, done);
   });
 
   it('should make least common demoninator list', function(done) {
@@ -160,7 +160,7 @@ describe('toJson', function() {
     var str = 'date=1640.7.1\r\nplayer="FRA"\r\nsavegame_version=' +
       '\r\n{\r\n\tfirst=1\r\n\tsecond=9\r\n\tthird=2\r\n\tforth=0\r\n}';
     var obj = {
-      date: '1640-07-01T00:00:00.000Z',
+      date: new Date(Date.UTC(1640, 6, 1)),
       player: 'FRA',
       savegame_version: {
         first: 1,
