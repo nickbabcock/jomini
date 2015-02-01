@@ -26,9 +26,8 @@ Parse it with the following
 ```js
 var jomini = require('jomini');
 var str;
-jomini.parse(str, function(err, obj) {
-    // Access object with parser.obj
-    // Ex. parser.obj.savegame_version.first
+jomini.parse(str, function(err, data) {
+    // Ex. data.savegame_version.first
 });
 
 ```
