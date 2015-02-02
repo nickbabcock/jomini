@@ -149,6 +149,11 @@ just like how Jomini the parser is related to Clausewitz the game engine
 
 ## Changelog
 
+`v0.1.3 Feb 2nd 2015`
+
+- Added `toDate` to the API
+- Implemented parsing of dates that contain hour information
+
 `v0.1.2 Feb 1st 2015`
 
 - Implemented simplified `parse` API
