@@ -45,6 +45,14 @@ describe('toJson', function() {
     parse('foo="bar"\nfoo="qux"', {'foo':['bar', 'qux']}, done);
   });
 
+  it('should handle boolen', function(done) {
+    parse('foo=yes', {'foo': true}, done);
+  });
+
+  it('should handle boolen list', function(done) {
+    parse('foo={yes no}', {'foo': [true, false]}, done);
+  });
+
   it('should handle whole numbers', function(done) {
     parse('foo=1', {'foo': 1}, done);
   });

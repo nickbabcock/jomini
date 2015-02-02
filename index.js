@@ -4,3 +4,4 @@ exports.Header = require('./lib/header');
 exports.parse = require('./lib/parse');
 exports.toArray = require('./lib/toArray');
 exports.toDate = require('./lib/toDate');
+exports.toBool = require('./lib/toBool');	
