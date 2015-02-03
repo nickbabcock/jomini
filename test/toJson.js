@@ -192,6 +192,17 @@ describe('toJson', function() {
     parse(str, obj, done);
   });
 
+  it('should parse minimal spacing for objects', function(done) {
+    var str = 'nation{ship={name="ship1"} ship={name="ship2"}}';
+    var obj = {
+      nation: {
+        ship: [{name: 'ship1'}, {name: 'ship2'}]
+      }
+    };
+
+    parse(str, obj, done);
+  });
+
   it('should understand a simple EU4 header', function(done) {
     var str = 'date=1640.7.1\r\nplayer="FRA"\r\nsavegame_version=' +
       '\r\n{\r\n\tfirst=1\r\n\tsecond=9\r\n\tthird=2\r\n\tforth=0\r\n}';
@@ -396,6 +407,29 @@ describe('toJson', function() {
       },
       rebel_faction: {
         id: 1
+      }
+    };
+
+    p.on('finish', function() {
+      expect(p.obj).to.deep.equal(obj);
+      done();
+    });
+  });
+
+  it('should handle a chunky start of an object', function(done) {
+    var p = new Parser();
+
+    var str1 = 'nation{ship={name="ship1"} ship='
+    var str2 = '{name="ship2"}}';
+    p.write(str1, 'utf8', function() {
+      p.write(str2, 'utf8', function() {
+        p.end();
+      });
+    });
+
+    var obj = {
+      nation: {
+        ship: [{name: 'ship1'}, {name: 'ship2'}]
       }
     };
 
