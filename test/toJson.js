@@ -381,6 +381,30 @@ describe('toJson', function() {
     });
   });
 
+  it('should understand new list chunky', function(done) {
+    var p = new Parser();
+    var str1 = 'id={1 2 3} reb';
+    var str2 = 'el_faction={id=5}';
+
+    p.write(str1, 'utf8', function() {
+      p.write(str2, 'utf8', function() {
+        p.end();
+      });
+    });
+
+    var obj = {
+      id: [1, 2,3 ],
+      rebel_faction: {
+        id: 5
+      }
+    };
+
+    p.on('finish', function() {
+      expect(p.obj).to.deep.equal(obj);
+      done();
+    });
+  });
+
   it('should parse multiple objects accumulated', function(done) {
     var str = 'army=\r\n{\r\n\tname="1st army"\r\n\tunit={\r\n\t\t' +
       'name="1st unit"\r\n\t}\r\n}\r\narmy=\r\n{\r\n\tname="2nd army"' +
