@@ -350,4 +350,29 @@ describe('toJson', function() {
       done();
     });
   });
+
+  it('should parse multiple objects accumulated', function(done) {
+    var str = 'army=\r\n{\r\n\tname="1st army"\r\n\tunit={\r\n\t\t' +
+      'name="1st unit"\r\n\t}\r\n}\r\narmy=\r\n{\r\n\tname="2nd army"' +
+      '\r\n\tunit={\r\n\t\tname="1st unit"\r\n\t}\r\n\tunit={\r\n\t\t' +
+      'name="2nd unit"\r\n\t}\r\n}';
+
+    var obj = {
+      army: [{
+        name: '1st army',
+        unit: {
+            name: '1st unit'
+        }
+      }, {
+        name: '2nd army',
+        unit: [{
+            name: '1st unit'
+        }, {
+            name: '2nd unit'
+        }]
+      }]
+    };
+
+    parse(str, obj, done);
+  });
 });
