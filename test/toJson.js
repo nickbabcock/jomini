@@ -111,12 +111,23 @@ describe('toJson', function() {
     parse('foo = { "bar" "baz" }', {'foo': ['bar', 'baz']}, done);
   });
 
-  it('should handle empty list', function(done) {
-    parse('foo = {}', {'foo': []}, done);
+  it('should handle empty object', function(done) {
+    parse('foo = {}', {'foo': {}}, done);
   });
 
-  it('should handle space empty list', function(done) {
-    parse('foo = { }', {'foo': []}, done);
+  it('should handle space empty object', function(done) {
+    parse('foo = { }', {'foo': {}}, done);
+  });
+
+  it('should handle the object after empty object', function(done) {
+    var obj = {
+      foo: {},
+      catholic: {
+        defender: 'me'
+      }
+    };
+
+    parse('foo={} catholic={defender="me"}', obj, done);
   });
 
   it('should handle consecutive numbers', function(done) {
