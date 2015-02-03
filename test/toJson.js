@@ -130,6 +130,19 @@ describe('toJson', function() {
     parse('foo={} catholic={defender="me"}', obj, done);
   });
 
+  it('should handle the object after empty object nested', function(done) {
+    var obj = {
+      religion: {
+        foo: {},
+        catholic: {
+          defender: 'me'
+        }
+      }
+    };
+
+    parse('religion={foo={} catholic={defender="me"}}', obj, done);
+  });
+
   it('should handle consecutive numbers', function(done) {
     parse('foo = { 1 -1.23 }', {'foo': [1, -1.23]}, done);
   });
