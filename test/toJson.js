@@ -25,6 +25,10 @@ describe('toJson', function() {
     parse('foo=bar', {'foo':'bar'}, done);
   });
 
+  it('should handle empty quoted strings', function(done) {
+    parse('foo=""', {'foo': ""}, done);
+  });
+
   it('should handle whitespace', function(done) {
     parse('\tfoo = bar ', {'foo':'bar'}, done);
   });
