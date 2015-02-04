@@ -26,7 +26,7 @@ describe('toJson', function() {
   });
 
   it('should handle empty quoted strings', function(done) {
-    parse('foo=""', {'foo': ""}, done);
+    parse('foo=""', {'foo': ''}, done);
   });
 
   it('should handle whitespace', function(done) {
@@ -449,7 +449,7 @@ describe('toJson', function() {
   it('should handle a chunky start of an object', function(done) {
     var p = new Parser();
 
-    var str1 = 'nation{ship={name="ship1"} ship='
+    var str1 = 'nation{ship={name="ship1"} ship=';
     var str2 = '{name="ship2"}}';
     p.write(str1, 'utf8', function() {
       p.write(str2, 'utf8', function() {
@@ -481,7 +481,7 @@ describe('toJson', function() {
     });
 
     var obj = {
-      id: [1, 2,3 ],
+      id: [1, 2, 3],
       rebel_faction: {
         id: 5
       }
