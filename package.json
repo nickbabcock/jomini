@@ -25,7 +25,8 @@
     "through2": "^0.6.3",
     "mocha": "^2.1.0",
     "zuul": "^1.17.0",
-    "bluebird": "^2.9.4"
+    "bluebird": "^2.9.4",
+    "json3": "^3.3.2"
   },
   "homepage": "https://github.com/nickbabcock/jomini",
   "keywords": [
