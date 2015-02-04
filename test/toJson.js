@@ -180,6 +180,10 @@ describe('toJson', function() {
     parse('foo={bar=val} {} { } me=you', {foo: {bar: 'val'}, me: 'you'}, done);
   });
 
+  it('should ignore empty objects with no identifier at end', function(done) {
+    parse('foo={bar=val {}}  { } me=you', {foo: {bar: 'val'}, me: 'you'}, done);
+  });
+
   it('should understand a list of objects', function(done) {
     var str = 'attachments={ { id=258579 type=4713 } ' +
       ' { id=258722 type=4713 } }';
