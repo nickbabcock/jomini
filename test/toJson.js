@@ -515,6 +515,23 @@ describe('toJson', function() {
     });
   });
 
+  it('should parse a chunky object on space', function(done) {
+    var p = new Parser();
+    var str1 = 'foo={\r\nbar={qux=bax ';
+    var str2 = '}}';
+    var obj = {foo: {bar: {qux: 'bax'}}};
+    p.write(str1, 'utf8', function() {
+      p.write(str2, 'utf8', function() {
+        p.end();
+      });
+    });
+
+    p.on('finish', function() {
+      expect(p.obj).to.deep.equal(obj);
+      done();
+    });
+  });
+
   it('should parse multiple objects accumulated', function(done) {
     var str = 'army=\r\n{\r\n\tname="1st army"\r\n\tunit={\r\n\t\t' +
       'name="1st unit"\r\n\t}\r\n}\r\narmy=\r\n{\r\n\tname="2nd army"' +
