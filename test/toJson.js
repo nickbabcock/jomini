@@ -393,6 +393,28 @@ describe('toJson', function() {
     });
   });
 
+  it('should handle empty objects on buffer edge2', function(done) {
+    var p = new Parser();
+    var str1 = 'foo={bar=val {';
+    var str2 = '}} me=you';
+
+    p.write(str1, 'utf8', function() {
+      p.write(str2, 'utf8', function() {
+        p.end();
+      });
+    });
+
+    var expected = {
+      foo: {bar: 'val'},
+      me: 'you'
+    };
+
+    p.on('finish', function() {
+      expect(p.obj).to.deep.equal(expected);
+      done();
+    });
+  });
+
   it('should understand a list of objects chunky', function(done) {
     var p = new Parser();
     var str1 = 'attachments={ { i';
