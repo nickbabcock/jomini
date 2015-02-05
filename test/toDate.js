@@ -20,4 +20,8 @@ describe('toDate', function() {
   it('should return undefined for deceptive date', function() {
     expect(toDate('1800.1.a')).to.equal(undefined);
   });
+
+  it('should return the input for a false value', function() {
+    expect(toDate(undefined)).to.equal(undefined);
+  });
 });
