@@ -3,7 +3,7 @@ var jscs = require('gulp-jscs');
 var mocha = require('gulp-mocha');
 var jshint = require('gulp-jshint');
 var istanbul = require('gulp-istanbul');
-var jison = require('gulp-jison');
+var jisonCli = require('gulp-jison-cli');
 
 gulp.task('test', ['jison'], function(cb) {
   gulp.src(['lib/*.js', '!lib/jomini.js'])
@@ -22,9 +22,9 @@ gulp.task('test', ['jison'], function(cb) {
 });
 
 gulp.task('jison', function() {
-  return gulp.src('./src/*.jison')
-    .pipe(jison({ moduleType: 'commonjs' }))
-    .pipe(gulp.dest('./src/'));
+  return gulp.src('./lib/*.jison')
+    .pipe(jisonCli({ 'module-type': 'commonjs' }))
+    .pipe(gulp.dest('./lib/'));
 });
 
 gulp.task('lint', function() {
