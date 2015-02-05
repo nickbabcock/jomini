@@ -88,6 +88,10 @@ describe('parse', function() {
     );
   });
 
+  it('should handle numbers as identifiers', function() {
+    expect(parse('158=10')).to.deep.equal({'158': 10});
+  });
+
   it('should handle consecutive strings', function() {
     expect(parse('foo = { bar baz }')).to.deep.equal({'foo': ['bar', 'baz']});
   });

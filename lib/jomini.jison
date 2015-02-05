@@ -46,6 +46,8 @@ PMemberList
 PMember 
     : IDENTIFIER '=' PValue
         {key = $1; value = $3;}
+    | NUMBER '=' PValue
+        {key = $1; value = $3;}
     | DATE '=' PValue
         {key = $1; value = $3;}
     | IDENTIFIER '=' '{' '}'
