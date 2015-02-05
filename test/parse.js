@@ -92,6 +92,10 @@ describe('parse', function() {
     expect(parse('158=10')).to.deep.equal({'158': 10});
   });
 
+  it('should handle periods in identifiers', function() {
+    expect(parse('flavor_tur.8=yes')).to.deep.equal({'flavor_tur.8': true});
+  });
+
   it('should handle consecutive strings', function() {
     expect(parse('foo = { bar baz }')).to.deep.equal({'foo': ['bar', 'baz']});
   });
