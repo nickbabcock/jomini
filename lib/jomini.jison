@@ -50,6 +50,8 @@ PMember
         {key = $1; value = $3;}
     | DATE '=' PValue
         {key = $1; value = $3;}
+    | DATE '=' '{' '}'
+        {key = $1; value = {};}
     | IDENTIFIER '=' '{' '}'
         {key = $1; value = {};}
     | '{' '}'

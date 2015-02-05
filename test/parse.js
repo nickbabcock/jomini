@@ -96,6 +96,10 @@ describe('parse', function() {
     expect(parse('flavor_tur.8=yes')).to.deep.equal({'flavor_tur.8': true});
   });
 
+  it('should handle empty objects for dates', function() {
+    expect(parse('1920.1.1={}')).to.deep.equal({'1920.1.1': {}});
+  });
+
   it('should handle consecutive strings', function() {
     expect(parse('foo = { bar baz }')).to.deep.equal({'foo': ['bar', 'baz']});
   });
