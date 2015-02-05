@@ -1,5 +1,6 @@
-
-/* description: Parses and executes mathematical expressions. */
+%{
+var toDate = require('./').toDate;
+%}
 
 /* lexical grammar */
 %lex
@@ -9,7 +10,7 @@
 "yes"\b               return 'BOOL'
 "no"\b                return 'BOOL'
 [0-9]+("."[0-9]+)?\b  return 'NUMBER'
-(\d+)"."(\d+)"."(\d+)\b return 'DATE'
+[0-9.]+\b return 'DATE'
 "{"                   return '{'
 "}"                   return '}'
 "="                   return '='
@@ -28,7 +29,7 @@
 
 expressions
     : PMemberList EOF
-        { typeof console !== 'undefined' ? console.log($1) : print($1);
+        { typeof console !== 'undefined' ? console.log(obj) : print(obj);
           return $1; }
     ;
 
@@ -44,6 +45,16 @@ PMemberList
 
 PMember 
     : IDENTIFIER '=' PValue
+        {obj[$1] = $3;}
+    ;
+
+PElements
+    : '{' PList '}'
+    ;
+
+PList
+    : PValue
+    | PList PValue
     ;
 
 PValue
@@ -51,7 +62,19 @@ PValue
         {$$ = +yytext;}
     | BOOL
         {$$ = yytext === 'yes';}
+    | '"' IDENTIFIER '"'
+        {$$ = $2;}
     | IDENTIFIER
         {$$ = yytext;}
+    | DATE
+        {$$ = toDate(yytext);}
+
+/*    | PElements
+        {$$ = $2;}*/
+//    | PObject
     ;
+
+%%
+
+obj = {};
 
