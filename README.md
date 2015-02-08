@@ -108,7 +108,7 @@ just like how Jomini the parser is related to Clausewitz the game engine
 
 ## Changelog
 
-`v0.2.0 Feb 7th 2015
+`v0.2.0 Feb 7th 2015`
 
 A near complete rewrite with [Jison](http://zaach.github.io/jison/) that
 ditches the handwritten stream based approach taken previously for an all in
