@@ -108,6 +108,10 @@ just like how Jomini the parser is related to Clausewitz the game engine
 
 ## Changelog
 
+`v0.2.1 June 1st 2015`
+
+Remove extraneous packaged files that (#1)
+
 `v0.2.0 Feb 7th 2015`
 
 A near complete rewrite with [Jison](http://zaach.github.io/jison/) that
