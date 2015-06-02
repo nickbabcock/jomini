@@ -73,7 +73,7 @@ describe('parse', function() {
         equal({'date': new Date(Date.UTC(1821, 0, 1))});
   });
 
-/*  it('should deceptive dates', function() {
+  /*it('should deceptive dates', function() {
     expect(parse('date=1821.a.1')).to.deep.equal({date': '1821.a.1'});
   });*/
 
@@ -215,14 +215,14 @@ describe('parse', function() {
       army: [{
         name: '1st army',
         unit: {
-            name: '1st unit'
+          name: '1st unit'
         }
       }, {
         name: '2nd army',
         unit: [{
-            name: '1st unit'
+          name: '1st unit'
         }, {
-            name: '2nd unit'
+          name: '2nd unit'
         }]
       }]
     };
