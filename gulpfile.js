@@ -3,7 +3,7 @@ var jscs = require('gulp-jscs');
 var mocha = require('gulp-mocha');
 var jshint = require('gulp-jshint');
 var istanbul = require('gulp-istanbul');
-var jisonCli = require('gulp-jison-cli');
+var jisonCli = require('gulp-jison');
 
 gulp.task('test', ['jison'], function(cb) {
   gulp.src(['lib/*.js', '!lib/jomini.js'])
