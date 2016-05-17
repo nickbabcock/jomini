@@ -25,7 +25,7 @@
     "json3": "^3.3.2",
     "mocha": "^2.1.0",
     "zuul": "^1.17.0",
-    "gulp-jison-cli": "^0.1.4"
+    "gulp-jison": "^1.2.0"
   },
   "homepage": "https://github.com/nickbabcock/jomini",
   "keywords": [
