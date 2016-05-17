@@ -295,4 +295,16 @@ describe('parse', function() {
     expect(parse('foo={bar=val} {} { } me=you')).to.deep.
         equal({foo: {bar: 'val'}, me: 'you'});
   });
+
+  it('should handle strings as identifiers', function() {
+    expect(parse('"foo"="bar"')).to.deep.equal({'foo': 'bar'});
+  });
+
+  it('should handle = as identifier', function() {
+    expect(parse('=="bar"')).to.deep.equal({'=': 'bar'});
+  });
+
+  it('should handle values with colon sign', function() {
+    expect(parse('foo=bar:foo')).to.deep.equal({'foo': 'bar:foo'});
+  });
 });
