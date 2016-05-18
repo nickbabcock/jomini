@@ -4,8 +4,7 @@
   "description": "Parses Paradox files into javascript objects",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/gulp/bin/gulp.js test",
-    "test-browser": "zuul -- test/*.js"
+    "test": "./node_modules/gulp/bin/gulp.js test"
   },
   "repository": {
     "type": "git",
@@ -18,14 +17,10 @@
     "concat-stream": "^1.4.7",
     "gulp": "^3.8.10",
     "gulp-istanbul": "^0.5.0",
-    "gulp-jscs": "^1.4.0",
-    "gulp-jshint": "^1.9.0",
+    "gulp-jison": "^1.2.0",
     "gulp-mocha": "^2.0.0",
-    "jshint-stylish": "^1.0.0",
     "json3": "^3.3.2",
-    "mocha": "^2.1.0",
-    "zuul": "^1.17.0",
-    "gulp-jison": "^1.2.0"
+    "mocha": "^2.1.0"
   },
   "homepage": "https://github.com/nickbabcock/jomini",
   "keywords": [
@@ -34,19 +29,5 @@
     "jomini",
     "parser",
     "javascript"
-  ],
-  "testling": {
-    "files": "test/*.js",
-    "harness": "mocha-bdd",
-    "browsers": [
-      "ie/6..latest",
-      "chrome/22..latest",
-      "firefox/16..latest",
-      "safari/latest",
-      "opera/11.0..latest",
-      "iphone/6",
-      "ipad/6",
-      "android-browser/latest"
-    ]
-  }
+  ]
 }
