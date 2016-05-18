@@ -108,6 +108,10 @@ just like how Jomini the parser is related to Clausewitz the game engine
 
 ## Changelog
 
+`v0.2.5 May 17th 2016`
+
+Add compatibility with Stellaris (#1)
+
 `v0.2.1 June 1st 2015`
 
 Remove extraneous packaged files that (#1)
