@@ -43,13 +43,13 @@ PMemberList
         {if (key) {setProp(obj, key, value);}}
     ;
 
-PMember 
+PMember
     : IDENTIFIER '=' PValue
         {key = $1; value = $3;}
-	| QIDENTIFIER '=' PValue
-		{key = $1; value = $3;}
-	| '=' '=' PValue
-		{key = $1; value = $3;}
+    | QIDENTIFIER '=' PValue
+        {key = $1; value = $3;}
+    | '=' '=' PValue
+        {key = $1; value = $3;}
     | NUMBER '=' PValue
         {key = $1; value = $3;}
     | DATE '=' PValue
