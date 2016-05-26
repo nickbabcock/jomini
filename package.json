@@ -20,7 +20,7 @@
     "gulp-jison": "^1.2.0",
     "gulp-mocha": "^2.0.0",
     "json3": "^3.3.2",
-    "mocha": "^2.1.0"
+    "mocha": "^2.5.3"
   },
   "homepage": "https://github.com/nickbabcock/jomini",
   "keywords": [
