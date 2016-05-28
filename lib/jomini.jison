@@ -79,7 +79,7 @@ PValue
     | 'hsv' '{' NUMBER NUMBER NUMBER '}'
         {$$ = { h: +$3, s: +$4, v: +$5 };}
     | 'rgb' '{' NUMBER NUMBER NUMBER '}'
-        {$$ = { h: +$3, s: +$4, v: +$5 };}
+        {$$ = { r: +$3, g: +$4, b: +$5 };}
     | QIDENTIFIER
         {$$ = yytext;}
     | IDENTIFIER
