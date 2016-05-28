@@ -108,6 +108,10 @@ just like how Jomini the parser is related to Clausewitz the game engine
 
 ## Changelog
 
+`v0.2.7 May 28th 2016`
+
+- Fix keys for rgb colors
+
 `v0.2.6 May 28th 2016`
 
 - Handle Stellaris variables
