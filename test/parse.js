@@ -311,4 +311,12 @@ describe('parse', function() {
   it('should handle variables', function() {
       expect(parse('@planet_standard_scale = 11')).to.deep.equal({'@planet_standard_scale': 11});
   });
+
+  it('should handle hsv', function() {
+      expect(parse('color = hsv { 0.5 0.2 0.8 }')).to.deep.equal({'color': { h: 0.5, s: 0.2, v: 0.8 }});
+  });
+
+  it('should handle rgb', function() {
+      expect(parse('color = rgb { 100 200 150 }')).to.deep.equal({'color': { r: 100, g: 200, b: 150 }});
+  });
 });

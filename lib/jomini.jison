@@ -15,6 +15,8 @@ var setProp = require('./setProp');
 "-"?[0-9]+("."[0-9]+)?\b  return 'NUMBER'
 "{"                   return '{'
 "}"                   return '}'
+"hsv"                 return 'hsv'
+"rgb"                 return 'rgb'
 "="                   return '='
 \"[^\"]*\"         yytext = yytext.substr(1,yyleng-2); return 'QIDENTIFIER'
 [a-zA-Z0-9_\.:@]+          return 'IDENTIFIER'
@@ -74,6 +76,10 @@ PValue
         {$$ = +yytext;}
     | BOOL
         {$$ = yytext === 'yes';}
+    | 'hsv' '{' NUMBER NUMBER NUMBER '}'
+        {$$ = { h: +$3, s: +$4, v: +$5 };}
+    | 'rgb' '{' NUMBER NUMBER NUMBER '}'
+        {$$ = { h: +$3, s: +$4, v: +$5 };}
     | QIDENTIFIER
         {$$ = yytext;}
     | IDENTIFIER
