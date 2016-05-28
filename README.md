@@ -108,6 +108,11 @@ just like how Jomini the parser is related to Clausewitz the game engine
 
 ## Changelog
 
+`v0.2.6 May 28th 2016`
+
+- Handle Stellaris variables
+- Handle Stellaris colors
+
 `v0.2.5 May 17th 2016`
 
 Add compatibility with Stellaris (#1)
