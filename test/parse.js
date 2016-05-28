@@ -307,4 +307,8 @@ describe('parse', function() {
   it('should handle values with colon sign', function() {
     expect(parse('foo=bar:foo')).to.deep.equal({'foo': 'bar:foo'});
   });
+
+  it('should handle variables', function() {
+      expect(parse('@planet_standard_scale = 11')).to.deep.equal({'@planet_standard_scale': 11});
+  });
 });
