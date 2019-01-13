@@ -304,6 +304,10 @@ describe('parse', function() {
     expect(parse('=="bar"')).to.deep.equal({'=': 'bar'});
   });
 
+  it('should handle dashed identifiers', function() {
+    expect(parse('dashed-identifier=bar')).to.deep.equal({'dashed-identifier': 'bar'});
+  });
+
   it('should handle values with colon sign', function() {
     expect(parse('foo=bar:foo')).to.deep.equal({'foo': 'bar:foo'});
   });

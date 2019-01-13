@@ -19,7 +19,7 @@ var setProp = require('./setProp');
 "rgb"                 return 'rgb'
 "="                   return '='
 \"[^\"]*\"         yytext = yytext.substr(1,yyleng-2); return 'QIDENTIFIER'
-[a-zA-Z0-9_\.:@]+          return 'IDENTIFIER'
+[a-zA-Z0-9\-_\.:@]+   return 'IDENTIFIER'
 "#"[^\r\n]*((\r\n)|<<EOF>>)       /* skip comments */
 .                     return 'INVALID'
 <<EOF>>               return 'EOF'
