@@ -19,8 +19,8 @@
     "chai": "^4.2.0",
     "concat-stream": "^2.0.0",
     "jison": "^0.4.18",
-    "json3": "^3.3.2",
-    "mocha": "^5.2.0"
+    "json3": "^3.3.3",
+    "mocha": "^6.1.4"
   },
   "homepage": "https://github.com/nickbabcock/jomini",
   "keywords": [
