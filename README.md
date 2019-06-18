@@ -108,6 +108,21 @@ just like how Jomini the parser is related to Clausewitz the game engine
 
 ## Changelog
 
+`v0.2.9 June 17th 2019`
+
+- Support additional object operators.
+
+
+```
+has_level >= 2
+```
+
+The output is 
+
+```js
+{'has_level': { 'GREATER_THAN_EQUAL': 2 }}
+```
+
 `v0.2.8 January 13th 2019`
 
 - Allow parsing of dashed identifiers
