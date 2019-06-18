@@ -17,7 +17,11 @@ var setProp = require('./setProp');
 "}"                   return '}'
 "hsv"                 return 'hsv'
 "rgb"                 return 'rgb'
+"<="                  return '<='
+">="                  return '>='
 "="                   return '='
+"<"                   return '<'
+">"                   return '>'
 \"[^\"]*\"         yytext = yytext.substr(1,yyleng-2); return 'QIDENTIFIER'
 [a-zA-Z0-9\-_\.:@]+   return 'IDENTIFIER'
 "#"[^\r\n]*((\r\n)|<<EOF>>)       /* skip comments */
@@ -62,6 +66,26 @@ PMember
         {key = $1; value = {};}
     | '{' '}'
         {key = undefined;}
+
+    | IDENTIFIER '<' PValue
+        {key = $1; value = {'LESS_THAN': $3};}
+    | QIDENTIFIER '<' PValue
+        {key = $1; value = {'LESS_THAN': $3};}
+
+    | IDENTIFIER '<=' PValue
+        {key = $1; value = {'LESS_THAN_EQUAL': $3};}
+    | QIDENTIFIER '<=' PValue
+        {key = $1; value = {'LESS_THAN_EQUAL': $3};}
+
+    | IDENTIFIER '>' PValue
+        {key = $1; value = {'GREATER_THAN': $3};}
+    | QIDENTIFIER '>' PValue
+        {key = $1; value = {'GREATER_THAN': $3};}
+
+    | IDENTIFIER '>=' PValue
+        {key = $1; value = {'GREATER_THAN_EQUAL': $3};}
+    | QIDENTIFIER '>=' PValue
+        {key = $1; value = {'GREATER_THAN_EQUAL': $3};}
     ;
 
 PList
