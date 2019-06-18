@@ -13,7 +13,7 @@
     "type": "git",
     "url": "git://github.com/nickbabcock/jomini.git"
   },
-  "author": "Nick Babcock <nbabcock19@hotmail.com> (nbsoftsolutions.com)",
+  "author": "Nick Babcock <nbabcock19@hotmail.com>",
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
