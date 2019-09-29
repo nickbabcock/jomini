@@ -358,6 +358,6 @@ describe('parse', function () {
     expect(parse("\"has_level2\" >= 2")).to.deep.equal({ 'has_level2': { 'GREATER_THAN_EQUAL': 2 } });
   });
   it('should handle escaped double quotes', function () {
-    expect(parse("desc=\"\\\"Captain\\\"\"")).to.deep.equal({ 'desc': "\\\"Captain\\\"" });
+    expect(parse("desc=\"\\\"Captain\\\"\"")).to.deep.equal({ 'desc': "\"Captain\"" });
   });
 });
