@@ -22,7 +22,8 @@ var setProp = require('./setProp');
 "="                   return '='
 "<"                   return '<'
 ">"                   return '>'
-\"[^\"]*\"         yytext = yytext.substr(1,yyleng-2); return 'QIDENTIFIER'
+"\\\""                return '"'
+\"[^\"\\]*(?:\\.[^\"\\]*)*\" yytext = yytext.substr(1,yyleng-2).replace(/\\\"/g, '"'); return 'QIDENTIFIER'
 [a-zA-Z0-9\-_\.:@]+   return 'IDENTIFIER'
 "#"[^\r\n]*((\r\n)|<<EOF>>)       /* skip comments */
 .                     return 'INVALID'
