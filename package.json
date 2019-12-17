@@ -29,5 +29,6 @@
     "jomini",
     "parser",
     "javascript"
-  ]
+  ],
+  "types": "index.d.ts"
 }
