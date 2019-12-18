@@ -111,6 +111,10 @@ just like how Jomini the parser is related to Clausewitz the game engine
 
 ## Changelog
 
+`v0.2.11 December 17th 2019`
+
+- Add typescript types
+
 `v0.2.10 August 29th 2019`
 
 - Allow escaped quotes in string fields
