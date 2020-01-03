@@ -1,4 +1,4 @@
-![](https://github.com/nickbabcock/jomini/workflows/nodejs/badge.svg)
+![](https://github.com/nickbabcock/jomini/workflows/.github/workflows/nodejs.yml/badge.svg)
 
 # Jomini
 
