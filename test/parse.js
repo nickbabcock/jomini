@@ -73,9 +73,9 @@ describe('parse', function () {
       equal({ 'date': new Date(Date.UTC(1821, 0, 1)) });
   });
 
-  /*it('should deceptive dates', function() {
-    expect(parse('date=1821.a.1')).to.deep.equal({date': '1821.a.1'});
-  });*/
+  it('should deceptive dates', function() {
+    expect(parse('date=1821.a.1')).to.deep.equal({'date': '1821.a.1'});
+  });
 
   it('should handle quoted dates', function () {
     expect(parse('date="1821.1.1"')).to.deep.

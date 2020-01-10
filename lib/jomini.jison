@@ -10,9 +10,9 @@ var setProp = require('./setProp');
 \s+                   /* skip whitespace */
 "yes"\b               return 'BOOL'
 "no"\b                return 'BOOL'
-[0-9]+"."[0-9]+"."[0-9]+\b return 'DATE'
+[0-9]+"."[0-9]+"."[0-9]+(?=$|[ \t\r\n\{\}\=\!\>\<]) return 'DATE'
 '"'[0-9]+"."[0-9]+"."[0-9]+'"' yytext = yytext.substr(1,yyleng-2); return 'QDATE'
-"-"?[0-9]+("."[0-9]+)?\b  return 'NUMBER'
+"-"?[0-9]+("."[0-9]+)?(?=$|[ \t\r\n\{\}\=\!\>\<])  return 'NUMBER'
 "{"                   return '{'
 "}"                   return '}'
 "hsv"                 return 'hsv'
