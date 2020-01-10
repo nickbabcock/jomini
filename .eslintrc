@@ -1,0 +1,183 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "ecmaFeatures": {},
+    "sourceType": "module",
+    "plugins": [
+      "import"
+    ]
+  },
+  "env": {
+    "es6": false,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings"
+  ],
+  "rules": {
+    "no-prototype-builtins": "off",
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": "error",
+    "no-console": "warn",
+    "no-dupe-keys": "error",
+    "no-duplicate-case": "error",
+    "no-extra-semi": "error",
+    "no-invalid-regexp": "error",
+    "no-irregular-whitespace": "error",
+    "no-unreachable": "warn",
+    "no-unsafe-finally": "warn",
+    "use-isnan": "error",
+    "valid-typeof": "error",
+    "class-methods-use-this": "error",
+    "curly": "error",
+    "dot-notation": "error",
+    "eqeqeq": "off",
+    "no-eval": "error",
+    "no-extend-native": "error",
+    "no-extra-bind": "error",
+    "no-fallthrough": "warn",
+    "no-global-assign": "error",
+    "no-implicit-globals": "error",
+    "no-implied-eval": "error",
+    "no-invalid-this": "error",
+    "no-magic-numbers": "off",
+    "no-redeclare": "error",
+    "no-return-assign": "error",
+    "no-return-await": "error",
+    "no-script-url": "error",
+    "no-self-assign": "error",
+    "no-self-compare": "error",
+    "no-throw-literal": "error",
+    "no-unmodified-loop-condition": "warn",
+    "no-unused-expressions": "warn",
+    "no-unused-labels": "error",
+    "no-useless-call": "error",
+    "no-useless-catch": "error",
+    "no-useless-concat": "warn",
+    "no-useless-escape": "error",
+    "no-useless-return": "error",
+    "no-void": "error",
+    "no-with": "error",
+    "radix": "error",
+    "require-await": "error",
+    "require-unicode-regexp": "error",
+    "vars-on-top": "off",
+    "strict": [
+      "error",
+      "global"
+    ],
+    "init-declarations": "error",
+    "no-label-var": "error",
+    "no-shadow": "warn",
+    "no-shadow-restricted-names": "error",
+    "no-undef": "error",
+    "no-unused-vars": "error",
+    "no-use-before-define": "error",
+    "no-buffer-constructor": "error",
+    "no-path-concat": "error",
+    "no-sync": "warn",
+    "eol-last": "error",
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "no-const-assign": "error",
+    "no-dupe-class-members": "error",
+    "no-duplicate-imports": "error",
+    "no-var": "off",
+    "prefer-arrow-callback": "off",
+    "prefer-const": "error",
+    "import/no-unresolved": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/named": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/default": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/no-absolute-path": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/no-self-import": "error",
+    "import/no-cycle": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/no-useless-path-segments": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/no-unused-modules": "error",
+    "import/export": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/no-deprecated": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/no-commonjs": "off",
+    "import/no-amd": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/first": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/no-duplicates": "error",
+    "import/no-namespace": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/extensions": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/newline-after-import": "error",
+    "import/prefer-default-export": [
+      "error",
+      {
+        "commonjs": true
+      }
+    ],
+    "import/no-unassigned-import": "error"
+  }
+}
