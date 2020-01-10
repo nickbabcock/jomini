@@ -1,4 +1,4 @@
-var toBool = require('../').toBool;
+var toBool = require('..').toBool;
 var expect = require('chai').expect;
 
 describe('toBool', function() {
