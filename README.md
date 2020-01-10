@@ -100,7 +100,7 @@ parsed is useful. When you're navigating the object structure you have two
 options for successful access. Whenever you are accessing an object that could
 be an array, do a type check and branch to the appropriate action, or use
 `toArray` to make sure that the property on all objects defined by a path
-are arrays. The solution to the example would be `jemini.toArray(obj,
+are arrays. The solution to the example would be `jomini.toArray(obj,
 'army.unit')`.
 
 ## Etymology
