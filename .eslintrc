@@ -41,7 +41,6 @@
     "require-await": "error",
     "require-unicode-regexp": "error",
     "vars-on-top": "off",
-    "strict": ["off"],
     "init-declarations": "error",
     "no-label-var": "error",
     "no-shadow": "warn",
