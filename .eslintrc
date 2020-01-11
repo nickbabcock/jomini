@@ -1,7 +1,6 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2015,
-    "sourceType": "module",
+    "ecmaVersion": 3,
     "plugins": ["import"]
   },
   "env": {"node": true},
@@ -42,7 +41,7 @@
     "require-await": "error",
     "require-unicode-regexp": "error",
     "vars-on-top": "off",
-    "strict": ["error", "global"],
+    "strict": ["off"],
     "init-declarations": "error",
     "no-label-var": "error",
     "no-shadow": "warn",
@@ -53,9 +52,6 @@
     "eol-last": "error",
     "indent": ["error", 2, {"SwitchCase": 1}],
     "no-duplicate-imports": "error",
-    "no-var": "off",
-    "prefer-arrow-callback": "off",
-    "prefer-const": "error",
     "import/no-unresolved": ["error", {"commonjs": true}],
     "import/named": ["error", {"commonjs": true}],
     "import/default": ["error", {"commonjs": true}],
