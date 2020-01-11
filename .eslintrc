@@ -61,7 +61,6 @@
     "import/no-unused-modules": "error",
     "import/export": ["error", {"commonjs": true}],
     "import/no-deprecated": ["error", {"commonjs": true}],
-    "import/no-commonjs": "off",
     "import/no-amd": ["error", {"commonjs": true}],
     "import/first": ["error", {"commonjs": true}],
     "import/no-duplicates": "error",
