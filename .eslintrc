@@ -1,6 +1,6 @@
 {
   "parserOptions": {
-    "ecmaVersion": 8,
+    "ecmaVersion": 2015,
     "ecmaFeatures": {},
     "sourceType": "module",
     "plugins": [
@@ -8,7 +8,6 @@
     ]
   },
   "env": {
-    "es6": false,
     "node": true
   },
   "extends": [
