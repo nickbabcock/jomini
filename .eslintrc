@@ -18,10 +18,7 @@
   ],
   "rules": {
     "no-prototype-builtins": "off",
-    "quotes": [
-      "error",
-      "single"
-    ],
+    "quotes": ["error", "single"],
     "semi": "error",
     "no-console": "warn",
     "class-methods-use-this": "error",
@@ -51,10 +48,7 @@
     "require-await": "error",
     "require-unicode-regexp": "error",
     "vars-on-top": "off",
-    "strict": [
-      "error",
-      "global"
-    ],
+    "strict": ["error", "global"],
     "init-declarations": "error",
     "no-label-var": "error",
     "no-shadow": "warn",
@@ -63,100 +57,29 @@
     "no-path-concat": "error",
     "no-sync": "warn",
     "eol-last": "error",
-    "indent": [
-      "error",
-      2,
-      {
-        "SwitchCase": 1
-      }
-    ],
+    "indent": ["error", 2, {"SwitchCase": 1}],
     "no-duplicate-imports": "error",
     "no-var": "off",
     "prefer-arrow-callback": "off",
     "prefer-const": "error",
-    "import/no-unresolved": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
-    "import/named": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
-    "import/default": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
-    "import/no-absolute-path": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
+    "import/no-unresolved": ["error", {"commonjs": true}],
+    "import/named": ["error", {"commonjs": true}],
+    "import/default": ["error", {"commonjs": true}],
+    "import/no-absolute-path": ["error", {"commonjs": true}],
     "import/no-self-import": "error",
-    "import/no-cycle": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
-    "import/no-useless-path-segments": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
+    "import/no-cycle": ["error", {"commonjs": true}],
+    "import/no-useless-path-segments": ["error", {"commonjs": true}],
     "import/no-unused-modules": "error",
-    "import/export": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
-    "import/no-deprecated": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
+    "import/export": ["error", {"commonjs": true}],
+    "import/no-deprecated": ["error", {"commonjs": true}],
     "import/no-commonjs": "off",
-    "import/no-amd": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
-    "import/first": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
+    "import/no-amd": ["error", {"commonjs": true}],
+    "import/first": ["error", {"commonjs": true}],
     "import/no-duplicates": "error",
-    "import/no-namespace": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
-    "import/extensions": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
+    "import/no-namespace": ["error", {"commonjs": true}],
+    "import/extensions": ["error", {"commonjs": true}],
     "import/newline-after-import": "error",
-    "import/prefer-default-export": [
-      "error",
-      {
-        "commonjs": true
-      }
-    ],
+    "import/prefer-default-export": ["error", {"commonjs": true}],
     "import/no-unassigned-import": "error"
   }
 }
