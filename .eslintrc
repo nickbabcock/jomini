@@ -10,7 +10,6 @@
     "plugin:import/warnings"
   ],
   "rules": {
-    "no-prototype-builtins": "off",
     "quotes": ["error", "single"],
     "semi": "error",
     "no-console": "warn",
