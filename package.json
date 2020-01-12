@@ -20,6 +20,7 @@
     "chai": "^4.2.0",
     "concat-stream": "^2.0.0",
     "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.19.1",
     "jison": "^0.4.18",
     "mocha": "^6.1.4"
   },
@@ -34,16 +35,71 @@
   "types": "index.d.ts",
   "eslintConfig": {
     "parserOptions": {
-      "ecmaVersion": 3
+      "ecmaVersion": 3,
+      "plugins": ["import"]
     },
-    "env": {
-      "node": true
-    },
+    "env": {"node": true},
     "extends": [
-      "eslint:recommended"
-    ]
+      "eslint:recommended",
+      "plugin:import/errors",
+      "plugin:import/warnings"
+    ],
+    "rules": {
+      "quotes": ["error", "single"],
+      "semi": "error",
+      "no-console": "warn",
+      "class-methods-use-this": "error",
+      "curly": "error",
+      "dot-notation": "error",
+      "no-eval": "error",
+      "no-extend-native": "error",
+      "no-extra-bind": "error",
+      "no-fallthrough": "warn",
+      "no-implicit-globals": "error",
+      "no-implied-eval": "error",
+      "no-invalid-this": "error",
+      "no-return-assign": "error",
+      "no-return-await": "error",
+      "no-script-url": "error",
+      "no-self-compare": "error",
+      "no-throw-literal": "error",
+      "no-unmodified-loop-condition": "warn",
+      "no-unused-expressions": "warn",
+      "no-useless-call": "error",
+      "no-useless-concat": "warn",
+      "no-useless-return": "error",
+      "no-void": "error",
+      "radix": "error",
+      "require-await": "error",
+      "require-unicode-regexp": "error",
+      "init-declarations": "error",
+      "no-label-var": "error",
+      "no-shadow": "warn",
+      "no-use-before-define": "error",
+      "no-buffer-constructor": "error",
+      "no-path-concat": "error",
+      "no-sync": "warn",
+      "eol-last": "error",
+      "indent": ["error", 2, {"SwitchCase": 1}],
+      "no-duplicate-imports": "error",
+      "import/no-unresolved": ["error", {"commonjs": true}],
+      "import/named": ["error", {"commonjs": true}],
+      "import/default": ["error", {"commonjs": true}],
+      "import/no-absolute-path": ["error", {"commonjs": true}],
+      "import/no-self-import": "error",
+      "import/no-cycle": ["error", {"commonjs": true}],
+      "import/no-useless-path-segments": ["error", {"commonjs": true}],
+      "import/no-unused-modules": "error",
+      "import/export": ["error", {"commonjs": true}],
+      "import/no-deprecated": ["error", {"commonjs": true}],
+      "import/no-amd": ["error", {"commonjs": true}],
+      "import/first": ["error", {"commonjs": true}],
+      "import/no-namespace": ["error", {"commonjs": true}],
+      "import/extensions": ["error", {"commonjs": true}],
+      "import/newline-after-import": "error",
+      "import/prefer-default-export": ["error", {"commonjs": true}],
+      "import/no-unassigned-import": "error"
+    }
   },
-  "eslintIgnore": [
-    "/lib/jomini.js"
-  ]
+  "eslintIgnore": ["/lib/jomini.js"]
 }
