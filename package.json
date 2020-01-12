@@ -29,5 +29,12 @@
     "parser",
     "javascript"
   ],
-  "types": "index.d.ts"
+  "types": "index.d.ts",
+  "files": [
+    "/lib/*.js",
+    "/lib/jomini.jison",
+    "/cli.js",
+    "/index.js",
+    "/index.d.ts"
+  ]
 }
