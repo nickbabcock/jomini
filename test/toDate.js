@@ -1,5 +1,5 @@
 var expect = require('chai').expect;
-var toDate = require('..').toDate;
+var toDate = require('../').toDate;
 
 describe('toDate', function() {
   it('should parse regular dates', function() {

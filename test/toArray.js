@@ -1,4 +1,4 @@
-var toArray = require('..').toArray;
+var toArray = require('../').toArray;
 var expect = require('chai').expect;
 
 describe('toArray', function() {

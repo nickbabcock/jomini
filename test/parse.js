@@ -327,37 +327,37 @@ describe('parse', function () {
   });
 
   it('should handle less than operator', function () {
-    expect(parse('has_level < 2')).to.deep.equal({ 'has_level': { 'LESS_THAN': 2 } });
+    expect(parse("has_level < 2")).to.deep.equal({ 'has_level': { 'LESS_THAN': 2 } });
   });
 
   it('should handle less than operator quotes', function () {
-    expect(parse('"has_level2" < 2')).to.deep.equal({ 'has_level2': { 'LESS_THAN': 2 } });
+    expect(parse("\"has_level2\" < 2")).to.deep.equal({ 'has_level2': { 'LESS_THAN': 2 } });
   });
 
   it('should handle less than or equal to operator', function () {
-    expect(parse('has_level <= 2')).to.deep.equal({ 'has_level': { 'LESS_THAN_EQUAL': 2 } });
+    expect(parse("has_level <= 2")).to.deep.equal({ 'has_level': { 'LESS_THAN_EQUAL': 2 } });
   });
 
   it('should handle less than or equal to operator quotes', function () {
-    expect(parse('"has_level2" <= 2')).to.deep.equal({ 'has_level2': { 'LESS_THAN_EQUAL': 2 } });
+    expect(parse("\"has_level2\" <= 2")).to.deep.equal({ 'has_level2': { 'LESS_THAN_EQUAL': 2 } });
   });
 
   it('should handle greater than operator', function () {
-    expect(parse('has_level > 2')).to.deep.equal({ 'has_level': { 'GREATER_THAN': 2 } });
+    expect(parse("has_level > 2")).to.deep.equal({ 'has_level': { 'GREATER_THAN': 2 } });
   });
 
   it('should handle greater than operator quotes', function () {
-    expect(parse('"has_level2" > 2')).to.deep.equal({ 'has_level2': { 'GREATER_THAN': 2 } });
+    expect(parse("\"has_level2\" > 2")).to.deep.equal({ 'has_level2': { 'GREATER_THAN': 2 } });
   });
 
   it('should handle greater than or equal to operator', function () {
-    expect(parse('has_level >= 2')).to.deep.equal({ 'has_level': { 'GREATER_THAN_EQUAL': 2 } });
+    expect(parse("has_level >= 2")).to.deep.equal({ 'has_level': { 'GREATER_THAN_EQUAL': 2 } });
   });
 
   it('should handle greater than or equal to operator quotes', function () {
-    expect(parse('"has_level2" >= 2')).to.deep.equal({ 'has_level2': { 'GREATER_THAN_EQUAL': 2 } });
+    expect(parse("\"has_level2\" >= 2")).to.deep.equal({ 'has_level2': { 'GREATER_THAN_EQUAL': 2 } });
   });
   it('should handle escaped double quotes', function () {
-    expect(parse('desc="\\"Captain\\""')).to.deep.equal({ 'desc': '"Captain"' });
+    expect(parse("desc=\"\\\"Captain\\\"\"")).to.deep.equal({ 'desc': "\"Captain\"" });
   });
 });
