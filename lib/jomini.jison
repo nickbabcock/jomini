@@ -59,6 +59,8 @@ PMember
         {key = $1; value = $3;}
     | NUMBER '=' PValue
         {key = $1; value = $3;}
+    | NUMBER '=' '{' '}'
+        {key = $1; value = {};}
     | DATE '=' PValue
         {key = $1; value = $3;}
     | DATE '=' '{' '}'
