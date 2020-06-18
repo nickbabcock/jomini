@@ -110,6 +110,10 @@ just like how Jomini the parser is related to Clausewitz the game engine
 
 ## Changelog
 
+`v0.2.12 June 17th 2020`
+
+- Fix parsing to support members that have numeric keys and empty values (eg: 'unit={ 2={ } 14={ } }')
+
 `v0.2.11 December 17th 2019`
 
 - Add typescript types
