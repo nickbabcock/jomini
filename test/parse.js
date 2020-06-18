@@ -360,4 +360,7 @@ describe('parse', function () {
   it('should handle escaped double quotes', function () {
     expect(parse('desc="\\"Captain\\""')).to.deep.equal({ 'desc': '"Captain"' });
   });
+  it('should handle empty number keys', function() {
+    expect(parse('unit={ 2={ } 14={ } }')).to.deep.equal({ 'unit': { '2': {}, '14': {} } });
+  });
 });
