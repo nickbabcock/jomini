@@ -3,7 +3,8 @@ use js_sys::{Array, Date, Object, Reflect};
 use std::{borrow::Cow, fmt::Write, ops::Range};
 use wasm_bindgen::prelude::*;
 
-#[cfg(feature = "wee_alloc")]
+/// wee_alloc saved ~6kb in the wasm payload and there was no
+/// measurable performance difference
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
