@@ -60,6 +60,8 @@ out = {
 }
 ```
 
+Same with `hsv`. This change has been done as the object / array header (`rgb` / `hsv`) can be arbitrary and new games introduce new headers. So in order to be more future proof, this change was made.
+
 ## v0.2.12 - June 17th 2020
 
 - Fix parsing to support members that have numeric keys and empty values (eg: 'unit={ 2={ } 14={ } }')
