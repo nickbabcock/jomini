@@ -1,5 +1,5 @@
 
-## v0.3.0 - TBD
+## v0.3.2 - 2020-10-04
 
 This library has been rewritten and hopefully by the end there'll be enough evidence to make the rewrite worth it.
 
