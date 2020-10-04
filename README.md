@@ -1,3 +1,5 @@
+![CI](https://github.com/nickbabcock/jomini/workflows/CI/badge.svg)
+
 # Jomini.js
 
 Jomini is a javascript library that is able to parse **plaintext** save and game files from Paradox Development Studios (Europa Universalis IV, Crusader Kings III, and others)
