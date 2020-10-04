@@ -1,4 +1,9 @@
 
+## v0.3.3 - 2020-10-04
+
+- Fix webpack compatibility
+- Wasm inlined as base64 so browser users don't need to fetch an additional file
+
 ## v0.3.2 - 2020-10-04
 
 This library has been rewritten and hopefully by the end there'll be enough evidence to make the rewrite worth it.
