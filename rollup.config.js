@@ -22,6 +22,11 @@ const rolls = (fmt) => ({
       // from documentation on the rust code
       name: "copy-pkg",
       generateBundle() {
+        // Remove the `import` bundler directive that wasm-bindgen spits out as webpack
+        // doesn't understand that directive yet
+        const data = fs.readFileSync(path.resolve(`src/pkg/jomini_js.js`), 'utf8');
+        fs.writeFileSync(path.resolve(`src/pkg/jomini_js.js`), data.replace('import.meta.url', 'input'));
+
         fs.mkdirSync(path.resolve(`dist/${fmt}/pkg`), { recursive: true });
         fs.copyFileSync(
           path.resolve("./src/pkg/jomini_js.d.ts"),
