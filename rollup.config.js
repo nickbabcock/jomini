@@ -11,7 +11,10 @@ const rolls = (fmt) => ({
     name: "jomini",
   },
   plugins: [
-    wasm(),
+    // We want to inline our wasm bundle as base64. Our wasm bundle is small (54k at time of writing)
+    // and not needing browser users to fetch an additional asset is a boon as there's less of a
+    // need to have an intermediate bundler
+    wasm({ maxFileSize: 100000 }),
     typescript({ outDir: `dist/${fmt}` }),
     {
       // We create our own rollup plugin that copies the typescript definitions that 
