@@ -1,10 +1,34 @@
-var jomini = require('.');
-var concat = require('concat-stream');
+const { readFileSync } = require("fs");
+const { Jomini } = require(".");
+const args = process.argv.slice(2);
+if (args.length !== 1) {
+  console.info("expected one argument for the file path");
+  process.exit(1);
+}
 
-var concatStream = concat(function(buf) {
-  var str = buf.toString('utf8');
-  var obj = jomini.parse(str);
-  process.stdout.write(JSON.stringify(obj));
-});
+console.time("read file");
+const buffer = readFileSync(args[0]);
+console.timeLog("read file");
 
-process.stdin.pipe(concatStream);
+(async function () {
+  console.time("initialize jomini");
+  const parser = await Jomini.initialize();
+  console.timeLog("initialize jomini");
+
+  console.time("initialize jomini2");
+  const parser2 = await Jomini.initialize();
+  console.timeLog("initialize jomini2");
+
+  console.time("parse text");
+  const { player, prestige } = parser.parseText(
+    buffer,
+    { encoding: "windows1252" },
+    (query) => {
+      const player = query.at("/player");
+      const prestige = query.at(`/countries/${player}/prestige`);
+      return { player, prestige };
+    }
+  );
+  console.log(`player: ${player} | prestige: ${prestige}`);
+  console.timeLog("parse text");
+})();

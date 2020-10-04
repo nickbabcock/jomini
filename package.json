@@ -1,27 +1,26 @@
 {
   "name": "jomini",
-  "version": "0.2.12",
+  "version": "0.3.1",
+  "author": "Nick Babcock <nbabcock19@hotmail.com>",
+  "license": "MIT",
   "description": "Parses Paradox files into javascript objects",
-  "main": "index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/es/index.js",
+  "types": "./dist/es/lib/index.d.ts",
+  "files": [
+    "src",
+    "dist"
+  ],
   "scripts": {
-    "build": "./node_modules/.bin/jison -m commonjs -o ./lib/jomini.js ./lib/jomini.jison",
+    "build": "wasm-pack build -t web --out-dir ../src/pkg crate && rm -rf dist/ && rollup -c",
     "pretest": "npm run build",
-    "test": "mocha test",
+    "test": "ava",
     "prepublishOnly": "npm test"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/nickbabcock/jomini.git"
   },
-  "author": "Nick Babcock <nbabcock19@hotmail.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "chai": "^4.2.0",
-    "concat-stream": "^2.0.0",
-    "jison": "^0.4.18",
-    "mocha": "^6.1.4"
-  },
-  "homepage": "https://github.com/nickbabcock/jomini",
   "keywords": [
     "paradox",
     "clausewitz",
@@ -29,5 +28,12 @@
     "parser",
     "javascript"
   ],
-  "types": "index.d.ts"
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^6.0.0",
+    "@rollup/plugin-wasm": "^5.1.0",
+    "ava": "^3.13.0",
+    "rollup": "^2.28.2",
+    "tslib": "^2.0.1",
+    "typescript": "^4.0.3"
+  }
 }
