@@ -1,9 +1,5 @@
 import init, { parse_text, Query } from "./pkg/jomini_js";
-// @ts-ignore
 import jomini_wasm from "./pkg/jomini_js_bg.wasm";
-
-
-// export type JQuery = Query;
 
 /**
  * Supported encodings: UTF8 and Windows1252
