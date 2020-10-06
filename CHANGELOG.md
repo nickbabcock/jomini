@@ -1,3 +1,15 @@
+## v0.3.4 - 2020-10-06
+
+Fix parsing of the following format that can occur in EU4 saves:
+
+```
+history = {
+  {}
+  1689.10.2={
+    decision="abc123"
+  }
+}
+```
 
 ## v0.3.3 - 2020-10-04
 
