@@ -1,3 +1,7 @@
+## v0.3.5 - 2020-10-12
+
+10-20% parsing performance improvement
+
 ## v0.3.4 - 2020-10-06
 
 Fix parsing of the following format that can occur in EU4 saves:
