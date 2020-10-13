@@ -24,9 +24,9 @@ dependencies = [
 
 [[package]]
 name = "jomini"
-version = "0.7.1"
+version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fe310624745de2d5088776e6bc50f3b329a2a30c3433695bcfce64c583c51191"
+checksum = "2922cd01c32a2001ac4b9933766a9a5bfc3621f8a932e661fa2046e5215994e8"
 
 [[package]]
 name = "jomini-js"
