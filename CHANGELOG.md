@@ -1,3 +1,7 @@
+## v0.3.6 - 2020-10-14
+
+Fix path to typescript types
+
 ## v0.3.5 - 2020-10-12
 
 10-20% parsing performance improvement
