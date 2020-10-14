@@ -6,7 +6,7 @@
   "description": "Parses Paradox files into javascript objects",
   "main": "./dist/cjs/index.js",
   "module": "./dist/es/index.js",
-  "types": "./dist/es/lib/index.d.ts",
+  "types": "./dist/es/index.d.ts",
   "files": ["dist"],
   "scripts": {
     "build": "wasm-pack build -t web --out-dir ../src/pkg crate && rm -rf dist/ && rollup -c",
