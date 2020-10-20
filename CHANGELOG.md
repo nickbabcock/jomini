@@ -1,3 +1,24 @@
+## v0.3.7 - 2020-10-20
+
+Aggregate fields that are out of order under a single field
+
+```plain
+name=aaa
+name=bbb
+core=123
+name=ccc
+name=ddd
+```
+
+is parsed into:
+
+```js
+{
+    name: ["aaa", "bbb", "ccc", "ddd"],
+    core: 123,
+}
+```
+
 ## v0.3.6 - 2020-10-14
 
 Fix path to typescript types
