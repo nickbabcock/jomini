@@ -516,3 +516,18 @@ test("should parse readme example", async (t) => {
   };
   t.deepEqual(out, expected);
 });
+
+test("should parse subsequent unordered objects", async (t) => {
+  const str = `
+  name=aaa
+  name=bbb
+  core=123
+  name=ccc
+  name=ddd
+  `;
+  const expected = {
+    name: ["aaa", "bbb", "ccc", "ddd"],
+    core: 123,
+  };
+  t.deepEqual(await parse(str), expected);
+});

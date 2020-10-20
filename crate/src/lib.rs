@@ -218,8 +218,6 @@ impl<'a, 'b, E: Encoding> InObjectifier<'a, 'b, E> {
                     if next_key.map_or(false, |next_key| next_key == key) {
                         self.seen[next_key_idx] = true;
                         values.push(next_key_idx + 1)
-                    } else {
-                        break;
                     }
                     value_idx = next_key_idx + 1;
                 }
