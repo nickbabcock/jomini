@@ -1,6 +1,9 @@
-use jomini::{Encoding, Operator, Scalar, TextTape, TextToken, Utf8Encoding, Windows1252Encoding};
+use jomini::{
+    ArrayReader, Encoding, ObjectReader, Operator, Scalar, TextTape, TextToken, Utf8Encoding,
+    ValueReader, Windows1252Encoding,
+};
 use js_sys::{Array, Date, Object, Reflect};
-use std::{borrow::Cow, fmt::Write, ops::Range};
+use std::fmt::Write;
 use wasm_bindgen::prelude::*;
 
 /// wee_alloc saved ~6kb in the wasm payload and there was no
@@ -100,30 +103,25 @@ fn skip_header(data: &[u8]) -> &[u8] {
 
 #[derive(Debug)]
 struct InObjectifier<'a, 'b, E> {
-    tokens: &'b [TextToken<'a>],
-    seen: Vec<bool>,
-    encoding: E,
+    reader: ObjectReader<'a, 'b, E>,
 }
 
-impl<'a, 'b, E: Encoding> InObjectifier<'a, 'b, E> {
-    fn new(tokens: &'b [TextToken<'a>], encoding: E) -> Self {
-        let seen: Vec<bool> = vec![false; tokens.len()];
-        Self {
-            tokens,
-            seen,
-            encoding,
-        }
+impl<'a, 'b, E: Encoding> InObjectifier<'a, 'b, E>
+where
+    E: Clone,
+{
+    fn new(tape: &'b TextTape<'a>, encoding: E) -> Self {
+        let reader = ObjectReader::new(tape, encoding);
+
+        Self { reader }
     }
 
-    fn token_as_str<'d, 'c: 'd>(&self, token: &'d TextToken<'c>) -> Cow<'c, str> {
-        if let TextToken::Scalar(s) = token {
-            self.encoding.decode(s.view_data())
-        } else {
-            Cow::Borrowed("__unknown")
-        }
+    fn from_root(&self) -> JsValue {
+        self.create_object(self.reader.clone()).into()
     }
 
-    fn scalar_to_js_value(&self, scalar: &Scalar) -> JsValue {
+    fn scalar_to_js_value(&self, reader: ValueReader<'a, 'b, E>) -> JsValue {
+        let scalar = reader.read_scalar().unwrap();
         if let Ok(x) = scalar.to_bool() {
             return JsValue::from_bool(x);
         }
@@ -136,11 +134,12 @@ impl<'a, 'b, E: Encoding> InObjectifier<'a, 'b, E> {
             return x.into();
         }
 
-        JsValue::from_str(self.encoding.decode(scalar.view_data()).as_ref())
+        JsValue::from_str(reader.read_str().unwrap().as_ref())
     }
 
-    fn create_array(&mut self, range: Range<usize>) -> JsValue {
-        if range.end - range.start == 0 {
+    fn create_array(&self, mut reader: ArrayReader<'a, 'b, E>) -> JsValue {
+        let len = reader.values_len();
+        if len == 0 {
             // Surprise! You thought we'd be creating an array. The only reason
             // we aren't for empty arrays is that it is ambiguous whether it is
             // an empty array or object. To keep with previous jomini behavior,
@@ -148,45 +147,30 @@ impl<'a, 'b, E: Encoding> InObjectifier<'a, 'b, E> {
             return Object::new().into();
         }
 
-        let arr = Array::new();
-        let mut tape_idx = range.start;
-        let end_idx = range.end;
-
-        while tape_idx < end_idx {
-            let v = self.token_to_value(tape_idx);
-            tape_idx = skip_next_idx(&self.tokens, tape_idx);
-            arr.push(&v);
+        let arr = Array::new_with_length(len as u32);
+        let mut pos = 0;
+        while let Some(x) = reader.next_value() {
+            let v = self.entry_to_js(None, x);
+            arr.set(pos, v);
+            pos += 1;
         }
 
         arr.into()
     }
 
-    fn create_from_header(&mut self, key: &Scalar, idx: usize) -> Object {
+    fn create_from_header(&self, mut veader: ArrayReader<'a, 'b, E>) -> Object {
         let result = Object::new();
 
-        let key = JsValue::from_str(self.encoding.decode(key.view_data()).as_ref());
-        let val = self.token_to_value(idx);
+        let key = JsValue::from_str(veader.next_value().unwrap().read_str().unwrap().as_ref());
+        let val = self.entry_to_js(None, veader.next_value().unwrap());
 
         let _ = Reflect::set(&result, &key, &val);
         result
     }
 
-    fn token_to_value(&mut self, val_idx: usize) -> JsValue {
-        match &self.tokens[val_idx] {
-            TextToken::Scalar(s) => self.scalar_to_js_value(s),
-            TextToken::Array(end_idx) => self.create_array(val_idx + 1..*end_idx),
-            TextToken::Object(end_idx) | TextToken::HiddenObject(end_idx) => {
-                self.create_object(val_idx + 1..*end_idx).into()
-            }
-            TextToken::Header(s) => self.create_from_header(s, val_idx + 1).into(),
-            TextToken::Operator(op) => self.create_operator_object(*op, val_idx).into(),
-            TextToken::End(_) => JsValue::null(),
-        }
-    }
-
-    fn create_operator_object(&mut self, op: Operator, idx: usize) -> Object {
+    fn create_operator_object(&self, op: Operator, veader: ValueReader<'a, 'b, E>) -> Object {
         let result = Object::new();
-        let val = self.token_to_value(idx + 1);
+        let val = self.entry_to_js(None, veader);
 
         let dsc = match op {
             Operator::LessThan => "LESS_THAN",
@@ -199,46 +183,42 @@ impl<'a, 'b, E: Encoding> InObjectifier<'a, 'b, E> {
         result
     }
 
-    fn create_object(&mut self, range: Range<usize>) -> Object {
-        let result = Object::new();
-        let mut tape_idx = range.start;
-        let end_idx = range.end;
-        let mut values: Vec<usize> = Vec::new();
-
-        while tape_idx < end_idx {
-            if !self.seen[tape_idx] {
-                let key = &self.tokens[tape_idx];
-                self.seen[tape_idx] = true;
-                values.push(tape_idx + 1);
-
-                let mut value_idx = tape_idx + 1;
-                while value_idx < end_idx {
-                    let next_key_idx = skip_next_idx(&self.tokens, value_idx);
-                    let next_key = self.tokens.get(next_key_idx);
-                    if next_key.map_or(false, |next_key| next_key == key) {
-                        self.seen[next_key_idx] = true;
-                        values.push(next_key_idx + 1)
-                    }
-                    value_idx = next_key_idx + 1;
+    fn entry_to_js(&self, op: Option<Operator>, veader: ValueReader<'a, 'b, E>) -> JsValue {
+        if let Some(op) = op {
+            self.create_operator_object(op, veader).into()
+        } else {
+            match veader.token() {
+                TextToken::Scalar(_) => self.scalar_to_js_value(veader),
+                TextToken::Array(_) => self.create_array(veader.read_array().unwrap()),
+                TextToken::Object(_) | TextToken::HiddenObject(_) => {
+                    self.create_object(veader.read_object().unwrap()).into()
                 }
-
-                let key_js = JsValue::from_str(self.token_as_str(key).as_ref());
-                let value_js = if values.len() == 1 {
-                    self.token_to_value(values[0])
-                } else {
-                    let arr = Array::new_with_length(values.len() as u32);
-                    for (i, &idx) in values.iter().enumerate() {
-                        let v = self.token_to_value(idx);
-                        arr.set(i as u32, v);
-                    }
-                    arr.into()
-                };
-
-                let _ = Reflect::set(&result, &key_js, &value_js);
+                TextToken::Header(_) => {
+                    self.create_from_header(veader.read_array().unwrap()).into()
+                }
+                TextToken::End(_) | TextToken::Operator(_) => JsValue::null(),
             }
+        }
+    }
 
-            tape_idx = skip_next_idx(&self.tokens, tape_idx + 1);
-            values.clear();
+    fn create_object(&self, mut reader: ObjectReader<'a, 'b, E>) -> Object {
+        let result = Object::new();
+        while let Some((key, mut entries)) = reader.next_fields() {
+            let key_js = JsValue::from_str(key.read_str().as_ref());
+
+            let value_js = if entries.len() == 1 {
+                let (op, value) = entries.pop().unwrap();
+                self.entry_to_js(op, value)
+            } else {
+                let arr = Array::new_with_length(entries.len() as u32);
+                for (i, (op, value)) in entries.drain(..).enumerate() {
+                    let v = self.entry_to_js(op, value);
+                    arr.set(i as u32, v);
+                }
+                arr.into()
+            };
+
+            let _ = Reflect::set(&result, &key_js, &value_js);
         }
 
         result
@@ -248,67 +228,35 @@ impl<'a, 'b, E: Encoding> InObjectifier<'a, 'b, E> {
         &mut self,
         needle: &str,
         mut rest: impl Iterator<Item = &'c str>,
-        range: Range<usize>,
+        reader: &mut ObjectReader<'a, 'b, E>,
     ) -> JsValue {
-        let mut tape_idx = range.start;
-        let end_idx = range.end;
-        let mut values: Vec<usize> = Vec::new();
-        while tape_idx < end_idx {
-            let key_token = &self.tokens[tape_idx];
-            let key = self.token_as_str(key_token);
-            if key.as_ref() == needle {
-                if let Some(nested_needle) = rest.next() {
-                    let rng = match self.tokens[tape_idx + 1] {
-                        TextToken::Array(x) | TextToken::Object(x) | TextToken::HiddenObject(x) => {
-                            tape_idx + 2..x
-                        }
-                        TextToken::Header(_) => match self.tokens[tape_idx + 2] {
-                            TextToken::Array(x)
-                            | TextToken::Object(x)
-                            | TextToken::HiddenObject(x) => tape_idx + 3..x,
-                            _ => tape_idx..tape_idx,
-                        },
-                        _ => tape_idx..tape_idx,
-                    };
-                    return self.find_query_in(nested_needle, rest, rng);
-                }
-
-                values.push(tape_idx + 1);
-
-                let mut value_idx = tape_idx + 1;
-                while value_idx < end_idx {
-                    let next_key_idx = skip_next_idx(&self.tokens, value_idx);
-                    if next_key_idx >= end_idx {
-                        break;
-                    }
-
-                    let next_key = &self.tokens[next_key_idx];
-                    if next_key == key_token {
-                        values.push(next_key_idx + 1)
-                    }
-
-                    value_idx = next_key_idx + 1;
-                }
-
-                let value_js = if values.len() == 1 {
-                    self.token_to_value(values[0])
-                } else {
-                    let arr = Array::new_with_length(values.len() as u32);
-                    for (i, &idx) in values.iter().enumerate() {
-                        let v = self.token_to_value(idx);
-                        arr.set(i as u32, v);
-                    }
-                    arr.into()
-                };
-
-                return value_js;
+        let mut values: Vec<JsValue> = Vec::new();
+        let nested_need = rest.next();
+        while let Some((key, op, value)) = reader.next_field() {
+            if key.read_str() != needle {
+                continue;
             }
 
-            tape_idx = skip_next_idx(&self.tokens, tape_idx + 1);
-            values.clear();
+            if let Some(nested_needle) = nested_need {
+                let mut nreader = value.read_object().unwrap();
+                return self.find_query_in(nested_needle, rest, &mut nreader);
+            }
+
+            let lvalue = self.entry_to_js(op, value);
+            values.push(lvalue);
         }
 
-        JsValue::undefined()
+        if values.is_empty() {
+            JsValue::undefined()
+        } else if values.len() == 1 {
+            values.pop().unwrap()
+        } else {
+            let arr = Array::new_with_length(values.len() as u32);
+            for (i, val) in values.drain(..).enumerate() {
+                arr.set(i as u32, val);
+            }
+            arr.into()
+        }
     }
 
     fn find_query(&mut self, query: &str) -> JsValue {
@@ -319,19 +267,8 @@ impl<'a, 'b, E: Encoding> InObjectifier<'a, 'b, E> {
             return JsValue::undefined();
         };
 
-        self.find_query_in(root, q, 0..self.tokens.len())
-    }
-}
-
-fn skip_next_idx(tokens: &[TextToken], idx: usize) -> usize {
-    match tokens[idx] {
-        TextToken::Array(x) | TextToken::Object(x) | TextToken::HiddenObject(x) => x + 1,
-        TextToken::Operator(_) => idx + 2,
-        TextToken::Header(_) => match tokens[idx + 1] {
-            TextToken::Array(x) | TextToken::Object(x) | TextToken::HiddenObject(x) => x + 1,
-            _ => idx + 2,
-        },
-        _ => idx + 1,
+        let mut cl = self.reader.clone();
+        self.find_query_in(root, q, &mut cl)
     }
 }
 
@@ -351,14 +288,12 @@ impl Query {
     pub fn root(&self) -> Result<Object, JsValue> {
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
-                let len = self.tape.tokens().len();
-                let mut io = InObjectifier::new(self.tape.tokens(), Windows1252Encoding::new());
-                Ok(io.create_object(0..len))
+                let io = InObjectifier::new(&self.tape, Windows1252Encoding::new());
+                Ok(io.from_root().into())
             }
             _ => {
-                let len = self.tape.tokens().len();
-                let mut io = InObjectifier::new(self.tape.tokens(), Utf8Encoding::new());
-                Ok(io.create_object(0..len))
+                let io = InObjectifier::new(&self.tape, Utf8Encoding::new());
+                Ok(io.from_root().into())
             }
         }
     }
@@ -372,11 +307,11 @@ impl Query {
     pub fn at(&self, query: &str) -> Result<JsValue, JsValue> {
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
-                let mut io = InObjectifier::new(self.tape.tokens(), Windows1252Encoding::new());
+                let mut io = InObjectifier::new(&self.tape, Windows1252Encoding::new());
                 Ok(io.find_query(query))
             }
             _ => {
-                let mut io = InObjectifier::new(self.tape.tokens(), Utf8Encoding::new());
+                let mut io = InObjectifier::new(&self.tape, Utf8Encoding::new());
                 Ok(io.find_query(query))
             }
         }
