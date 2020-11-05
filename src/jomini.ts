@@ -34,8 +34,8 @@ export class Jomini {
    */
   public parseText<T>(
     data: Uint8Array | string,
-    options: undefined | Partial<ParseOptions>,
-    cb: undefined | ((arg0: Query) => T)
+    options?: Partial<ParseOptions>,
+    cb?: ((arg0: Query) => T)
   ) {
     if (typeof data === "string") {
       var inp = encoder.encode(data);
