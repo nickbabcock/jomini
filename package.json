@@ -13,7 +13,7 @@
   "scripts": {
     "build": "wasm-pack build -t web --out-dir ../src/pkg crate && rm -rf dist/ && rollup -c",
     "pretest": "npm run build",
-    "test": "ava",
+    "test": "ava && tsc --target esnext --moduleResolution node --noEmit tests/usage.ts",
     "prepublishOnly": "npm test"
   },
   "repository": {
