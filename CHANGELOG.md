@@ -1,3 +1,7 @@
+## v0.3.8 - 2020-11-05
+
+Fix some typescript typing on optional arguments to `parseText`
+
 ## v0.3.7 - 2020-10-20
 
 Aggregate fields that are out of order under a single field
