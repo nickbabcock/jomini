@@ -1,3 +1,7 @@
+## v0.3.9 - 2020-12-09
+
+Support for parsing negative dates
+
 ## v0.3.8 - 2020-11-05
 
 Fix some typescript typing on optional arguments to `parseText`
