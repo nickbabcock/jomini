@@ -42,10 +42,10 @@ fn data_to_js_date(data: &[u8]) -> Option<Date> {
     for &c in data {
         if c == b'.' {
             let span = Scalar::new(&data[start..pos]);
-            if let Ok(x) = span.to_u64() {
+            if let Ok(x) = span.to_i64() {
                 match state {
                     DateState::Empty => {
-                        y = x as u32;
+                        y = x as i32;
                         state = DateState::Year;
                     }
                     DateState::Year => {
@@ -64,7 +64,7 @@ fn data_to_js_date(data: &[u8]) -> Option<Date> {
             } else {
                 return None;
             }
-        } else if c > b'9' || c < b'0' {
+        } else if c > b'9' || (c < b'0' && c != b'-') {
             return None;
         }
 
