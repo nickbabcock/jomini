@@ -188,7 +188,7 @@ where
             self.create_operator_object(op, veader).into()
         } else {
             match veader.token() {
-                TextToken::Scalar(_) => self.scalar_to_js_value(veader),
+                TextToken::Quoted(_) | TextToken::Unquoted(_) => self.scalar_to_js_value(veader),
                 TextToken::Array(_) => self.create_array(veader.read_array().unwrap()),
                 TextToken::Object(_) | TextToken::HiddenObject(_) => {
                     self.create_object(veader.read_object().unwrap()).into()
