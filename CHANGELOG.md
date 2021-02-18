@@ -1,3 +1,7 @@
+## v0.3.10 - 2020-02-18
+
+Support for parsing Victoria II saves that contain an extraneous closing brace
+
 ## v0.3.9 - 2020-12-09
 
 Support for parsing negative dates
