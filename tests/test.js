@@ -129,6 +129,10 @@ test("should handle empty object", async (t) => {
   t.deepEqual(await parse("foo = {}"), { foo: {} });
 });
 
+test("should parse through extra trailing brace", async (t) => {
+  t.deepEqual(await parse("foo = { bar } }"), { foo: ["bar"] });
+});
+
 test("should handle space empty object", async (t) => {
   t.deepEqual(await parse("foo = { }"), { foo: {} });
 });
