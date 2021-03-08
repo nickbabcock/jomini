@@ -2,7 +2,7 @@ use jomini::{
     ArrayReader, Encoding, ObjectReader, Operator, Scalar, TextTape, TextToken, Utf8Encoding,
     ValueReader, Windows1252Encoding,
 };
-use js_sys::{Array, Date, Object, Reflect};
+use js_sys::{Array, Date};
 use std::fmt::Write;
 use wasm_bindgen::prelude::*;
 
@@ -10,6 +10,20 @@ use wasm_bindgen::prelude::*;
 /// measurable performance difference
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
+
+/// Custom bindings to avoid using fallible `Reflect` for plain objects.
+/// Lifted from serde-wasm-bindgen where it brought a nice performance boost:
+/// https://github.com/cloudflare/serde-wasm-bindgen/commit/f763ead4b47d6cda5873d18f276be4fa6712f6a6
+#[wasm_bindgen]
+extern "C" {
+    type Object;
+
+    #[wasm_bindgen(constructor)]
+    fn new() -> Object;
+
+    #[wasm_bindgen(method, indexing_setter)]
+    fn set(this: &Object, key: JsValue, value: JsValue);
+}
 
 fn create_error_msg(err: &dyn std::error::Error) -> String {
     let mut msg = String::new();
@@ -164,7 +178,7 @@ where
         let key = JsValue::from_str(veader.next_value().unwrap().read_str().unwrap().as_ref());
         let val = self.entry_to_js(None, veader.next_value().unwrap());
 
-        let _ = Reflect::set(&result, &key, &val);
+        result.set(key, val);
         result
     }
 
@@ -179,7 +193,7 @@ where
             Operator::GreaterThanEqual => "GREATER_THAN_EQUAL",
         };
 
-        let _ = Reflect::set(&result, &JsValue::from_str(dsc), &val);
+        result.set(JsValue::from_str(dsc), val);
         result
     }
 
@@ -218,7 +232,7 @@ where
                 arr.into()
             };
 
-            let _ = Reflect::set(&result, &key_js, &value_js);
+            result.set(key_js, value_js);
         }
 
         result
@@ -285,7 +299,7 @@ pub struct Query {
 #[wasm_bindgen]
 impl Query {
     /// Convert the entire document into an object
-    pub fn root(&self) -> Result<Object, JsValue> {
+    pub fn root(&self) -> Result<JsValue, JsValue> {
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
                 let io = InObjectifier::new(&self.tape, Windows1252Encoding::new());
