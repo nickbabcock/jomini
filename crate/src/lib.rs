@@ -3,8 +3,11 @@ use jomini::{
     ValueReader, Windows1252Encoding,
 };
 use js_sys::{Array, Date};
+use ser::SerTape;
 use std::fmt::Write;
 use wasm_bindgen::prelude::*;
+mod op;
+mod ser;
 
 /// wee_alloc saved ~6kb in the wasm payload and there was no
 /// measurable performance difference
@@ -185,15 +188,7 @@ where
     fn create_operator_object(&self, op: Operator, veader: ValueReader<'a, 'b, E>) -> Object {
         let result = Object::new();
         let val = self.entry_to_js(None, veader);
-
-        let dsc = match op {
-            Operator::LessThan => "LESS_THAN",
-            Operator::LessThanEqual => "LESS_THAN_EQUAL",
-            Operator::GreaterThan => "GREATER_THAN",
-            Operator::GreaterThanEqual => "GREATER_THAN_EQUAL",
-        };
-
-        result.set(JsValue::from_str(dsc), val);
+        result.set(JsValue::from_str(op::operator_name(op)), val);
         result
     }
 
@@ -308,6 +303,24 @@ impl Query {
             _ => {
                 let io = InObjectifier::new(&self.tape, Utf8Encoding::new());
                 Ok(io.from_root().into())
+            }
+        }
+    }
+
+    /// Convert the entire document into a JSON string
+    pub fn json(&self) -> Result<JsValue, JsValue> {
+        match self.encoding.as_string().as_deref() {
+            Some("windows1252") => {
+                let reader = SerTape::new(&self.tape, Windows1252Encoding::new());
+                let result = serde_json::to_string(&reader).unwrap();
+                let val = JsValue::from_str(&result);
+                Ok(val)
+            }
+            _ => {
+                let reader = SerTape::new(&self.tape, Utf8Encoding::new());
+                let result = serde_json::to_string(&reader).unwrap();
+                let val = JsValue::from_str(&result);
+                Ok(val)
             }
         }
     }

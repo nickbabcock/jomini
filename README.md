@@ -9,11 +9,11 @@ Jomini is a javascript library that is able to parse **plaintext** save and game
 ## Features:
 
 - ✔ Compatibility: Node 12+ and >90% of browsers
-- ✔ Speed: Parse at nearly 200 MB/s
+- ✔ Speed: Parse at over 200 MB/s
 - ✔ Correctness: The same parser underpins [Rakaly](https://rakaly.com/eu4), the EU4 achievement leaderboard, and the [Paradox Game Converters's](https://github.com/ParadoxGameConverters/EU4toVic2) ironman to plaintext converter
-- ✔ Ergonomic: Data parsed into plain javascript objects
+- ✔ Ergonomic: Data parsed into plain javascript objects or JSON
 - ✔ Self-contained: zero runtime dependencies
-- ✔ Small: Less than 50 KB when gzipped
+- ✔ Small: Less than 60 KB when gzipped
 
 ## Install
 
@@ -100,6 +100,25 @@ const prestige = save.countries[player].prestige;
 ```
 
 The faster version completes 40x faster (6.3s vs 0.16s) and uses about half the memory.
+
+## JSON
+
+There is a middle ground in terms of performance and flexibility: using JSON as an intermediate layer:
+
+```js
+const buffer = readFileSync(args[0]);
+const parser = await Jomini.initialize();
+const out = parser.parseText(buffer, { encoding: "windows1252" }, (q) => q.json());
+const save = JSON.parse(out);
+const player = save.player;
+const prestige = save.countries[player].prestige;
+```
+
+The keys of the stringified JSON object are in the order as they appear in the file, so this makes the JSON approach well suited for parsing files where the order of object keys matter. The other APIs are subjected to natively constructed JS objects reordering keys to suit their fancy. To process the JSON and not lose key order, you'll want to leverage a streaming JSON parser like [oboe.js](https://github.com/jimhigson/oboe.js) or [stream-json](https://github.com/uhop/stream-json).
+
+Interestingly, even though using JSON adds a layer, constructing and parsing the JSON into a JS object is still 3x faster than when a JS object is constructed directly. This must be a testament to how tuned browser JSON parsers are.
+
+The JSON format does not change how dates are encoded, so dates are written into the JSON exactly as they appear in the original file.
 
 ## Data Mangling
 

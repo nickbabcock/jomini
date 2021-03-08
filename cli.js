@@ -19,7 +19,15 @@ console.timeLog("read file");
   const parser2 = await Jomini.initialize();
   console.timeLog("initialize jomini2");
 
-  console.time("parse text");
+  console.time("parse text")
+  parser.parseText(buffer, { encoding: "windows1252" }, (_) => null);
+  console.timeLog("parse text");
+
+  console.time("parse text whole")
+  parser.parseText(buffer, { encoding: "windows1252" });
+  console.timeLog("parse text whole");
+
+  console.time("parse text at");
   const { player, prestige } = parser.parseText(
     buffer,
     { encoding: "windows1252" },
@@ -30,5 +38,17 @@ console.timeLog("read file");
     }
   );
   console.log(`player: ${player} | prestige: ${prestige}`);
-  console.timeLog("parse text");
+  console.timeLog("parse text at");
+
+  console.time("parse text json");
+  const out = parser.parseText(
+    buffer,
+    { encoding: "windows1252" },
+    (query) => query.json(),
+  );
+  console.timeLog("parse text json");
+
+  console.time("parse json")
+  JSON.parse(out);
+  console.timeLog("parse json")
 })();
