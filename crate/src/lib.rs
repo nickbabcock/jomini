@@ -298,11 +298,11 @@ impl Query {
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
                 let io = InObjectifier::new(&self.tape, Windows1252Encoding::new());
-                Ok(io.from_root().into())
+                Ok(io.from_root())
             }
             _ => {
                 let io = InObjectifier::new(&self.tape, Utf8Encoding::new());
-                Ok(io.from_root().into())
+                Ok(io.from_root())
             }
         }
     }
