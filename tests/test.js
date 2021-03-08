@@ -539,3 +539,65 @@ test("should parse subsequent unordered objects", async (t) => {
   };
   t.deepEqual(await parse(str), expected);
 });
+
+test("should serialize to json", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "foo=bar";
+  const expected = '{"foo":"bar"}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json()
+  );
+  t.deepEqual(out, expected);
+});
+
+test("should serialize to json simple types", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "foo=bar num=1 bool=no bool2=yes pi=3.14";
+  const expected = '{"foo":"bar","num":1,"bool":false,"bool2":true,"pi":3.14}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json()
+  );
+  t.deepEqual(out, expected);
+});
+
+test("should serialize to json object", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "foo={prop=a bar={num=1}}";
+  const expected = '{"foo":{"prop":"a","bar":{"num":1}}}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json()
+  );
+  t.deepEqual(out, expected);
+});
+
+
+test("should serialize to json array", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "nums={1 2 3 4}";
+  const expected = '{"nums":[1,2,3,4]}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json()
+  );
+  t.deepEqual(out, expected);
+});
+
+test("should serialize to json consecutive field values", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "core=AAA core=BBB";
+  const expected = '{"core":["AAA","BBB"]}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json()
+  );
+  t.deepEqual(out, expected);
+});
+
+test("should serialize to json header", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "color = rgb { 100 200 150 }";
+  const expected = '{"color":{"rgb":[100,200,150]}}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json()
+  );
+  t.deepEqual(out, expected);
+});
+
