@@ -434,6 +434,19 @@ test("should handle less than operator object", async (t) => {
   });
 });
 
+test("should serialize large numbers as strings", async (t) => {
+  t.deepEqual(await parse("val = 18446744073709547616"), {
+    val: "18446744073709547616",
+  });
+});
+
+test("should serialize large negative numbers as strings", async (t) => {
+  t.deepEqual(await parse("val = -90071992547409097"), {
+    val: "-90071992547409097",
+  });
+});
+
+
 test("should handle hsv", async (t) => {
   t.deepEqual(await parse("color = hsv { 0.5 0.2 0.8 }"), {
     color: { hsv: [0.5, 0.2, 0.8] },
@@ -595,6 +608,26 @@ test("should serialize to json header", async (t) => {
   const jomini = await Jomini.initialize();
   const str = "color = rgb { 100 200 150 }";
   const expected = '{"color":{"rgb":[100,200,150]}}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json()
+  );
+  t.deepEqual(out, expected);
+});
+
+test("should serialize large numbers as strings in json", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "identity = 18446744073709547616";
+  const expected = '{"identity":"18446744073709547616"}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json()
+  );
+  t.deepEqual(out, expected);
+});
+
+test("should serialize large negative numbers as strings in json", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "identity = -90071992547409097";
+  const expected = '{"identity":"-90071992547409097"}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
     q.json()
   );
