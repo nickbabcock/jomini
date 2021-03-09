@@ -634,3 +634,19 @@ test("should serialize large negative numbers as strings in json", async (t) => 
   t.deepEqual(out, expected);
 });
 
+test("should serialize to json object pretty", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "foo={prop=a bar={num=1}}";
+  const expected = `{
+  "foo": {
+    "prop": "a",
+    "bar": {
+      "num": 1
+    }
+  }
+}`;
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json({ pretty: true })
+  );
+  t.deepEqual(out, expected);
+});

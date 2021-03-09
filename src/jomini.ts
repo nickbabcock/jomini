@@ -72,6 +72,16 @@ export class Jomini {
   };
 }
 
+/**
+ * Tweaks the knobs used in JSON generation
+ */
+ export type JsonOptions = {
+  /**
+   * If the JSON should be pretty-printed. Defaults to false
+   */
+  pretty: boolean;
+};
+
 export class Query {
   constructor(private query: WasmQuery) {
   }
@@ -92,8 +102,10 @@ export class Query {
   }
 
   /** Convert the entire document into a JSON string */
-  json(): string {
-    return this.query.json();
+  json(
+    options?: Partial<JsonOptions>,
+  ): string {
+    return this.query.json(options?.pretty || false);
   }
 
   /** Internal, do not use */

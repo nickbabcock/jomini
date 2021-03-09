@@ -308,18 +308,28 @@ impl Query {
     }
 
     /// Convert the entire document into a JSON string
-    pub fn json(&self) -> Result<JsValue, JsValue> {
+    pub fn json(&self, pretty: bool) -> Result<JsValue, JsValue> {
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
                 let reader = SerTape::new(&self.tape, Windows1252Encoding::new());
-                let result = serde_json::to_string(&reader).unwrap();
-                let val = JsValue::from_str(&result);
+                let result = if pretty {
+                    serde_json::to_string_pretty(&reader)
+                } else {
+                    serde_json::to_string(&reader)
+                };
+
+                let val = JsValue::from_str(&result.unwrap());
                 Ok(val)
             }
             _ => {
                 let reader = SerTape::new(&self.tape, Utf8Encoding::new());
-                let result = serde_json::to_string(&reader).unwrap();
-                let val = JsValue::from_str(&result);
+                let result = if pretty {
+                    serde_json::to_string_pretty(&reader)
+                } else {
+                    serde_json::to_string(&reader)
+                };
+
+                let val = JsValue::from_str(&result.unwrap());
                 Ok(val)
             }
         }
