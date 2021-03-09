@@ -16,19 +16,18 @@ where
         return s.serialize_bool(x);
     }
 
-    if let Ok(x) = scalar.to_u64() {
-        return s.serialize_u64(x);
-    }
+    let signed = scalar.to_i64();
+    let unsigned = scalar.to_u64();
+    let float = scalar.to_f64();
 
-    if let Ok(x) = scalar.to_i64() {
-        return s.serialize_i64(x);
+    // We only want to serialize numbers that are perfectly representable
+    // with 64 bit floating point, else the value will be stringified
+    match (signed, unsigned, float) {
+        (Ok(x), _, Ok(_)) => s.serialize_i64(x),
+        (_, Ok(x), Ok(_)) => s.serialize_u64(x),
+        (_, _, Ok(f)) => s.serialize_f64(f),
+        _ => s.serialize_str(reader.read_str().unwrap().deref()),
     }
-
-    if let Ok(x) = scalar.to_f64() {
-        return s.serialize_f64(x);
-    }
-
-    s.serialize_str(reader.read_str().unwrap().deref())
 }
 
 pub(crate) struct SerValue<'data, 'tokens, 'reader, E> {
