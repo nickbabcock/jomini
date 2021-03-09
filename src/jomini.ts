@@ -80,6 +80,17 @@ export class Jomini {
    * If the JSON should be pretty-printed. Defaults to false
    */
   pretty: boolean;
+
+  /**
+   * Determines how duplicate keys are disambiguated from arrays. The default of
+   * "none" means that there is no disambiguation and that duplicate keys will
+   * be aggregated into an array and appear similar to other arrays. "keys" will
+   * write duplicate keys back into the JSON but it is debateable whether duplicate
+   * keys is considered valid JSON. "typed" is an overly verbose format that translates
+   * objects into arrays of key value tuples -- arrays are also transformed in this
+   * process to explicitly list their type as `array`
+   */
+  disambiguate: "none" | "keys" | "typed";
 };
 
 export class Query {
@@ -105,7 +116,7 @@ export class Query {
   json(
     options?: Partial<JsonOptions>,
   ): string {
-    return this.query.json(options?.pretty || false);
+    return this.query.json(options?.pretty || false, options?.disambiguate || "none");
   }
 
   /** Internal, do not use */

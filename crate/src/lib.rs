@@ -3,7 +3,7 @@ use jomini::{
     ValueReader, Windows1252Encoding,
 };
 use js_sys::{Array, Date};
-use ser::SerTape;
+use ser::{DisambiguateMode, SerTape};
 use std::fmt::Write;
 use wasm_bindgen::prelude::*;
 mod op;
@@ -308,10 +308,16 @@ impl Query {
     }
 
     /// Convert the entire document into a JSON string
-    pub fn json(&self, pretty: bool) -> Result<JsValue, JsValue> {
+    pub fn json(&self, pretty: bool, disambiguate: &str) -> Result<JsValue, JsValue> {
+        let disam_mode = match disambiguate {
+            "keys" => DisambiguateMode::Keys,
+            "typed" => DisambiguateMode::Typed,
+            _ => DisambiguateMode::None,
+        };
+
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
-                let reader = SerTape::new(&self.tape, Windows1252Encoding::new());
+                let reader = SerTape::new(&self.tape, Windows1252Encoding::new(), disam_mode);
                 let result = if pretty {
                     serde_json::to_string_pretty(&reader)
                 } else {
@@ -322,7 +328,7 @@ impl Query {
                 Ok(val)
             }
             _ => {
-                let reader = SerTape::new(&self.tape, Utf8Encoding::new());
+                let reader = SerTape::new(&self.tape, Utf8Encoding::new(), disam_mode);
                 let result = if pretty {
                     serde_json::to_string_pretty(&reader)
                 } else {
