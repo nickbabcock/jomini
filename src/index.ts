@@ -1,3 +1,2 @@
-export { Jomini, ParseOptions, Encoding } from "./jomini";
+export { Jomini, ParseOptions, Encoding, Query } from "./jomini";
 export { toArray } from "./toArray";
-export { Query } from "./pkg/jomini_js";

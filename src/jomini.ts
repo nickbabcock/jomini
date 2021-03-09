@@ -1,4 +1,4 @@
-import init, { parse_text, Query } from "./pkg/jomini_js";
+import init, { parse_text, Query as WasmQuery } from "./pkg/jomini_js";
 import jomini_wasm from "./pkg/jomini_js_bg.wasm";
 
 /**
@@ -44,7 +44,8 @@ export class Jomini {
       var inp = data;
     }
 
-    const query = parse_text(inp, options?.encoding ?? "utf8");
+    const query = new Query(parse_text(inp, options?.encoding ?? "utf8"));
+
     if (cb === undefined) {
       const val = query.root();
       query.free();
@@ -69,4 +70,34 @@ export class Jomini {
 
     return new Jomini();
   };
+}
+
+export class Query {
+  constructor(private query: WasmQuery) {
+  }
+
+  /** Convert the entire document into an object */
+  root(): Object {
+    return this.query.root();
+  }
+
+  /**
+   * Narrow down the document to just the specified property
+   *
+   * @param pointer the JSON pointer-esque string to the desired value
+   * @returns object, array, or value identified by the query
+   */
+  at(pointer: string): any {
+    return this.query.at(pointer)
+  }
+
+  /** Convert the entire document into a JSON string */
+  json(): string {
+    return this.query.json();
+  }
+
+  /** Internal, do not use */
+  free() {
+    this.query.free();
+  }
 }
