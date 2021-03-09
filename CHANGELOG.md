@@ -1,3 +1,20 @@
+## v0.4.0 - 2020-03-08
+
+New API: requesting the parsed file be converted to JSON:
+
+```js
+const parser = await Jomini.initialize();
+const jsonString = parser.parseText(
+  buffer, 
+  { encoding: "windows1252" },
+  (q) => q.json()
+);
+```
+
+The JSON will contain object keys in the order as they appear in the file (instead of it being browser dependent). The JSON API is fast too, producing the JSON and then parsing the JSON is still 3x faster than parsing the file directly to a JS object.
+
+Additionally integers that can't losslessly represented by a 64 bit floating point number are now represented as strings instead of numbers with a loss of precision.
+
 ## v0.3.10 - 2020-02-18
 
 Support for parsing Victoria II saves that contain an extraneous closing brace
