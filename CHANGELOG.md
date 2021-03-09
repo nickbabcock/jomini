@@ -1,3 +1,7 @@
+## v0.4.1 - 2020-03-09
+
+Fix wasm not being bundled inside the JS distribution
+
 ## v0.4.0 - 2020-03-08
 
 New API: requesting the parsed file be converted to JSON:
