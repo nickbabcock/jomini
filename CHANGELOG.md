@@ -1,3 +1,9 @@
+## v0.4.2 - 2020-03-09
+
+- Add option to prettify JSON output
+- Add option to define how to deal with duplicate keys when generating JSON
+- Enhance types on `Query` object
+
 ## v0.4.1 - 2020-03-09
 
 Fix wasm not being bundled inside the JS distribution
