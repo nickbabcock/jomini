@@ -13,7 +13,7 @@ Jomini is a javascript library that is able to parse **plaintext** save and game
 - ✔ Correctness: The same parser underpins [Rakaly](https://rakaly.com/eu4), the EU4 achievement leaderboard, and the [Paradox Game Converters's](https://github.com/ParadoxGameConverters/EU4toVic2) ironman to plaintext converter
 - ✔ Ergonomic: Data parsed into plain javascript objects or JSON
 - ✔ Self-contained: zero runtime dependencies
-- ✔ Small: 70 KB when gzipped
+- ✔ Small: 75 KB when gzipped
 
 ## Install
 
@@ -119,6 +119,64 @@ The keys of the stringified JSON object are in the order as they appear in the f
 Interestingly, even though using JSON adds a layer, constructing and parsing the JSON into a JS object is still 3x faster than when a JS object is constructed directly. This must be a testament to how tuned browser JSON parsers are.
 
 The JSON format does not change how dates are encoded, so dates are written into the JSON exactly as they appear in the original file.
+
+The JSON generator contains options to tweak the output.
+
+To pretty print the output:
+
+```js
+parser.parseText(buffer, { }, (q) => q.json({ pretty: true }));
+```
+
+There is an option to decide how duplicate keys are disambiguated. For instance, given the following data:
+
+```
+core="AAA"
+core="BBB"
+```
+
+The default behavior (the disambiguation of "none") will encode the above as:
+
+```json
+{
+  "core": ["AAA", "BBB"]
+}
+```
+
+The default behavior favors ergonomics over preserving structure as most users probably aren't in need to know if a JSON array appeared as an array in the data. This behavior can be tweaked so that duplicate keys are retained:
+
+```js
+parser.parseText(buffer, { }, (q) => q.json({ disambiguate: "keys" }));
+```
+
+will output:
+
+```json
+{
+  "core": "AAA",
+  "core": "BBB"
+}
+```
+
+But whether or not the above is [valid JSON is debateable](https://stackoverflow.com/q/21832701). So the last disambiguation mode transforms key value objects to an array of key value tuples:
+
+```js
+parser.parseText(buffer, { }, (q) => q.json({ disambiguate: "typed" }));
+```
+
+will output:
+
+```json
+{
+  "type": "obj",
+  "val": [
+    ["core", "AAA"],
+    ["core", "BBB"]
+  ]
+}
+```
+
+The output is ugly and verbose, but it's valid JSON and preserves the original structure. Arrays will have the type of `array`.
 
 ## Data Mangling
 

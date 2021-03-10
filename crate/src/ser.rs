@@ -6,6 +6,14 @@ use serde::{
 };
 use std::{cell::RefCell, ops::Deref};
 
+/// See the JS comments about this field
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DisambiguateMode {
+    None,
+    Keys,
+    Typed,
+}
+
 fn serialize_scalar<E, S>(reader: &ValueReader<E>, s: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
@@ -32,6 +40,7 @@ where
 
 pub(crate) struct SerValue<'data, 'tokens, 'reader, E> {
     reader: &'reader ValueReader<'data, 'tokens, E>,
+    mode: DisambiguateMode,
 }
 
 impl<'data, 'tokens, 'reader, E> Serialize for SerValue<'data, 'tokens, 'reader, E>
@@ -50,6 +59,7 @@ where
                 let array_reader = self.reader.read_array().unwrap();
                 let seq = SerArray {
                     reader: RefCell::new(array_reader),
+                    mode: self.mode,
                 };
                 seq.serialize(serializer)
             }
@@ -57,6 +67,7 @@ where
                 let object_reader = self.reader.read_object().unwrap();
                 let map = SerTape {
                     reader: RefCell::new(object_reader),
+                    mode: self.mode,
                 };
                 map.serialize(serializer)
             }
@@ -70,6 +81,7 @@ where
                     &key_reader.read_str().unwrap(),
                     &SerValue {
                         reader: &value_reader,
+                        mode: self.mode,
                     },
                 )?;
                 map.end()
@@ -81,15 +93,17 @@ where
 
 pub(crate) struct SerTape<'data, 'tokens, E> {
     reader: RefCell<ObjectReader<'data, 'tokens, E>>,
+    mode: DisambiguateMode,
 }
 
 impl<'data, 'tokens, E> SerTape<'data, 'tokens, E>
 where
     E: Encoding + Clone,
 {
-    pub fn new(tape: &'tokens TextTape<'data>, encoding: E) -> Self {
+    pub fn new(tape: &'tokens TextTape<'data>, encoding: E, mode: DisambiguateMode) -> Self {
         SerTape {
             reader: RefCell::new(ObjectReader::new(tape, encoding)),
+            mode,
         }
     }
 }
@@ -102,36 +116,69 @@ where
     where
         S: Serializer,
     {
-        let mut reader = self.reader.borrow_mut();
-        let mut map = serializer.serialize_map(None)?;
-        while let Some((key, mut entries)) = reader.next_fields() {
-            if entries.len() == 1 {
-                let (op, val) = entries.pop().unwrap();
-                let v = OperatorValue {
-                    operator: op,
-                    value: val,
-                };
+        match self.mode {
+            DisambiguateMode::None => {
+                let mut reader = self.reader.borrow_mut();
+                let mut map = serializer.serialize_map(None)?;
+                while let Some((key, mut entries)) = reader.next_fields() {
+                    if entries.len() == 1 {
+                        let (op, val) = entries.pop().unwrap();
+                        let v = OperatorValue {
+                            operator: op,
+                            value: val,
+                            mode: self.mode,
+                        };
 
-                map.serialize_entry(&key.read_str(), &v)?;
-            } else {
-                let values: Vec<_> = entries
-                    .into_iter()
-                    .map(|(op, val)| OperatorValue {
+                        map.serialize_entry(&key.read_str(), &v)?;
+                    } else {
+                        let values: Vec<_> = entries
+                            .into_iter()
+                            .map(|(op, val)| OperatorValue {
+                                operator: op,
+                                value: val,
+                                mode: self.mode,
+                            })
+                            .collect();
+                        map.serialize_entry(&key.read_str(), &values)?;
+                    }
+                }
+
+                map.end()
+            }
+            DisambiguateMode::Keys => {
+                let mut reader = self.reader.borrow_mut();
+                let mut map = serializer.serialize_map(None)?;
+                while let Some((key, op, val)) = reader.next_field() {
+                    let v = OperatorValue {
                         operator: op,
                         value: val,
-                    })
-                    .collect();
-                map.serialize_entry(&key.read_str(), &values)?;
+                        mode: self.mode,
+                    };
+                    map.serialize_entry(&key.read_str(), &v)?;
+                }
+
+                map.end()
+            }
+            DisambiguateMode::Typed => {
+                let mut map = serializer.serialize_map(None)?;
+                map.serialize_entry("type", "obj")?;
+                map.serialize_entry(
+                    "val",
+                    &SerTapeTyped {
+                        reader: self.reader.clone(),
+                        mode: self.mode,
+                    },
+                )?;
+                map.end()
             }
         }
-
-        map.end()
     }
 }
 
 pub(crate) struct OperatorValue<'data, 'tokens, E> {
     operator: Option<Operator>,
     value: ValueReader<'data, 'tokens, E>,
+    mode: DisambiguateMode,
 }
 
 impl<'data, 'tokens, E> Serialize for OperatorValue<'data, 'tokens, E>
@@ -145,21 +192,31 @@ where
         if let Some(op) = self.operator {
             let mut map = serializer.serialize_map(None)?;
             let reader = &self.value;
-            map.serialize_entry(op::operator_name(op), &SerValue { reader })?;
+            map.serialize_entry(
+                op::operator_name(op),
+                &SerValue {
+                    reader,
+                    mode: self.mode,
+                },
+            )?;
             map.end()
         } else {
             let reader = &self.value;
-            let vs = SerValue { reader };
+            let vs = SerValue {
+                reader,
+                mode: self.mode,
+            };
             vs.serialize(serializer)
         }
     }
 }
 
-pub(crate) struct SerArray<'data, 'tokens, E> {
+pub(crate) struct InnerSerArray<'data, 'tokens, E> {
     reader: RefCell<ArrayReader<'data, 'tokens, E>>,
+    mode: DisambiguateMode,
 }
 
-impl<'data, 'tokens, E> Serialize for SerArray<'data, 'tokens, E>
+impl<'data, 'tokens, E> Serialize for InnerSerArray<'data, 'tokens, E>
 where
     E: Encoding + Clone,
 {
@@ -173,8 +230,66 @@ where
             let v = OperatorValue {
                 operator: None,
                 value,
+                mode: self.mode,
             };
             seq.serialize_element(&v)?;
+        }
+
+        seq.end()
+    }
+}
+
+pub(crate) struct SerArray<'data, 'tokens, E> {
+    reader: RefCell<ArrayReader<'data, 'tokens, E>>,
+    mode: DisambiguateMode,
+}
+
+impl<'data, 'tokens, E> Serialize for SerArray<'data, 'tokens, E>
+where
+    E: Encoding + Clone,
+{
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let inner = InnerSerArray {
+            reader: self.reader.clone(),
+            mode: self.mode,
+        };
+
+        if self.mode != DisambiguateMode::Typed {
+            inner.serialize(serializer)
+        } else {
+            let mut map = serializer.serialize_map(None)?;
+            map.serialize_entry("type", "array")?;
+            map.serialize_entry("val", &inner)?;
+            map.end()
+        }
+    }
+}
+
+pub(crate) struct SerTapeTyped<'data, 'tokens, E> {
+    reader: RefCell<ObjectReader<'data, 'tokens, E>>,
+    mode: DisambiguateMode,
+}
+
+impl<'data, 'tokens, E> Serialize for SerTapeTyped<'data, 'tokens, E>
+where
+    E: Encoding + Clone,
+{
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut reader = self.reader.borrow_mut();
+        let mut seq = serializer.serialize_seq(None)?;
+        while let Some((key, op, val)) = reader.next_field() {
+            let v = OperatorValue {
+                operator: op,
+                value: val,
+                mode: self.mode,
+            };
+            seq.serialize_element(&(key.read_str(), &v))?;
         }
 
         seq.end()

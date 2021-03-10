@@ -650,3 +650,33 @@ test("should serialize to json object pretty", async (t) => {
   );
   t.deepEqual(out, expected);
 });
+
+test("should serialize to json disambiguate keys", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "core=AAA core=BBB";
+  const expected = '{"core":"AAA","core":"BBB"}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json({ disambiguate: "keys" })
+  );
+  t.deepEqual(out, expected);
+});
+
+test("should serialize to json disambiguate typed", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "core=AAA core=BBB";
+  const expected = '{"type":"obj","val":[["core","AAA"],["core","BBB"]]}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json({ disambiguate: "typed" })
+  );
+  t.deepEqual(out, expected);
+});
+
+test("should serialize to json disambiguate typed arrays", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "nums={1 2}";
+  const expected = '{"type":"obj","val":[["nums",{"type":"array","val":[1,2]}]]}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json({ disambiguate: "typed" })
+  );
+  t.deepEqual(out, expected);
+});
