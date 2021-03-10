@@ -3,7 +3,7 @@
  * This function is useful when dealing with documents where a single occurence of
  * a field can be mistaken for a scalar value instead of an array. This function
  * ensures that all properties that need to be arrays are arrays.
- * 
+ *
  * @param obj The array or object to mutate
  * @param path The path to a field to ensure it is an array
  */

@@ -23,7 +23,7 @@ export class Jomini {
 
   /**
    * Parses plain text data into javascript values
-   * 
+   *
    * @param data The data to parse, can either be raw bytes or a string. If given a string, the
    * string will be encoded as utf-8. Else if given bytes, they are assumed to be utf-8 unless the
    * windows1252 is passed as the encoding.
@@ -35,7 +35,7 @@ export class Jomini {
   public parseText<T>(
     data: Uint8Array | string,
     options?: Partial<ParseOptions>,
-    cb?: ((arg0: Query) => T)
+    cb?: (arg0: Query) => T
   ) {
     if (typeof data === "string") {
       var inp = encoder.encode(data);
@@ -75,7 +75,7 @@ export class Jomini {
 /**
  * Tweaks the knobs used in JSON generation
  */
- export type JsonOptions = {
+export type JsonOptions = {
   /**
    * If the JSON should be pretty-printed. Defaults to false
    */
@@ -94,8 +94,7 @@ export class Jomini {
 };
 
 export class Query {
-  constructor(private query: WasmQuery) {
-  }
+  constructor(private query: WasmQuery) {}
 
   /** Convert the entire document into an object */
   root(): Object {
@@ -109,14 +108,15 @@ export class Query {
    * @returns object, array, or value identified by the query
    */
   at(pointer: string): any {
-    return this.query.at(pointer)
+    return this.query.at(pointer);
   }
 
   /** Convert the entire document into a JSON string */
-  json(
-    options?: Partial<JsonOptions>,
-  ): string {
-    return this.query.json(options?.pretty || false, options?.disambiguate || "none");
+  json(options?: Partial<JsonOptions>): string {
+    return this.query.json(
+      options?.pretty || false,
+      options?.disambiguate || "none"
+    );
   }
 
   /** Internal, do not use */
