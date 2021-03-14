@@ -1,3 +1,7 @@
+## v0.4.3 - 2020-03-14
+
+- Bug fixes to internal parser to properly handle more edge cases (unseen in the wild) instead of panicking
+
 ## v0.4.2 - 2020-03-09
 
 - Add option to prettify JSON output
