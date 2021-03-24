@@ -1,3 +1,18 @@
+## v0.4.4 - 2020-03-24
+
+Added the ability to properly expose a document with an object trailer:
+
+```
+area = { color = { 10 } 1 2 }
+```
+
+The trailing "1 2" is referred to as the object trailer and will now be
+exposed as the `trailer` property:
+
+```js
+area: { color: [10], trailer: [1, 2] }
+```
+
 ## v0.4.3 - 2020-03-14
 
 - Bug fixes to internal parser to properly handle more edge cases (unseen in the wild) instead of panicking
