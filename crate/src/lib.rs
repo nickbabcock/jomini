@@ -230,6 +230,10 @@ where
             result.set(key_js, value_js);
         }
 
+        if let Some(trailer) = reader.at_trailer() {
+            result.set(JsValue::from_str("trailer"), self.create_array(trailer));
+        }
+
         result
     }
 

@@ -143,6 +143,14 @@ where
                     }
                 }
 
+                if let Some(trailer) = reader.at_trailer() {
+                    let seq = SerArray {
+                        reader: RefCell::new(trailer),
+                        mode: self.mode,
+                    };
+                    map.serialize_entry("trailer", &seq)?;
+                }
+
                 map.end()
             }
             DisambiguateMode::Keys => {
@@ -155,6 +163,14 @@ where
                         mode: self.mode,
                     };
                     map.serialize_entry(&key.read_str(), &v)?;
+                }
+
+                if let Some(trailer) = reader.at_trailer() {
+                    let seq = SerArray {
+                        reader: RefCell::new(trailer),
+                        mode: self.mode,
+                    };
+                    map.serialize_entry("trailer", &seq)?;
                 }
 
                 map.end()
@@ -290,6 +306,15 @@ where
                 mode: self.mode,
             };
             seq.serialize_element(&(key.read_str(), &v))?;
+        }
+
+        if let Some(trailer) = reader.at_trailer() {
+            let trailer_array = InnerSerArray {
+                reader: RefCell::new(trailer),
+                mode: self.mode,
+            };
+
+            seq.serialize_element(&trailer_array)?;
         }
 
         seq.end()
