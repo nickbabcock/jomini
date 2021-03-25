@@ -1,4 +1,20 @@
-## v0.4.4 - 2020-03-24
+## v0.4.5 - 2021-03-24
+
+Fix inaccuracy in float parsing numbers in the range of (-1, 0). Previously
+
+```
+foo=-0.5
+```
+
+and
+
+```
+foo=0.5
+```
+
+would parse to the same value. This has been fixed.
+
+## v0.4.4 - 2021-03-24
 
 Added the ability to properly expose a document with an object trailer:
 
@@ -13,21 +29,21 @@ exposed as the `trailer` property:
 area: { color: [10], trailer: [1, 2] }
 ```
 
-## v0.4.3 - 2020-03-14
+## v0.4.3 - 2021-03-14
 
 - Bug fixes to internal parser to properly handle more edge cases (unseen in the wild) instead of panicking
 
-## v0.4.2 - 2020-03-09
+## v0.4.2 - 2021-03-09
 
 - Add option to prettify JSON output
 - Add option to define how to deal with duplicate keys when generating JSON
 - Enhance types on `Query` object
 
-## v0.4.1 - 2020-03-09
+## v0.4.1 - 2021-03-09
 
 Fix wasm not being bundled inside the JS distribution
 
-## v0.4.0 - 2020-03-08
+## v0.4.0 - 2021-03-08
 
 New API: requesting the parsed file be converted to JSON:
 
@@ -44,7 +60,7 @@ The JSON will contain object keys in the order as they appear in the file (inste
 
 Additionally integers that can't losslessly represented by a 64 bit floating point number are now represented as strings instead of numbers with a loss of precision.
 
-## v0.3.10 - 2020-02-18
+## v0.3.10 - 2021-02-18
 
 Support for parsing Victoria II saves that contain an extraneous closing brace
 
