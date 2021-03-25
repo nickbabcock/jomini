@@ -75,6 +75,10 @@ test("should handle negative decimal number", async (t) => {
   t.deepEqual(await parse("foo=-1.23"), { foo: -1.23 });
 });
 
+test("should handle negative decimal number regression", async (t) => {
+  t.deepEqual(await parse("foo=-0.5"), { foo: -0.5 });
+});
+
 test("should handle number list accumulation", async (t) => {
   t.deepEqual(await parse("foo=1\nfoo=-1.23"), { foo: [1, -1.23] });
 });
