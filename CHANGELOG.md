@@ -1,4 +1,21 @@
-## v0.4.5 - 2021-03-24
+## v0.4.6 - 2021-03-27
+
+Allow extraneous closing brace at any point. Previously extraneous closing
+braces could only be at the end of the document (something seen in Vic II
+saves), but there are EU4 game files where an extraneous closing brace ocurrs
+in the middle (looking at you verona.txt):
+
+```
+a = { 1 }
+}
+b = 2
+```
+
+This release makes the parser purposely accept invalid documents in an
+effort to be as flexible as possible. Any file that is parseable by PDS
+should be parseable by us.
+
+## v0.4.5 - 2021-03-25
 
 Fix inaccuracy in float parsing numbers in the range of (-1, 0). Previously
 
