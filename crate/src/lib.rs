@@ -1,6 +1,6 @@
 use jomini::{
-    ArrayReader, Encoding, ObjectReader, Operator, Scalar, TextTape, TextToken, Utf8Encoding,
-    ValueReader, Windows1252Encoding,
+    ArrayReader, Encoding, ObjectReader, Operator, Scalar, ScalarReader, TextTape, TextToken,
+    Utf8Encoding, ValueReader, Windows1252Encoding,
 };
 use js_sys::{Array, Date};
 use ser::{DisambiguateMode, SerTape};
@@ -154,6 +154,22 @@ where
         JsValue::from_str(reader.read_str().unwrap().as_ref())
     }
 
+    fn parameter_to_js(&self, reader: ScalarReader<'a, E>, defined: bool) -> JsValue {
+        let body = reader.read_str();
+
+        let mut result = String::with_capacity(body.len() + 3);
+        result.push('[');
+
+        if !defined {
+            result.push('!');
+        }
+
+        result.push_str(body.as_ref());
+        result.push(']');
+
+        JsValue::from_str(&result)
+    }
+
     fn create_array(&self, mut reader: ArrayReader<'a, 'b, E>) -> JsValue {
         let len = reader.values_len();
         if len == 0 {
@@ -205,15 +221,28 @@ where
                 TextToken::Header(_) => {
                     self.create_from_header(veader.read_array().unwrap()).into()
                 }
-                TextToken::End(_) | TextToken::Operator(_) => JsValue::null(),
+
+                // parameters should not be seen as values
+                TextToken::End(_)
+                | TextToken::Operator(_)
+                | TextToken::Parameter(_)
+                | TextToken::UndefinedParameter(_) => JsValue::null(),
             }
+        }
+    }
+
+    fn scalar_to_key(&self, reader: ScalarReader<'a, E>) -> JsValue {
+        match reader.token() {
+            TextToken::Parameter(_) => self.parameter_to_js(reader, true),
+            TextToken::UndefinedParameter(_) => self.parameter_to_js(reader, false),
+            _ => JsValue::from_str(reader.read_str().as_ref()),
         }
     }
 
     fn create_object(&self, mut reader: ObjectReader<'a, 'b, E>) -> Object {
         let result = Object::new();
         while let Some((key, mut entries)) = reader.next_fields() {
-            let key_js = JsValue::from_str(key.read_str().as_ref());
+            let key_js = self.scalar_to_key(key);
 
             let value_js = if entries.len() == 1 {
                 let (op, value) = entries.pop().unwrap();

@@ -1,5 +1,7 @@
 use crate::op;
-use jomini::{ArrayReader, Encoding, ObjectReader, Operator, TextTape, TextToken, ValueReader};
+use jomini::{
+    ArrayReader, Encoding, ObjectReader, Operator, ScalarReader, TextTape, TextToken, ValueReader,
+};
 use serde::{
     ser::{SerializeMap, SerializeSeq},
     Serialize, Serializer,
@@ -36,6 +38,22 @@ where
         (_, _, Ok(f)) => s.serialize_f64(f),
         _ => s.serialize_str(reader.read_str().unwrap().deref()),
     }
+}
+
+fn serialize_parameter<S>(body: &str, defined: bool, s: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    let mut result = String::with_capacity(body.len() + 3);
+    result.push('[');
+
+    if !defined {
+        result.push('!');
+    }
+
+    result.push_str(body.as_ref());
+    result.push(']');
+    s.serialize_str(&result)
 }
 
 pub(crate) struct SerValue<'data, 'tokens, 'reader, E> {
@@ -86,7 +104,10 @@ where
                 )?;
                 map.end()
             }
-            TextToken::End(_) | TextToken::Operator(_) => serializer.serialize_none(),
+            TextToken::End(_)
+            | TextToken::Operator(_)
+            | TextToken::Parameter(_)
+            | TextToken::UndefinedParameter(_) => serializer.serialize_none(),
         }
     }
 }
@@ -129,7 +150,7 @@ where
                             mode: self.mode,
                         };
 
-                        map.serialize_entry(&key.read_str(), &v)?;
+                        map.serialize_entry(&KeyScalarWrapper { reader: key }, &v)?;
                     } else {
                         let values: Vec<_> = entries
                             .into_iter()
@@ -139,7 +160,7 @@ where
                                 mode: self.mode,
                             })
                             .collect();
-                        map.serialize_entry(&key.read_str(), &values)?;
+                        map.serialize_entry(&KeyScalarWrapper { reader: key }, &values)?;
                     }
                 }
 
@@ -162,7 +183,7 @@ where
                         value: val,
                         mode: self.mode,
                     };
-                    map.serialize_entry(&key.read_str(), &v)?;
+                    map.serialize_entry(&KeyScalarWrapper { reader: key }, &v)?;
                 }
 
                 if let Some(trailer) = reader.at_trailer() {
@@ -305,7 +326,7 @@ where
                 value: val,
                 mode: self.mode,
             };
-            seq.serialize_element(&(key.read_str(), &v))?;
+            seq.serialize_element(&(KeyScalarWrapper { reader: key }, &v))?;
         }
 
         if let Some(trailer) = reader.at_trailer() {
@@ -318,5 +339,26 @@ where
         }
 
         seq.end()
+    }
+}
+
+pub(crate) struct KeyScalarWrapper<'data, E> {
+    reader: ScalarReader<'data, E>,
+}
+
+impl<'data, E> Serialize for KeyScalarWrapper<'data, E>
+where
+    E: Encoding + Clone,
+{
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let body = self.reader.read_str();
+        match self.reader.token() {
+            TextToken::Parameter(_) => serialize_parameter(&body, true, serializer),
+            TextToken::UndefinedParameter(_) => serialize_parameter(&body, false, serializer),
+            _ => serializer.serialize_str(&body),
+        }
     }
 }
