@@ -135,6 +135,18 @@ test("should handle empty object", async (t) => {
   t.deepEqual(await parse("foo = {}"), { foo: {} });
 });
 
+test("should handle parameter definition value", async (t) => {
+  t.deepEqual(await parse("foo = { [[add] $add$]}"), { foo: { "[add]": "$add$" } });
+});
+
+test("should handle parameter definitions", async (t) => {
+  t.deepEqual(await parse("foo = { [[add] if={a=b}]}"), { foo: { "[add]": {if: {a: "b"}}} });
+});
+
+test("should handle undefined parameter definitions", async (t) => {
+  t.deepEqual(await parse("foo = { [[!add] if={a=b}]}"), { foo: { "[!add]": {if: {a: "b"}}} });
+});
+
 test("should parse through extra trailing brace", async (t) => {
   t.deepEqual(await parse("foo = { bar } }"), { foo: ["bar"] });
 });
@@ -703,6 +715,27 @@ test("should serialize object trailers to json typed", async (t) => {
   const str = "area = { color = { 10 } 1 2 }";
   const expected =
     '{"type":"obj","val":[["area",{"type":"obj","val":[["color",{"type":"array","val":[10]}],[1,2]]}]]}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json({ disambiguate: "typed" })
+  );
+  t.deepEqual(out, expected);
+});
+
+test("should serialize parameter definitions to json typed", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "generate_advisor = { [[scaled_skill] a=b ] [[!scaled_skill] c=d ]  }";
+  const expected =
+    '{"type":"obj","val":[["generate_advisor",{"type":"obj","val":[["[scaled_skill]",{"type":"obj","val":[["a","b"]]}],["[!scaled_skill]",{"type":"obj","val":[["c","d"]]}]]}]]}';
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json({ disambiguate: "typed" })
+  );
+  t.deepEqual(out, expected);
+});
+
+test("should serialize parameter definition value to json typed", async (t) => {
+  const jomini = await Jomini.initialize();
+  const str = "foo = { [[add] $add$]}";
+  const expected = '{"type":"obj","val":[["foo",{"type":"obj","val":[["[add]","$add$"]]}]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
     q.json({ disambiguate: "typed" })
   );
