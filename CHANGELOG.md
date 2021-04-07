@@ -1,3 +1,21 @@
+## v0.4.7 - 2021-04-07
+
+Support for Eu4 parameter definition syntax:
+
+```
+each_estate_effect = {
+  if = {
+      limit = {
+              has_estate = estate_brahmins
+      }
+      [[effect] $effect$]
+      [[estate_action]
+        $estate_action$ = estate_brahmins
+      ]
+  }
+}
+```
+
 ## v0.4.6 - 2021-03-27
 
 Allow extraneous closing brace at any point. Previously extraneous closing
