@@ -1,3 +1,11 @@
+## v0.4.8 - 2021-04-26
+
+Support for Ck3 interpolated variable syntax:
+
+```
+position = @[1-leopard_x]
+```
+
 ## v0.4.7 - 2021-04-07
 
 Support for Eu4 parameter definition syntax:
