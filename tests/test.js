@@ -395,6 +395,12 @@ test("should handle variables", async (t) => {
   });
 });
 
+test("should handle interpolated variables", async (t) => {
+  t.deepEqual(await parse("position = @[1-leopard_x]"), {
+    "position": "@[1-leopard_x]",
+  });
+});
+
 test("should handle empty number keys", async (t) => {
   t.deepEqual(await parse("unit={ 2={ } 14={ } }"), {
     unit: { 2: {}, 14: {} },
