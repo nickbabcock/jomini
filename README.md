@@ -13,7 +13,7 @@ Jomini is a javascript library that is able to parse **plaintext** save and game
 - ✔ Correctness: The same parser underpins [Rakaly](https://rakaly.com/eu4), the EU4 achievement leaderboard, and the [Paradox Game Converters's](https://github.com/ParadoxGameConverters/EU4toVic2) ironman to plaintext converter
 - ✔ Ergonomic: Data parsed into plain javascript objects or JSON
 - ✔ Self-contained: zero runtime dependencies
-- ✔ Small: 75 KB when gzipped
+- ✔ Small: 80 KB when gzipped
 
 ## Install
 
