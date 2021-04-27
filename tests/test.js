@@ -111,6 +111,12 @@ test("should parse negative dates", async (t) => {
   });
 });
 
+test("should parse large negative dates", async (t) => {
+  t.deepEqual(await parse("date=-2500.1.1"), {
+    date: new Date(Date.UTC(-2500, 0, 1)),
+  });
+});
+
 test("should handle numbers as identifiers", async (t) => {
   t.deepEqual(await parse("158=10"), { 158: 10 });
 });
