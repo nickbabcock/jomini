@@ -1,3 +1,7 @@
+## v0.4.9 - 2021-04-27
+
+Support for prehistoric Eu4 Leviathan monument dates
+
 ## v0.4.8 - 2021-04-26
 
 Support for Ck3 interpolated variable syntax:
