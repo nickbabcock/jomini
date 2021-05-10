@@ -2,7 +2,7 @@
 
 # Jomini.js
 
-Jomini is a javascript library that is able to parse **plaintext** save and game files from Paradox Development Studios (Europa Universalis IV, Crusader Kings III, and others)
+Jomini is a javascript library that is able to parse **plaintext** save and game files from Paradox Development Studios produced on the Clausewitz engine (Europa Universalis IV (eu4), Crusader Kings III (ck3), Hearts of Iron 4 (hoi4), Stellaris, and others)
 
 > Aside: it's only by happenstance that this library and Paradox's own code share the same name (this library is older by several years).
 
@@ -10,7 +10,7 @@ Jomini is a javascript library that is able to parse **plaintext** save and game
 
 - ✔ Compatibility: Node 12+ and >90% of browsers
 - ✔ Speed: Parse at over 200 MB/s
-- ✔ Correctness: The same parser underpins [Rakaly](https://rakaly.com/eu4), the EU4 achievement leaderboard, and the [Paradox Game Converters's](https://github.com/ParadoxGameConverters/EU4toVic2) ironman to plaintext converter
+- ✔ Correctness: The same parser underpins [Rakaly](https://rakaly.com/eu4), a EU4 save game analyzer and leaderboard, and the [Paradox Game Converters's](https://github.com/ParadoxGameConverters/EU4toVic2) ironman to plaintext converter
 - ✔ Ergonomic: Data parsed into plain javascript objects or JSON
 - ✔ Self-contained: zero runtime dependencies
 - ✔ Small: 80 KB when gzipped
