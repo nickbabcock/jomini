@@ -194,7 +194,7 @@ test("should handle the object after empty object nested", async (t) => {
 
 test("should ignore empty objects with no identifier at end", async (t) => {
   t.deepEqual(await parse("foo={bar=val {}}  { } me=you"), {
-    foo: { bar: { val: {} } },
+    foo: { bar: 'val' },
     me: "you",
   });
 });
