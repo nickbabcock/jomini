@@ -1,4 +1,9 @@
-import init, { parse_text, Query as WasmQuery } from "./pkg/jomini_js";
+import init, {
+  parse_text,
+  Query as WasmQuery,
+  WasmWriter,
+  write_text,
+} from "./pkg/jomini_js";
 import jomini_wasm from "./pkg/jomini_js_bg.wasm";
 
 /**
@@ -55,6 +60,13 @@ export class Jomini {
       query.free();
       return val;
     }
+  }
+
+  public write(cb: (arg0: Writer) => void): Uint8Array {
+    let inner = write_text();
+    let writer = new Writer(inner);
+    cb(writer);
+    return inner.inner();
   }
 
   /**
@@ -122,5 +134,138 @@ export class Query {
   /** Internal, do not use */
   free() {
     this.query.free();
+  }
+}
+
+/**
+ * A text writer that accumulates commands written to an internal buffer
+ */
+export class Writer {
+  constructor(private writer: WasmWriter) {}
+
+  /**
+   * Write out the start of an object
+   */
+  write_object_start() {
+    this.writer.write_object_start();
+  }
+
+  /**
+   * Write out the start of a hidden object
+   */
+   write_hidden_object_start() {
+    this.writer.write_hidden_object_start();
+  }
+
+  /**
+   * Write out the start of an array
+   */
+  write_array_start() {
+    this.writer.write_array_start();
+  }
+
+  /**
+   * End the outermost object or array
+   */
+  write_end() {
+    this.writer.write_end();
+  }
+
+  /**
+   * Write out a yes or no
+   * @param data boolean to be written
+   */
+  write_bool(data: boolean) {
+    this.writer.write_bool(data);
+  }
+
+  /**
+   * Write out a non-equals operator
+   * @param data operator to write out
+   */
+  write_operator(data: ">" | ">=" | "<" | "<=") {
+    this.writer.write_operator(data);
+  }
+
+  /**
+   * Write unquoted data. Most, if not all object keys should be unquoted.
+   * @param data unquoted data to write
+   */
+  write_unquoted(data: Uint8Array | string) {
+    if (typeof data === "string") {
+      this.writer.write_unquoted(encoder.encode(data));
+    } else {
+      this.writer.write_unquoted(data);
+    }
+  }
+
+  /**
+   * Write a field to be encapsulated in quotes. Unlike the unquoted variant,
+   * this method will inspect the data to ensure everything is properly
+   * escaped, like quotes and escape characters. And will trim trailing
+   * newlines. Strings that are passed in are assumed to be UTF-8, so if
+   * you're wanting to write out EU4 data you'll want to first convert the
+   * payload to a windows 1252 byte array.
+   * @param data payload to be quoted
+   */
+  write_quoted(data: Uint8Array | string) {
+    if (typeof data === "string") {
+      this.writer.write_quoted(encoder.encode(data));
+    } else {
+      this.writer.write_quoted(data);
+    }
+  }
+
+  /**
+   * Write a header object like (rgb, hsv, LIST, etc). One will need to start an array
+   * or object after calling this method
+   * @param data the header
+   */
+  write_header(data: Uint8Array | string) {
+    if (typeof data === "string") {
+      this.writer.write_header(encoder.encode(data));
+    } else {
+      this.writer.write_header(data);
+    }
+  }
+
+  /**
+   * Write a signed number
+   * @param data signed payload
+   */
+  write_integer(data: number) {
+    this.writer.write_integer(data);
+  }
+
+  /**
+   * Write an unsigned big number
+   * @param data big number
+   */
+  write_u64(data: bigint) {
+    this.writer.write_u64(data);
+  }
+
+  /**
+   * Write a 32 bit floating point number
+   * @param data 32 bit floating point
+   */
+  write_f32(data: number) {
+    this.writer.write_f32(data);
+  }
+
+  /**
+   * Write a 64 bit floating point number
+   * @param data 64 bit floating point
+   */
+  write_f64(data: number) {
+    this.writer.write_f64(data);
+  }
+
+  /**
+   * Write a date
+   * @param date date
+   */
+  write_date(date: Date, options?: Partial<{hour: boolean}>,) {
+    this.writer.write_date(date, options?.hour || false);
   }
 }

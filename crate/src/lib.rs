@@ -1,13 +1,14 @@
 use jomini::{
     ArrayReader, Encoding, ObjectReader, Operator, Scalar, ScalarReader, TextTape, TextToken,
-    Utf8Encoding, ValueReader, Windows1252Encoding,
+    TextWriterBuilder, Utf8Encoding, ValueReader, Windows1252Encoding,
 };
 use js_sys::{Array, Date};
 use ser::{DisambiguateMode, SerTape};
-use std::fmt::Write;
 use wasm_bindgen::prelude::*;
+mod errors;
 mod op;
 mod ser;
+mod write;
 
 /// wee_alloc saved ~6kb in the wasm payload and there was no
 /// measurable performance difference
@@ -26,19 +27,6 @@ extern "C" {
 
     #[wasm_bindgen(method, indexing_setter)]
     fn set(this: &Object, key: JsValue, value: JsValue);
-}
-
-fn create_error_msg(err: &dyn std::error::Error) -> String {
-    let mut msg = String::new();
-    let _ = write!(msg, "{}", err);
-
-    let mut ie = err.source();
-    while let Some(cause) = ie {
-        let _ = write!(msg, ". Caused by: {}", cause);
-        ie = cause.source();
-    }
-
-    msg
 }
 
 fn data_to_js_date(data: &[u8]) -> Option<Date> {
@@ -98,7 +86,7 @@ fn data_to_js_date(data: &[u8]) -> Option<Date> {
         DateState::Day => {
             let res = Date::new(&JsValue::from_f64(Date::utc(y as f64, m as f64)));
             res.set_utc_date(d as u32);
-            res.set_utc_hours(x as u32);
+            res.set_utc_hours(x as u32 - 1);
             Some(res)
         }
         _ => None,
@@ -398,8 +386,7 @@ impl Query {
 pub fn parse_text(d: Vec<u8>, encoding: JsValue) -> Result<Query, JsValue> {
     let data = skip_header(d.as_slice());
 
-    let tape =
-        TextTape::from_slice(data).map_err(|e| JsValue::from_str(create_error_msg(&e).as_str()))?;
+    let tape = TextTape::from_slice(data).map_err(errors::create_error_val)?;
 
     // Cast away the lifetime so that we can store it in a wasm-bindgen compatible struct
     let tape: TextTape<'static> = unsafe { std::mem::transmute(tape) };
@@ -409,4 +396,11 @@ pub fn parse_text(d: Vec<u8>, encoding: JsValue) -> Result<Query, JsValue> {
         encoding,
         _backing_data: d,
     })
+}
+
+#[wasm_bindgen]
+pub fn write_text() -> Result<write::WasmWriter, JsValue> {
+    let sink = Vec::new();
+    let writer = TextWriterBuilder::new().from_writer(sink);
+    Ok(write::WasmWriter { writer })
 }

@@ -753,3 +753,75 @@ test("should serialize parameter definition value to json typed", async (t) => {
   );
   t.deepEqual(out, expected);
 });
+
+test("should write simple fields", async (t) => {
+  const jomini = await Jomini.initialize();
+  const out = jomini.write((writer) => {
+    writer.write_integer(1);
+    writer.write_integer(2);
+    writer.write_unquoted("foo");
+    writer.write_quoted("bar");
+  });
+
+  t.deepEqual(new TextDecoder().decode(out), '1=2\nfoo="bar"\n');
+});
+
+test("should write hidden object", async (t) => {
+  const jomini = await Jomini.initialize();
+  const out = jomini.write((writer) => {
+    writer.write_unquoted("foo");
+    writer.write_array_start();
+    writer.write_integer(1);
+    writer.write_hidden_object_start();
+    writer.write_unquoted("qux");
+    writer.write_unquoted("bar");
+    writer.write_unquoted("a");
+    writer.write_unquoted("b");
+    writer.write_end();
+    writer.write_unquoted("f");
+    writer.write_unquoted("d");
+  });
+
+  t.deepEqual(new TextDecoder().decode(out), 'foo={\n  1 qux=bar a=b\n}\nf=d\n');
+});
+
+test("should write readme example", async (t) => {
+  const jomini = await Jomini.initialize();
+  const out = jomini.write((writer) => {
+    writer.write_unquoted("data");
+    writer.write_object_start();
+    writer.write_unquoted("settings");
+    writer.write_array_start();
+    writer.write_integer(0);
+    writer.write_integer(1);
+    writer.write_end();
+    writer.write_unquoted("name");
+    writer.write_quoted("world");
+    writer.write_end();
+    writer.write_unquoted("color");
+    writer.write_header("rgb");
+    writer.write_array_start();
+    writer.write_integer(100);
+    writer.write_integer(150);
+    writer.write_integer(74);
+    writer.write_end();
+    writer.write_unquoted("start");
+    writer.write_date(new Date(Date.UTC(1444, 10, 11)));
+  });
+
+  t.deepEqual(
+    new TextDecoder().decode(out),
+    'data={\n  settings={\n    0 1\n  }\n  name="world"\n}\ncolor=rgb {\n  100 150 74\n}\nstart=1444.11.11\n'
+  );
+});
+
+test("should read and write hour date", async (t) => {
+  const jomini = await Jomini.initialize();
+  const obj = await parse("start_date=1936.1.1.1");
+  const out = jomini.write((writer) => {
+    writer.write_unquoted("start_date");
+    writer.write_date(obj.start_date, { hour: true });
+  });
+
+  t.deepEqual(new TextDecoder().decode(out), 'start_date=1936.1.1.1\n');
+})
