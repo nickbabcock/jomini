@@ -44,15 +44,16 @@ export class Jomini {
       var inp = data;
     }
 
-    const query = new Query(parse_text(inp, options?.encoding ?? "utf8"));
+    const innerQuery = parse_text(inp, options?.encoding ?? "utf8");
+    const query = new Query(innerQuery);
 
     if (cb === undefined) {
       const val = query.root();
-      query.free();
+      innerQuery.free();
       return val;
     } else {
       const val = cb(query);
-      query.free();
+      innerQuery.free();
       return val;
     }
   }
@@ -117,10 +118,5 @@ export class Query {
       options?.pretty || false,
       options?.disambiguate || "none"
     );
-  }
-
-  /** Internal, do not use */
-  free() {
-    this.query.free();
   }
 }
