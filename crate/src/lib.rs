@@ -1,5 +1,6 @@
 use jomini::{
-    ArrayReader, Encoding, ObjectReader, Operator, Scalar, ScalarReader, TextTape, TextToken,
+    common::{PdsDate, RawDate},
+    ArrayReader, Encoding, ObjectReader, Operator, ScalarReader, TextTape, TextToken,
     TextWriterBuilder, Utf8Encoding, ValueReader, Windows1252Encoding,
 };
 use js_sys::{Array, Date};
@@ -30,67 +31,14 @@ extern "C" {
 }
 
 fn data_to_js_date(data: &[u8]) -> Option<Date> {
-    enum DateState {
-        Empty,
-        Year,
-        Month,
-        Day,
+    let date = RawDate::parse(data).ok()?;
+    let utc = Date::utc(f64::from(date.year()), f64::from(date.month() - 1));
+    let res = Date::new(&JsValue::from_f64(utc));
+    res.set_utc_date(date.day() as u32);
+    if date.has_hour() {
+        res.set_utc_hours(u32::from(date.hour()) - 1);
     }
-
-    let mut state = DateState::Empty;
-    let mut y = 0;
-    let mut m = 0;
-    let mut d = 0;
-    let mut start = 0;
-    let mut pos = 0;
-
-    for &c in data {
-        if c == b'.' {
-            let span = Scalar::new(&data[start..pos]);
-            if let Ok(x) = span.to_i64() {
-                match state {
-                    DateState::Empty => {
-                        y = x as i32;
-                        state = DateState::Year;
-                    }
-                    DateState::Year => {
-                        m = x as i32 - 1;
-                        state = DateState::Month;
-                    }
-                    DateState::Month => {
-                        d = x as i32;
-                        state = DateState::Day;
-                    }
-                    _ => {
-                        return None;
-                    }
-                }
-                start = pos + 1;
-            } else {
-                return None;
-            }
-        } else if c > b'9' || (c < b'0' && c != b'-') {
-            return None;
-        }
-
-        pos += 1;
-    }
-
-    let span = Scalar::new(&data[start..pos]);
-    span.to_u64().ok().and_then(|x| match state {
-        DateState::Month => {
-            let res = Date::new(&JsValue::from_f64(Date::utc(y as f64, m as f64)));
-            res.set_utc_date(x as u32);
-            Some(res)
-        }
-        DateState::Day => {
-            let res = Date::new(&JsValue::from_f64(Date::utc(y as f64, m as f64)));
-            res.set_utc_date(d as u32);
-            res.set_utc_hours(x as u32 - 1);
-            Some(res)
-        }
-        _ => None,
-    })
+    Some(res)
 }
 
 // We skip the header for jomini

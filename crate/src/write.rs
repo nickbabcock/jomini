@@ -116,6 +116,5 @@ impl WasmWriter {
             )
             .map_err(errors::create_error_val)
         }
-
     }
 }
