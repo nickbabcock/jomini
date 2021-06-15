@@ -12,4 +12,11 @@ import { Jomini, toArray } from "..";
   actual = jomini.parseText("a=b", { encoding: "windows1252" });
   actual = jomini.parseText("a=b", {}, (cb) => cb.at("/a"));
   toArray(actual, "a");
+
+  const _out = jomini.write((writer) => {
+    writer.write_integer(1);
+    writer.write_integer(2);
+    writer.write_unquoted("foo");
+    writer.write_quoted("bar");
+  });
 })();

@@ -2,7 +2,7 @@
 
 # Jomini.js
 
-Jomini is a javascript library that is able to parse **plaintext** save and game files from Paradox Development Studios produced on the Clausewitz engine (Europa Universalis IV (eu4), Crusader Kings III (ck3), Hearts of Iron 4 (hoi4), Stellaris, and others)
+Jomini is a javascript library that is able to read and write **plaintext** save and game files from Paradox Development Studios produced on the Clausewitz engine (Europa Universalis IV (eu4), Crusader Kings III (ck3), Hearts of Iron 4 (hoi4), Stellaris, and others)
 
 > Aside: it's only by happenstance that this library and Paradox's own code share the same name (this library is older by several years).
 
@@ -13,7 +13,7 @@ Jomini is a javascript library that is able to parse **plaintext** save and game
 - ✔ Correctness: The same parser underpins [Rakaly](https://rakaly.com/eu4), a EU4 save game analyzer and leaderboard, and the [Paradox Game Converters's](https://github.com/ParadoxGameConverters/EU4toVic2) ironman to plaintext converter
 - ✔ Ergonomic: Data parsed into plain javascript objects or JSON
 - ✔ Self-contained: zero runtime dependencies
-- ✔ Small: 80 KB when gzipped
+- ✔ Small: Less than 100 KB gzipped
 
 ## Install
 
@@ -236,4 +236,38 @@ const expected = {
     },
   ],
 };
+```
+
+## Write API
+
+The write API is low level in order to clear out any ambiguities that may arise from a higher level API.
+
+```js
+const jomini = await Jomini.initialize();
+const out = jomini.write((writer) => {
+  writer.write_unquoted("data");
+  writer.write_object_start();
+  writer.write_unquoted("settings");
+  writer.write_array_start();
+  writer.write_integer(0);
+  writer.write_integer(1);
+  writer.write_end();
+  writer.write_unquoted("name");
+  writer.write_quoted("world");
+  writer.write_end();
+  writer.write_unquoted("color");
+  writer.write_header("rgb");
+  writer.write_array_start();
+  writer.write_integer(100);
+  writer.write_integer(150);
+  writer.write_integer(74);
+  writer.write_end();
+  writer.write_unquoted("start");
+  writer.write_date(new Date(Date.UTC(1444, 10, 11)));
+});
+
+t.deepEqual(
+  new TextDecoder().decode(out),
+  'data={\n  settings={\n    0 1\n  }\n  name="world"\n}\ncolor=rgb {\n  100 150 74\n}\nstart=1444.11.11\n'
+);
 ```
