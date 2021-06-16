@@ -1,3 +1,17 @@
+## v0.5.0 - 2021-06-16
+
+- Add low level write API. [See readme](https://github.com/nickbabcock/jomini/tree/ffe5a94ed2e3c070557cf96f38210b693f203cf5#write-api) for more info
+- Skip creating empty objects values that don't have an associated key. The example below shows the new behavior
+```js
+// foo={bar=val {}}  { } me=you
+{
+  foo: { bar: 'val' },
+  me: "you"
+}
+```
+- Internal method of `Query::free` is no longer exposed.
+- Minor parsing performance improvement
+
 ## v0.4.9 - 2021-04-27
 
 Support for prehistoric Eu4 Leviathan monument dates
