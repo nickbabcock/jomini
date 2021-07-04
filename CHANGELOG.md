@@ -1,3 +1,7 @@
+## v0.5.1 - 2021-07-04
+
+- Fix improperly writing escaped quoted values that end with a quote
+
 ## v0.5.0 - 2021-06-16
 
 - Add low level write API. [See readme](https://github.com/nickbabcock/jomini/tree/ffe5a94ed2e3c070557cf96f38210b693f203cf5#write-api) for more info
