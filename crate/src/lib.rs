@@ -83,7 +83,7 @@ where
             return JsValue::from_f64(x);
         }
 
-        if let Some(x) = data_to_js_date(scalar.view_data()) {
+        if let Some(x) = data_to_js_date(scalar.as_bytes()) {
             return x.into();
         }
 

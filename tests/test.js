@@ -825,3 +825,13 @@ test("should read and write hour date", async (t) => {
 
   t.deepEqual(new TextDecoder().decode(out), 'start_date=1936.1.1.1\n');
 })
+
+test("should write escaped text", async (t) => {
+  const jomini = await Jomini.initialize();
+  const out = jomini.write((writer) => {
+    writer.write_unquoted("name");
+    writer.write_quoted('Project "Eagle"');
+  });
+
+  t.deepEqual(new TextDecoder().decode(out), 'name="Project \\"Eagle\\""\n');
+});
