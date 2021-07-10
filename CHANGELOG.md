@@ -1,3 +1,7 @@
+## v0.5.2 - 2021-07-10
+
+- Add support for decoding numbers with leading plus sign
+
 ## v0.5.1 - 2021-07-04
 
 - Fix improperly writing escaped quoted values that end with a quote
