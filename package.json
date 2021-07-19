@@ -12,8 +12,8 @@
   ],
   "scripts": {
     "build": "wasm-pack build -t web --out-dir ../src/pkg crate && rm -rf dist/ && rollup -c",
-    "pretest": "npm run build",
     "build:minify": "npm run build && npx terser@latest --compress --mangle --output dist/es/index.js -- dist/es/index.js",
+    "pretest": "npm run build",
     "test": "ava --timeout=2m && tsc --target esnext --moduleResolution node --noEmit tests/usage.ts",
     "prepublishOnly": "npm test"
   },
