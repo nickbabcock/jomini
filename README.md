@@ -1,5 +1,6 @@
 ![CI](https://github.com/nickbabcock/jomini/workflows/CI/badge.svg)
 [![npm](https://img.shields.io/npm/v/jomini.svg)](http://npm.im/jomini)
+![size](https://badgen.net/bundlephobia/minzip/jomini)
 
 # Jomini.js
 
