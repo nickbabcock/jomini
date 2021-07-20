@@ -149,7 +149,7 @@ export class Writer {
   /**
    * Write out the start of a hidden object
    */
-   write_hidden_object_start() {
+  write_hidden_object_start() {
     this.writer.write_hidden_object_start();
   }
 
@@ -261,7 +261,7 @@ export class Writer {
    * Write a date
    * @param date date
    */
-  write_date(date: Date, options?: Partial<{hour: boolean}>,) {
+  write_date(date: Date, options?: Partial<{ hour: boolean }>) {
     this.writer.write_date(date, options?.hour || false);
   }
 }
