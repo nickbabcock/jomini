@@ -1,3 +1,14 @@
+## v0.5.3 - 2021-07-25
+
+- Support deserializing dates with a zero year
+- Support CK2 exact operator (==)
+- Support CK3 not equal operator (!=)
+- Support skipping over semicolons when parsing text
+- Support parsing text with UTF-8 BOM
+- Support parsing files with missing brackets
+- Small performance improvement to text parsing
+- Improve support for parsing operators
+
 ## v0.5.2 - 2021-07-10
 
 - Add support for decoding numbers with leading plus sign
