@@ -6,5 +6,7 @@ pub fn operator_name(op: Operator) -> &'static str {
         Operator::LessThanEqual => "LESS_THAN_EQUAL",
         Operator::GreaterThan => "GREATER_THAN",
         Operator::GreaterThanEqual => "GREATER_THAN_EQUAL",
+        Operator::Exact => "EXACT",
+        Operator::NotEqual => "NOT_EQUAL",
     }
 }
