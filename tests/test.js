@@ -1,4 +1,5 @@
 const test = require("ava");
+const fs = require("fs/promises");
 const { Jomini, toArray } = require("..");
 
 const encoder = new TextEncoder();
@@ -838,4 +839,14 @@ test("should write escaped text", async (t) => {
   });
 
   t.deepEqual(new TextDecoder().decode(out), 'name="Project \\"Eagle\\""\n');
+});
+
+test("should allow custom initialization", async (t) => {
+  let jomini = await Jomini.initialize();
+  Jomini.resetModule();
+  const wasm = await fs.readFile("dist/jomini.wasm");
+  jomini = await Jomini.initialize({ wasm });
+
+  const out = jomini.parseText("foo=bar");
+  t.deepEqual(out, { "foo": "bar" });
 });

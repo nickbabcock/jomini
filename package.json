@@ -9,14 +9,19 @@
     ".": {
       "import": "./dist/es/index.js",
       "default": "./dist/cjs/index.js"
-    }
+    },
+    "./slim": {
+      "import": "./dist/es-slim/index.js",
+      "default": "./dist/cjs-slim/index.js"
+    },
+    "./jomini.wasm": "./dist/jomini.wasm"
   },
   "types": "./dist/es/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "wasm-pack build -t web --out-dir ../src/pkg crate && rm -rf dist/ && rollup -c",
+    "build": "wasm-pack build -t web --out-dir ../src/pkg crate && rm -rf dist/ && rollup -c && cp src/pkg/jomini_js_bg.wasm dist/jomini.wasm",
     "build:minify": "npm run build && npx terser@latest --compress --mangle --output dist/es/index.js -- dist/es/index.js",
     "pretest": "npm run build",
     "test": "ava --timeout=2m && tsc --target esnext --moduleResolution node --noEmit tests/usage.ts",
