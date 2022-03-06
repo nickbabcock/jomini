@@ -12,7 +12,7 @@ Jomini is a javascript library that is able to read and write **plaintext** save
 
 - ✔ Compatibility: Node 12+ and >90% of browsers
 - ✔ Speed: Parse at over 200 MB/s
-- ✔ Correctness: The same parser underpins [Rakaly](https://rakaly.com/eu4), a EU4 save game analyzer and leaderboard, and the [Paradox Game Converters's](https://github.com/ParadoxGameConverters/EU4toVic2) ironman to plaintext converter
+- ✔ Correctness: The same parser underpins a [EU4 save file analyzer](https://pdx.tools), and the [Paradox Game Converters's](https://github.com/ParadoxGameConverters/EU4toVic2) ironman to plaintext converter
 - ✔ Ergonomic: Data parsed into plain javascript objects or JSON
 - ✔ Self-contained: zero runtime dependencies
 - ✔ Small: Less than 100 KB gzipped

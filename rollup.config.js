@@ -16,9 +16,6 @@ const rolls = (fmt) => ({
     wasm({ maxFileSize: 10000000 }),
     typescript({ outDir: `dist/${fmt}` }),
     {
-      // We create our own rollup plugin that copies the typescript definitions that 
-      // wasm-bindgen creates into the distribution so that downstream users can benefit
-      // from documentation on the rust code
       name: "copy-pkg",
       generateBundle() {
         // Remove the `import` bundler directive that wasm-bindgen spits out as webpack
@@ -26,6 +23,9 @@ const rolls = (fmt) => ({
         const data = fs.readFileSync(path.resolve(`src/pkg/jomini_js.js`), 'utf8');
         fs.writeFileSync(path.resolve(`src/pkg/jomini_js.js`), data.replace('import.meta.url', 'input'));
 
+        // copy the typescript definitions that wasm-bindgen creates into the
+        // distribution so that downstream users can benefit from documentation
+        // on the rust code
         fs.mkdirSync(path.resolve(`dist/${fmt}/pkg`), { recursive: true });
         fs.copyFileSync(
           path.resolve("./src/pkg/jomini_js.d.ts"),
