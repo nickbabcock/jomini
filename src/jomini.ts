@@ -22,7 +22,7 @@ export type ParseOptions = {
 };
 
 const encoder = new TextEncoder();
-let initialized = false;
+let initialized: Promise<void> | undefined = undefined;
 export class Jomini {
   private constructor() {}
 
@@ -75,12 +75,13 @@ export class Jomini {
    * requests to initialize will be instantaneous, so it's not imperative to reuse the same parser.
    */
   public static initialize = async () => {
-    if (!initialized) {
+    if (initialized === undefined) {
       //@ts-ignore
-      await init(jomini_wasm());
-      initialized = true;
+      const initted: Promise<void> = init(jomini_wasm());
+      initialized = initted;
     }
 
+    await initialized;
     return new Jomini();
   };
 }
