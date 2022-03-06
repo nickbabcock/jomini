@@ -19,4 +19,11 @@ import { Jomini, toArray } from "..";
     writer.write_unquoted("foo");
     writer.write_quoted("bar");
   });
+
+  Jomini.resetModule();
+
+  const wasmModule = null as unknown as WebAssembly.Module;
+  await Jomini.initialize({
+    wasm: wasmModule,
+  });
 })();
