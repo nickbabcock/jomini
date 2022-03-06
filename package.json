@@ -4,8 +4,13 @@
   "author": "Nick Babcock <nbabcock19@hotmail.com>",
   "license": "MIT",
   "description": "Parses Paradox files into javascript objects",
-  "main": "./dist/cjs/index.js",
-  "module": "./dist/es/index.js",
+  "main": "./dist/umd/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/es/index.js",
+      "default": "./dist/cjs/index.js"
+    }
+  },
   "types": "./dist/es/index.d.ts",
   "files": [
     "dist"

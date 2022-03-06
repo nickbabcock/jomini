@@ -36,4 +36,4 @@ const rolls = (fmt) => ({
   ],
 });
 
-export default [rolls("cjs"), rolls("es")];
+export default [rolls("umd"), rolls("cjs"), rolls("es")];
