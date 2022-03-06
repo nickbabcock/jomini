@@ -273,3 +273,18 @@ t.deepEqual(
   'data={\n  settings={\n    0 1\n  }\n  name="world"\n}\ncolor=rgb {\n  100 150 74\n}\nstart=1444.11.11\n'
 );
 ```
+
+## Slim Module
+
+By default, the `jomini` entrypoint includes Wasm that is base64 inlined. This is the default as most developers will probably not need to care. However some developers will care: those running the library in environments where Wasm is executable but not compileable or those who are ambitious about reducing compute and bandwidth costs for their users.
+
+To cater to these use cases, there is a `jomini/slim` package that operates the exactly the same except now it is expected for developers to prime initialization through some other means:
+
+```js
+import { Jomini } from "jomini/slim";
+import wasm from "jomini/jomini.wasm";
+
+const data = `player="FRA"`;
+const parser = await Jomini.initialize({ wasm });
+const out = parser.parseText(data);
+```

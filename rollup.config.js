@@ -3,18 +3,19 @@ import typescript from "@rollup/plugin-typescript";
 const path = require("path");
 const fs = require("fs");
 
-const rolls = (fmt) => ({
+const outdir = (fmt, inlineWasm) => `dist/${fmt}${inlineWasm ? `-${inlineWasm}` : ''}`;
+const rolls = (fmt, inlineWasm) => ({
   input: "src/index.ts",
   output: {
-    dir: `dist/${fmt}`,
+    dir: outdir(fmt, inlineWasm),
     format: fmt,
     name: "jomini",
   },
   plugins: [
     // We want to inline our wasm bundle as base64. Not needing browser users
     // to fetch an additional asset is a boon as there's less room for errors
-    wasm({ maxFileSize: 10000000 }),
-    typescript({ outDir: `dist/${fmt}` }),
+    wasm({ maxFileSize: inlineWasm === "slim" ? 0 : 10000000 }),
+    typescript({ outDir: outdir(fmt, inlineWasm) }),
     {
       name: "copy-pkg",
       generateBundle() {
@@ -26,14 +27,20 @@ const rolls = (fmt) => ({
         // copy the typescript definitions that wasm-bindgen creates into the
         // distribution so that downstream users can benefit from documentation
         // on the rust code
-        fs.mkdirSync(path.resolve(`dist/${fmt}/pkg`), { recursive: true });
+        fs.mkdirSync(path.resolve(`${outdir(fmt, inlineWasm)}/pkg`), { recursive: true });
         fs.copyFileSync(
           path.resolve("./src/pkg/jomini_js.d.ts"),
-          path.resolve(`dist/${fmt}/pkg/jomini_js.d.ts`)
+          path.resolve(`${outdir(fmt, inlineWasm)}/pkg/jomini_js.d.ts`)
         );
       },
     },
   ],
 });
 
-export default [rolls("umd"), rolls("cjs"), rolls("es")];
+export default [
+  rolls("umd"),
+  rolls("cjs"),
+  rolls("es"),
+  rolls("cjs", "slim"),
+  rolls("es", "slim"),
+];
