@@ -1,3 +1,10 @@
+## v0.6.0 - 2022-03-06
+
+- Fix possibility of double initialization
+- Distribute library with [conditional exports](https://nodejs.org/api/packages.html#conditional-exports)
+- Main distributable is now a UMD package instead CJS
+- Add a `jomini/slim` entrypoint for downstream developers to customize the Wasm used in initialization
+
 ## v0.5.3 - 2021-07-25
 
 - Support deserializing dates with a zero year
