@@ -1,5 +1,5 @@
 const test = require("ava");
-const { toArray } = require("..");
+const { toArray } = require("jomini");
 
 test("should handle the easy case", (t) => {
   var obj = {

@@ -5,7 +5,6 @@ import init, {
   WasmWriter,
   write_text,
 } from "./pkg/jomini_js";
-import jomini_wasm from "./pkg/jomini_js_bg.wasm";
 
 /**
  * Supported encodings: UTF8 and Windows1252
@@ -25,15 +24,20 @@ export type ParseOptions = {
 /**
  * Customize how jomini is loaded
  */
- export interface JominiLoadOptions {
+export interface JominiLoadOptions {
   /**
    * Controls how the Wasm module is instantiated.
    */
   wasm?: InitInput;
 }
 
-const encoder = new TextEncoder();
+let wasmInit: (() => InitInput) | undefined = undefined;
+export const setWasmInit = (arg: () => InitInput) => {
+  wasmInit = arg;
+};
+
 let initialized: Promise<void> | undefined = undefined;
+const encoder = new TextEncoder();
 export class Jomini {
   private constructor() {}
 
@@ -88,7 +92,7 @@ export class Jomini {
   public static initialize = async (options?: JominiLoadOptions) => {
     if (initialized === undefined) {
       //@ts-ignore
-      const loadModule = options?.wasm ?? jomini_wasm();
+      const loadModule = options?.wasm ?? wasmInit();
       initialized = init(loadModule).then(() => void 0);
     }
 
@@ -102,7 +106,7 @@ export class Jomini {
    */
   public static resetModule = () => {
     initialized = undefined;
-  }
+  };
 }
 
 /**
