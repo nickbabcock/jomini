@@ -1,3 +1,7 @@
+## v0.6.2 - 2022-03-11
+
+- Fix botched release of 0.6.1
+
 ## v0.6.1 - 2022-03-10
 
 - Fix bundling to make the library easier to use with bundlers
