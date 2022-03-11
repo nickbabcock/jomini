@@ -26,7 +26,7 @@ const rolls = (fmt, env) => ({
       wasm(
         env == "node"
           ? { maxFileSize: 0, targetEnv: "node" }
-          : { targetEnv: env }
+          : { targetEnv: "auto-inline" }
       ),
     typescript({ outDir: outdir(fmt, env) }),
     {
