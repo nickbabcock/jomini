@@ -4,25 +4,31 @@
   "author": "Nick Babcock <nbabcock19@hotmail.com>",
   "license": "MIT",
   "description": "Parses Paradox files into javascript objects",
+  "type": "module",
   "main": "./dist/umd/index.js",
+  "types": "./dist/umd/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/cjs/index.d.ts",
+      "node": "./dist/node/index.cjs",
       "import": "./dist/es/index.js",
-      "default": "./dist/cjs/index.js"
+      "default": "./dist/cjs/index.cjs"
     },
     "./slim": {
-      "import": "./dist/es-slim/index.js",
-      "default": "./dist/cjs-slim/index.js"
+      "types": "./dist/cjs-slim/index_slim.d.ts",
+      "node": "./dist/node/index.cjs",
+      "import": "./dist/es-slim/index_slim.js",
+      "default": "./dist/cjs-slim/index_slim.cjs"
     },
-    "./jomini.wasm": "./dist/jomini.wasm"
+    "./jomini.wasm": "./dist/jomini.wasm",
+    "./package.json": "./package.json"
   },
-  "types": "./dist/es/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "wasm-pack build -t web --out-dir ../src/pkg crate && rm -rf dist/ && rollup -c && cp src/pkg/jomini_js_bg.wasm dist/jomini.wasm",
-    "build:minify": "npm run build && npx terser@latest --compress --mangle --output dist/es/index.js -- dist/es/index.js",
+    "build:minify": "npm run build && npx terser@latest --compress --mangle --output dist/cjs/index.cjs -- dist/cjs/index.cjs",
     "pretest": "npm run build",
     "test": "ava --timeout=2m && tsc --target esnext --moduleResolution node --noEmit tests/usage.ts",
     "prepublishOnly": "npm test"
@@ -40,7 +46,7 @@
   ],
   "devDependencies": {
     "@rollup/plugin-typescript": "^8.3.1",
-    "@rollup/plugin-wasm": "^5.1.2",
+    "@nickbabcock/plugin-wasm": "^5.2.0",
     "ava": "^4.0.1",
     "rollup": "^2.69.2",
     "tslib": "^2.3.1",

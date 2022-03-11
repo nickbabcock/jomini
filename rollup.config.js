@@ -1,36 +1,54 @@
-import { wasm } from "@rollup/plugin-wasm";
+import { wasm } from "@nickbabcock/plugin-wasm";
 import typescript from "@rollup/plugin-typescript";
-const path = require("path");
-const fs = require("fs");
+import path from "path";
+import fs from "fs";
 
-const outdir = (fmt, inlineWasm) => `dist/${fmt}${inlineWasm ? `-${inlineWasm}` : ''}`;
-const rolls = (fmt, inlineWasm) => ({
-  input: "src/index.ts",
+const outdir = (fmt, env) => {
+  if (env == "node") {
+    return `dist/node`;
+  } else {
+    return `dist/${fmt}${env == "slim" ? "-slim" : ""}`;
+  }
+};
+
+const rolls = (fmt, env) => ({
+  input: env !== "slim" ? "src/index.ts" : "src/index_slim.ts",
   output: {
-    dir: outdir(fmt, inlineWasm),
+    dir: outdir(fmt, env),
     format: fmt,
+    entryFileNames: `[name].${fmt === "cjs" ? "cjs" : "js"}`,
     name: "jomini",
   },
   plugins: [
     // We want to inline our wasm bundle as base64. Not needing browser users
     // to fetch an additional asset is a boon as there's less room for errors
-    wasm({ maxFileSize: inlineWasm === "slim" ? 0 : 10000000 }),
-    typescript({ outDir: outdir(fmt, inlineWasm) }),
+    env != "slim" &&
+      wasm(
+        env == "node"
+          ? { maxFileSize: 0, targetEnv: "node" }
+          : { targetEnv: env }
+      ),
+    typescript({ outDir: outdir(fmt, env) }),
     {
       name: "copy-pkg",
-      generateBundle() {
-        // Remove the `import` bundler directive that wasm-bindgen spits out as webpack
-        // doesn't understand that directive yet
-        const data = fs.readFileSync(path.resolve(`src/pkg/jomini_js.js`), 'utf8');
-        fs.writeFileSync(path.resolve(`src/pkg/jomini_js.js`), data.replace('import.meta.url', 'input'));
 
+      // wasm-bindgen outputs a import.meta.url when using the web target.
+      // rollup will either perserve the the statement when outputting an esm,
+      // which will cause webpack < 5 to choke or it will output a
+      // "require('url')", for other output types, causing more choking. Since
+      // we want a downstream developer to either not worry about providing wasm
+      // at all, or forcing them to deal with bundling, we resolve the import to
+      // an empty string. This will error at runtime.
+      resolveImportMeta: () => `""`,
+      generateBundle() {
         // copy the typescript definitions that wasm-bindgen creates into the
         // distribution so that downstream users can benefit from documentation
         // on the rust code
-        fs.mkdirSync(path.resolve(`${outdir(fmt, inlineWasm)}/pkg`), { recursive: true });
+        const dir = outdir(fmt, env);
+        fs.mkdirSync(path.resolve(`${dir}/pkg`), { recursive: true });
         fs.copyFileSync(
           path.resolve("./src/pkg/jomini_js.d.ts"),
-          path.resolve(`${outdir(fmt, inlineWasm)}/pkg/jomini_js.d.ts`)
+          path.resolve(`${dir}/pkg/jomini_js.d.ts`)
         );
       },
     },
@@ -38,9 +56,10 @@ const rolls = (fmt, inlineWasm) => ({
 });
 
 export default [
-  rolls("umd"),
-  rolls("cjs"),
-  rolls("es"),
-  rolls("cjs", "slim"),
+  rolls("umd", "fat"),
+  rolls("es", "fat"),
+  rolls("cjs", "fat"),
+  rolls("cjs", "node"),
   rolls("es", "slim"),
+  rolls("cjs", "slim"),
 ];

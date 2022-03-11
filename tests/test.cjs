@@ -1,6 +1,6 @@
 const test = require("ava");
 const fs = require("fs/promises");
-const { Jomini, toArray } = require("..");
+const { Jomini, toArray } = require("jomini");
 
 const encoder = new TextEncoder();
 const utf8encode = (s) => encoder.encode(s);
