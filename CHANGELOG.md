@@ -1,3 +1,7 @@
+## v0.6.1 - 2022-03-10
+
+- Fix bundling to make the library easier to use with bundlers
+
 ## v0.6.0 - 2022-03-06
 
 - Fix possibility of double initialization
