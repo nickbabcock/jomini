@@ -17,17 +17,48 @@ Jomini is a javascript library that is able to read and write **plaintext** save
 - ✔ Self-contained: zero runtime dependencies
 - ✔ Small: Less than 100 KB gzipped
 
-## Install
+## Quick Start
+
+Quick and easy way to add jomini to your project:
+
+```html
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/jomini@0.6.2/dist/umd/index.min.js"></script>
+  <script>
+    jomini.Jomini.initialize().then((parser) => {
+      const out = parser.parseText("foo=bar");
+      alert(`the value of foo is ${out.foo}`);
+    });
+  </script>
+</body>
+```
+
+If you want a slightly more efficient experience with reduced bandwidth and computation at the cost of [some compatibility](https://caniuse.com/es6-module-dynamic-import).
+
+```html
+<script type="module">
+  import { Jomini } from 'https://cdn.jsdelivr.net/npm/jomini@0.6.2/dist/es-slim/index_slim.js';
+
+  fetch('https://cdn.jsdelivr.net/npm/jomini@0.6.2/dist/jomini.wasm')
+    .then((x) => x.arrayBuffer())
+    .then((wasm) => Jomini.initialize({ wasm }))
+    .then((parser) => {
+      const out = parser.parseText('foo=bar');
+      alert(`the value of foo is ${out.foo}`);
+    });
+</script>
+```
+
+If on Node.js or are bundling it inside a larger application:
 
 ```bash
 npm i jomini
 ```
 
-## Quick Start
+## Example
 
 ```js
-const { Jomini } = require("jomini");
-// or import { Jomini } from "jomini";
+import { Jomini } from "jomini";
 
 const data = `
     date=1640.7.1
