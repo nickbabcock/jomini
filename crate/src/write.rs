@@ -1,11 +1,11 @@
 use crate::errors;
-use jomini::{DefaultWriteVisitor, Operator, TextWriter};
+use jomini::{Operator, TextWriter};
 use js_sys::Date;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub struct WasmWriter {
-    pub(crate) writer: TextWriter<Vec<u8>, DefaultWriteVisitor>,
+    pub(crate) writer: TextWriter<Vec<u8>>,
 }
 
 #[wasm_bindgen]
