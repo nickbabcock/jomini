@@ -1,3 +1,8 @@
+## v0.6.3 - 2022-03-19
+
+- Quoted keys will now retain quotes
+- Written output no longer ends in a newline
+
 ## v0.6.2 - 2022-03-11
 
 - Fix botched release of 0.6.1
