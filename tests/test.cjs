@@ -768,7 +768,7 @@ test("should write simple fields", async (t) => {
     writer.write_quoted("bar");
   });
 
-  t.deepEqual(new TextDecoder().decode(out), '1=2\nfoo="bar"\n');
+  t.deepEqual(new TextDecoder().decode(out), '1=2\nfoo="bar"');
 });
 
 test("should write hidden object", async (t) => {
@@ -787,7 +787,7 @@ test("should write hidden object", async (t) => {
     writer.write_unquoted("d");
   });
 
-  t.deepEqual(new TextDecoder().decode(out), 'foo={\n  1 qux=bar a=b\n}\nf=d\n');
+  t.deepEqual(new TextDecoder().decode(out), 'foo={\n  1 qux=bar a=b\n}\nf=d');
 });
 
 test("should write readme example", async (t) => {
@@ -816,7 +816,7 @@ test("should write readme example", async (t) => {
 
   t.deepEqual(
     new TextDecoder().decode(out),
-    'data={\n  settings={\n    0 1\n  }\n  name="world"\n}\ncolor=rgb {\n  100 150 74\n}\nstart=1444.11.11\n'
+    'data={\n  settings={\n    0 1\n  }\n  name="world"\n}\ncolor=rgb {\n  100 150 74\n}\nstart=1444.11.11'
   );
 });
 
@@ -828,7 +828,7 @@ test("should read and write hour date", async (t) => {
     writer.write_date(obj.start_date, { hour: true });
   });
 
-  t.deepEqual(new TextDecoder().decode(out), 'start_date=1936.1.1.1\n');
+  t.deepEqual(new TextDecoder().decode(out), 'start_date=1936.1.1.1');
 })
 
 test("should write escaped text", async (t) => {
@@ -838,7 +838,7 @@ test("should write escaped text", async (t) => {
     writer.write_quoted('Project "Eagle"');
   });
 
-  t.deepEqual(new TextDecoder().decode(out), 'name="Project \\"Eagle\\""\n');
+  t.deepEqual(new TextDecoder().decode(out), 'name="Project \\"Eagle\\""');
 });
 
 test("should allow custom initialization", async (t) => {
