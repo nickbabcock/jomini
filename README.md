@@ -307,7 +307,7 @@ t.deepEqual(
 
 ## Slim Module
 
-By default, the `jomini` entrypoint includes Wasm that is base64 inlined. This is the default as most developers will probably not need to care. However some developers will care: those running the library in environments where Wasm is executable but not compileable or those who are ambitious about reducing compute and bandwidth costs for their users.
+By default, the `jomini` entrypoint includes Wasm that is base64 inlined. This is the default as most developers will probably not need to care. However some developers will care: those running the library in environments where Wasm is executable but not compilable or those who are ambitious about reducing compute and bandwidth costs for their users.
 
 To cater to these use cases, there is a `jomini/slim` package that operates the exactly the same except now it is expected for developers to prime initialization through some other means:
 
