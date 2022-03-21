@@ -147,15 +147,21 @@ test("should handle empty object", async (t) => {
 });
 
 test("should handle parameter definition value", async (t) => {
-  t.deepEqual(await parse("foo = { [[add] $add$]}"), { foo: { "[add]": "$add$" } });
+  t.deepEqual(await parse("foo = { [[add] $add$]}"), {
+    foo: { "[add]": "$add$" },
+  });
 });
 
 test("should handle parameter definitions", async (t) => {
-  t.deepEqual(await parse("foo = { [[add] if={a=b}]}"), { foo: { "[add]": {if: {a: "b"}}} });
+  t.deepEqual(await parse("foo = { [[add] if={a=b}]}"), {
+    foo: { "[add]": { if: { a: "b" } } },
+  });
 });
 
 test("should handle undefined parameter definitions", async (t) => {
-  t.deepEqual(await parse("foo = { [[!add] if={a=b}]}"), { foo: { "[!add]": {if: {a: "b"}}} });
+  t.deepEqual(await parse("foo = { [[!add] if={a=b}]}"), {
+    foo: { "[!add]": { if: { a: "b" } } },
+  });
 });
 
 test("should parse through extra trailing brace", async (t) => {
@@ -199,7 +205,7 @@ test("should handle the object after empty object nested", async (t) => {
 
 test("should ignore empty objects with no identifier at end", async (t) => {
   t.deepEqual(await parse("foo={bar=val {}}  { } me=you"), {
-    foo: { bar: 'val' },
+    foo: { bar: "val" },
     me: "you",
   });
 });
@@ -408,7 +414,7 @@ test("should handle variables", async (t) => {
 
 test("should handle interpolated variables", async (t) => {
   t.deepEqual(await parse("position = @[1-leopard_x]"), {
-    "position": "@[1-leopard_x]",
+    position: "@[1-leopard_x]",
   });
 });
 
@@ -740,7 +746,8 @@ test("should serialize object trailers to json typed", async (t) => {
 
 test("should serialize parameter definitions to json typed", async (t) => {
   const jomini = await Jomini.initialize();
-  const str = "generate_advisor = { [[scaled_skill] a=b ] [[!scaled_skill] c=d ]  }";
+  const str =
+    "generate_advisor = { [[scaled_skill] a=b ] [[!scaled_skill] c=d ]  }";
   const expected =
     '{"type":"obj","val":[["generate_advisor",{"type":"obj","val":[["[scaled_skill]",{"type":"obj","val":[["a","b"]]}],["[!scaled_skill]",{"type":"obj","val":[["c","d"]]}]]}]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
@@ -752,7 +759,8 @@ test("should serialize parameter definitions to json typed", async (t) => {
 test("should serialize parameter definition value to json typed", async (t) => {
   const jomini = await Jomini.initialize();
   const str = "foo = { [[add] $add$]}";
-  const expected = '{"type":"obj","val":[["foo",{"type":"obj","val":[["[add]","$add$"]]}]]}';
+  const expected =
+    '{"type":"obj","val":[["foo",{"type":"obj","val":[["[add]","$add$"]]}]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
     q.json({ disambiguate: "typed" })
   );
@@ -787,7 +795,7 @@ test("should write hidden object", async (t) => {
     writer.write_unquoted("d");
   });
 
-  t.deepEqual(new TextDecoder().decode(out), 'foo={\n  1 qux=bar a=b\n}\nf=d');
+  t.deepEqual(new TextDecoder().decode(out), "foo={\n  1 qux=bar a=b\n}\nf=d");
 });
 
 test("should write readme example", async (t) => {
@@ -828,8 +836,8 @@ test("should read and write hour date", async (t) => {
     writer.write_date(obj.start_date, { hour: true });
   });
 
-  t.deepEqual(new TextDecoder().decode(out), 'start_date=1936.1.1.1');
-})
+  t.deepEqual(new TextDecoder().decode(out), "start_date=1936.1.1.1");
+});
 
 test("should write escaped text", async (t) => {
   const jomini = await Jomini.initialize();
@@ -848,5 +856,5 @@ test("should allow custom initialization", async (t) => {
   jomini = await Jomini.initialize({ wasm });
 
   const out = jomini.parseText("foo=bar");
-  t.deepEqual(out, { "foo": "bar" });
+  t.deepEqual(out, { foo: "bar" });
 });
