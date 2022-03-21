@@ -28,7 +28,7 @@ const rolls = (fmt, env) => ({
           ? { maxFileSize: 0, targetEnv: "node" }
           : { targetEnv: "auto-inline" }
       ),
-    typescript({ outDir: outdir(fmt, env) }),
+    typescript({ outDir: outdir(fmt, env), rootDir: "src" }),
     {
       name: "copy-pkg",
 
