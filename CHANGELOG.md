@@ -1,3 +1,8 @@
+## v0.6.4 - 2022-03-21
+
+- Fix return type of `parseText` to be a `Record<string, any>` instead of an `Object`
+- Fix return type of `parseText` when provided a callback
+
 ## v0.6.3 - 2022-03-19
 
 - Quoted keys will now retain quotes
