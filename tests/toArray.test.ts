@@ -1,31 +1,31 @@
-const test = require("ava");
-const { toArray } = require("jomini");
+import { expect, it } from "vitest";
+import { toArray } from "..";
 
-test("should handle the easy case", (t) => {
+it("should handle the easy case", () => {
   var obj = {
     foo: {},
     bar: 1,
   };
   toArray(obj, "foo");
-  t.deepEqual(obj, {
+  expect(obj).toEqual({
     foo: [{}],
     bar: 1,
   });
 });
 
-test("should ignore nonexistant properties", (t) => {
+it("should ignore nonexistant properties", () => {
   var obj = {};
   toArray(obj, "foo");
-  t.deepEqual(obj, {});
+  expect(obj).toEqual({});
 });
 
-test("should ignore nonexistant nested properties", (t) => {
+it("should ignore nonexistant nested properties", () => {
   var obj = {};
   toArray(obj, "foo.bar");
-  t.deepEqual(obj, {});
+  expect(obj).toEqual({});
 });
 
-test("should change nested paths", (t) => {
+it("should change nested paths", () => {
   var obj = {
     foo: {
       baz: 1,
@@ -33,25 +33,25 @@ test("should change nested paths", (t) => {
   };
 
   toArray(obj, "foo.baz");
-  t.deepEqual(obj, {
+  expect(obj).toEqual({
     foo: {
       baz: [1],
     },
   });
 });
 
-test("should make no change for an array already", (t) => {
+it("should make no change for an array already", () => {
   var obj = {
     foo: [1],
   };
 
   toArray(obj, "foo");
-  t.deepEqual(obj, {
+  expect(obj).toEqual({
     foo: [1],
   });
 });
 
-test("should make changes for a nested array", (t) => {
+it("should make changes for a nested array", () => {
   var obj = {
     foo: [
       {
@@ -64,7 +64,7 @@ test("should make changes for a nested array", (t) => {
   };
 
   toArray(obj, "foo.baz");
-  t.deepEqual(obj, {
+  expect(obj).toEqual({
     foo: [
       {
         baz: [1, 2],
@@ -76,24 +76,24 @@ test("should make changes for a nested array", (t) => {
   });
 });
 
-test("should do nothing if the nested property is useless", (t) => {
+it("should do nothing if the nested property is useless", () => {
   var obj = {
     foo: [1, 2],
   };
 
   toArray(obj, "foo.baz");
-  t.deepEqual(obj, {
+  expect(obj).toEqual({
     foo: [1, 2],
   });
 });
 
-test("should do nothing if the nested properties is not an object", (t) => {
+it("should do nothing if the nested properties is not an object", () => {
   var obj = {
     foo: 1,
   };
 
   toArray(obj, "foo.baz");
-  t.deepEqual(obj, {
+  expect(obj).toEqual({
     foo: 1,
   });
 });

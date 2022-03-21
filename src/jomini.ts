@@ -52,7 +52,7 @@ export class Jomini {
   public parseText(
     data: Uint8Array | string,
     options?: Partial<ParseOptions>
-  ): Object;
+  ): ReturnType<Query["root"]>;
 
   /**
    * Parses plain text data into javascript values
@@ -153,7 +153,7 @@ export class Query {
   constructor(private query: WasmQuery) {}
 
   /** Convert the entire document into an object */
-  root(): Object {
+  root(): Record<string, any> {
     return this.query.root();
   }
 
