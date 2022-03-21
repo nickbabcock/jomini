@@ -297,11 +297,21 @@ const out = jomini.write((writer) => {
   writer.write_unquoted("start");
   writer.write_date(new Date(Date.UTC(1444, 10, 11)));
 });
+```
 
-t.deepEqual(
-  new TextDecoder().decode(out),
-  'data={\n  settings={\n    0 1\n  }\n  name="world"\n}\ncolor=rgb {\n  100 150 74\n}\nstart=1444.11.11\n'
-);
+The return value will be a byte array that contains the following:
+
+```plain
+data={
+  settings={
+    0 1
+  }
+  name="world"
+}
+color=rgb {
+  100 150 74
+}
+start=1444.11.11
 ```
 
 ## Slim Module
