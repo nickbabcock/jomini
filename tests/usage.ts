@@ -11,6 +11,9 @@ import { Jomini, toArray } from "..";
   actual = jomini.parseText("a=b", { encoding: "utf8" });
   actual = jomini.parseText("a=b", { encoding: "windows1252" });
   actual = jomini.parseText("a=b", {}, (cb) => cb.at("/a"));
+
+  const _json = jomini.parseText("a=b", {}, (cb) => cb.json());
+
   toArray(actual, "a");
 
   const _out = jomini.write((writer) => {

@@ -48,10 +48,29 @@ export class Jomini {
    * string will be encoded as utf-8. Else if given bytes, they are assumed to be utf-8 unless the
    * windows1252 is passed as the encoding.
    * @param options Controls the encoding of the data. If not configured, assumes utf-8
+   */
+  public parseText(
+    data: Uint8Array | string,
+    options?: Partial<ParseOptions>
+  ): Object;
+
+  /**
+   * Parses plain text data into javascript values
+   *
+   * @param data The data to parse, can either be raw bytes or a string. If given a string, the
+   * string will be encoded as utf-8. Else if given bytes, they are assumed to be utf-8 unless the
+   * windows1252 is passed as the encoding.
+   * @param options Controls the encoding of the data. If not configured, assumes utf-8
    * @param cb The callback to extract a subset of the parsed document. Since creating JS objects
    * is where 95-99% of the performance is lost, one can achieve a great speedup by requesting only
    * the bits needed. If a callback is not provided, then the entire parsed document is returned.
    */
+  public parseText<T>(
+    data: Uint8Array | string,
+    options: Partial<ParseOptions>,
+    cb: (arg0: Query) => T
+  ): T;
+
   public parseText<T>(
     data: Uint8Array | string,
     options?: Partial<ParseOptions>,
