@@ -23,7 +23,7 @@ Quick and easy way to add jomini to your project:
 
 ```html
 <body>
-  <script src="https://cdn.jsdelivr.net/npm/jomini@0.6.2/dist/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jomini@0.6.3/dist/umd/index.min.js"></script>
   <script>
     jomini.Jomini.initialize().then((parser) => {
       const out = parser.parseText("foo=bar");
@@ -33,15 +33,14 @@ Quick and easy way to add jomini to your project:
 </body>
 ```
 
-If you want a slightly more efficient experience with reduced bandwidth and computation at the cost of [some compatibility](https://caniuse.com/es6-module-dynamic-import).
+Or if you want a more efficient way to get started:
 
 ```html
 <script type="module">
-  import { Jomini } from 'https://cdn.jsdelivr.net/npm/jomini@0.6.2/dist/es-slim/index_slim.js';
+  import { Jomini } from 'https://cdn.jsdelivr.net/npm/jomini@0.6.3/dist/es-slim/index_slim.min.js';
 
-  fetch('https://cdn.jsdelivr.net/npm/jomini@0.6.2/dist/jomini.wasm')
-    .then((x) => x.arrayBuffer())
-    .then((wasm) => Jomini.initialize({ wasm }))
+  const wasmUrl = 'https://cdn.jsdelivr.net/npm/jomini@0.6.3/dist/jomini.wasm';
+  Jomini.initialize({ wasm: wasmUrl })
     .then((parser) => {
       const out = parser.parseText('foo=bar');
       alert(`the value of foo is ${out.foo}`);
@@ -49,7 +48,7 @@ If you want a slightly more efficient experience with reduced bandwidth and comp
 </script>
 ```
 
-If on Node.js or are bundling it inside a larger application:
+Or if Node.js is targeted or one is bundling this inside a larger application:
 
 ```bash
 npm i jomini
