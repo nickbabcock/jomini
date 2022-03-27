@@ -15,7 +15,7 @@ Jomini is a javascript library that is able to read and write **plaintext** save
 - ✔ Correctness: The same parser underpins a [EU4 save file analyzer](https://pdx.tools), and the [Paradox Game Converters's](https://github.com/ParadoxGameConverters/EU4toVic2) ironman to plaintext converter
 - ✔ Ergonomic: Data parsed into plain javascript objects or JSON
 - ✔ Self-contained: zero runtime dependencies
-- ✔ Small: Less than 100 KB gzipped
+- ✔ Small: Less than 100 KB gzipped (or 70 KB when using the [slim entrypoint](#slim-module))
 
 ## Quick Start
 
