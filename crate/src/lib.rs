@@ -69,7 +69,7 @@ where
         Self { reader }
     }
 
-    fn from_root(&self) -> JsValue {
+    fn create_from_root(&self) -> JsValue {
         self.create_object(self.reader.clone()).into()
     }
 
@@ -267,11 +267,11 @@ impl Query {
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
                 let io = InObjectifier::new(&self.tape, Windows1252Encoding::new());
-                Ok(io.from_root())
+                Ok(io.create_from_root())
             }
             _ => {
                 let io = InObjectifier::new(&self.tape, Utf8Encoding::new());
-                Ok(io.from_root())
+                Ok(io.create_from_root())
             }
         }
     }

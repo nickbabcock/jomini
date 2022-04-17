@@ -71,7 +71,7 @@ where
     {
         match self.reader.token() {
             TextToken::Quoted(_) | TextToken::Unquoted(_) => {
-                serialize_scalar(&self.reader, serializer)
+                serialize_scalar(self.reader, serializer)
             }
             TextToken::Array(_) => {
                 let array_reader = self.reader.read_array().unwrap();
