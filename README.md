@@ -160,14 +160,14 @@ To pretty print the output:
 parser.parseText(buffer, { }, (q) => q.json({ pretty: true }));
 ```
 
-There is an option to decide how duplicate keys are disambiguated. For instance, given the following data:
+There is an option to decide how duplicate keys are serialized. For instance, given the following data:
 
 ```
 core="AAA"
 core="BBB"
 ```
 
-The default behavior (the disambiguation of "none") will encode the above as:
+The default behavior will group the two fields into one list, as shown below. This favors ergonomics, as the builtin `JSON.parse` doesn't handle duplicate keys well.
 
 ```json
 {
@@ -175,10 +175,10 @@ The default behavior (the disambiguation of "none") will encode the above as:
 }
 ```
 
-The default behavior favors ergonomics over preserving structure as most users probably aren't in need to know if a JSON array appeared as an array in the data. This behavior can be tweaked so that duplicate keys are retained:
+If this behavior is not desirable, it can be tweaked such that the duplicate keys are preserved:
 
 ```js
-parser.parseText(buffer, { }, (q) => q.json({ disambiguate: "keys" }));
+parser.parseText(buffer, { }, (q) => q.json({ duplicateKeyMode: "preserve" }));
 ```
 
 will output:
@@ -190,10 +190,12 @@ will output:
 }
 ```
 
-But whether or not the above is [valid JSON is debateable](https://stackoverflow.com/q/21832701). So the last disambiguation mode transforms key value objects to an array of key value tuples:
+Whether or not the above is [valid JSON is debateable](https://stackoverflow.com/q/21832701).
+
+The remaining mode transforms key value objects to an array of key value tuples:
 
 ```js
-parser.parseText(buffer, { }, (q) => q.json({ disambiguate: "typed" }));
+parser.parseText(buffer, { }, (q) => q.json({ duplicateKeyMode: "key-value-pairs" }));
 ```
 
 will output:

@@ -138,15 +138,11 @@ export type JsonOptions = {
   pretty: boolean;
 
   /**
-   * Determines how duplicate keys are disambiguated from arrays. The default of
-   * "none" means that there is no disambiguation and that duplicate keys will
-   * be aggregated into an array and appear similar to other arrays. "keys" will
-   * write duplicate keys back into the JSON but it is debateable whether duplicate
-   * keys is considered valid JSON. "typed" is an overly verbose format that translates
-   * objects into arrays of key value tuples -- arrays are also transformed in this
-   * process to explicitly list their type as `array`
+   * Determines how duplicate keys are serialized
+   * 
+   * @see {@link https://docs.rs/jomini/0.19.0/jomini/json/enum.DuplicateKeyMode.html}
    */
-  disambiguate: "none" | "keys" | "typed";
+  duplicateKeyMode: "group" | "preserve" | "key-value-pairs";
 };
 
 export class Query {
@@ -170,8 +166,8 @@ export class Query {
   /** Convert the entire document into a JSON string */
   json(options?: Partial<JsonOptions>): string {
     return this.query.json(
-      options?.pretty || false,
-      options?.disambiguate || "none"
+      options?.pretty ?? false,
+      options?.duplicateKeyMode ?? "group"
     );
   }
 }
@@ -305,6 +301,6 @@ export class Writer {
    * @param date date
    */
   write_date(date: Date, options?: Partial<{ hour: boolean }>) {
-    this.writer.write_date(date, options?.hour || false);
+    this.writer.write_date(date, options?.hour ?? false);
   }
 }
