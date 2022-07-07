@@ -1,3 +1,12 @@
+## v0.7.0 - 2022-07-07
+
+- Performance improvements in json and js object creation (avoid heap allocation
+  when a grouped field consist of only one element)
+- the duplicate key mode (previously `disambiguate` values have been renamed):
+  - none -> group
+  - keys -> preserve
+  - typed -> key-value-pairs
+
 ## v0.6.4 - 2022-03-21
 
 - Fix return type of `parseText` to be a `Record<string, any>` instead of an `Object`
