@@ -697,33 +697,33 @@ it("should serialize to json object pretty", async () => {
   expect(out).toEqual(expected);
 });
 
-it("should serialize to json disambiguate keys", async () => {
+it("should serialize to json duplicate key mode preserve", async () => {
   const jomini = await Jomini.initialize();
   const str = "core=AAA core=BBB";
   const expected = '{"core":"AAA","core":"BBB"}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ disambiguate: "keys" })
+    q.json({ duplicateKeyMode: "preserve" })
   );
   expect(out).toEqual(expected);
 });
 
-it("should serialize to json disambiguate typed", async () => {
+it("should serialize to json duplicate key mode typed", async () => {
   const jomini = await Jomini.initialize();
   const str = "core=AAA core=BBB";
   const expected = '{"type":"obj","val":[["core","AAA"],["core","BBB"]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ disambiguate: "typed" })
+    q.json({ duplicateKeyMode: "key-value-pairs" })
   );
   expect(out).toEqual(expected);
 });
 
-it("should serialize to json disambiguate typed arrays", async () => {
+it("should serialize to json duplicate key mode typed arrays", async () => {
   const jomini = await Jomini.initialize();
   const str = "nums={1 2}";
   const expected =
     '{"type":"obj","val":[["nums",{"type":"array","val":[1,2]}]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ disambiguate: "typed" })
+    q.json({ duplicateKeyMode: "key-value-pairs" })
   );
   expect(out).toEqual(expected);
 });
@@ -741,7 +741,7 @@ it("should serialize object trailers to json keys", async () => {
   const str = "area = { color = { 10 } 1 2 }";
   const expected = '{"area":{"color":[10],"trailer":[1,2]}}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ disambiguate: "keys" })
+    q.json({ duplicateKeyMode: "preserve" })
   );
   expect(out).toEqual(expected);
 });
@@ -752,7 +752,7 @@ it("should serialize object trailers to json typed", async () => {
   const expected =
     '{"type":"obj","val":[["area",{"type":"obj","val":[["color",{"type":"array","val":[10]}],[1,2]]}]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ disambiguate: "typed" })
+    q.json({ duplicateKeyMode: "key-value-pairs" })
   );
   expect(out).toEqual(expected);
 });
@@ -764,7 +764,7 @@ it("should serialize parameter definitions to json typed", async () => {
   const expected =
     '{"type":"obj","val":[["generate_advisor",{"type":"obj","val":[["[scaled_skill]",{"type":"obj","val":[["a","b"]]}],["[!scaled_skill]",{"type":"obj","val":[["c","d"]]}]]}]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ disambiguate: "typed" })
+    q.json({ duplicateKeyMode: "key-value-pairs" })
   );
   expect(out).toEqual(expected);
 });
@@ -775,7 +775,7 @@ it("should serialize parameter definition value to json typed", async () => {
   const expected =
     '{"type":"obj","val":[["foo",{"type":"obj","val":[["[add]","$add$"]]}]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ disambiguate: "typed" })
+    q.json({ duplicateKeyMode: "key-value-pairs" })
   );
   expect(out).toEqual(expected);
 });

@@ -1,5 +1,5 @@
 use crate::errors;
-use jomini::{Operator, TextWriter};
+use jomini::{text::Operator, TextWriter};
 use js_sys::Date;
 use wasm_bindgen::prelude::*;
 

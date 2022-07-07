@@ -1,14 +1,12 @@
 use jomini::{
     common::{PdsDate, RawDate},
-    ArrayReader, Encoding, ObjectReader, Operator, ScalarReader, TextTape, TextToken,
-    TextWriterBuilder, Utf8Encoding, ValueReader, Windows1252Encoding,
+    json::{DuplicateKeyMode, JsonOptions},
+    text::{ArrayReader, GroupEntry, ObjectReader, Operator, ScalarReader, ValueReader},
+    Encoding, TextTape, TextToken, TextWriterBuilder, Utf8Encoding, Windows1252Encoding,
 };
 use js_sys::{Array, Date};
-use ser::{DisambiguateMode, SerTape};
 use wasm_bindgen::prelude::*;
 mod errors;
-mod op;
-mod ser;
 mod write;
 
 /// wee_alloc saved ~6kb in the wasm payload and there was no
@@ -106,8 +104,8 @@ where
         JsValue::from_str(&result)
     }
 
-    fn create_array(&self, mut reader: ArrayReader<'a, 'b, E>) -> JsValue {
-        let len = reader.values_len();
+    fn create_array(&self, reader: ArrayReader<'a, 'b, E>) -> JsValue {
+        let len = reader.len();
         if len == 0 {
             // Surprise! You thought we'd be creating an array. The only reason
             // we aren't for empty arrays is that it is ambiguous whether it is
@@ -118,7 +116,7 @@ where
 
         let arr = Array::new_with_length(len as u32);
         let mut pos = 0;
-        while let Some(x) = reader.next_value() {
+        for x in reader.values() {
             let v = self.entry_to_js(None, x);
             arr.set(pos, v);
             pos += 1;
@@ -127,11 +125,12 @@ where
         arr.into()
     }
 
-    fn create_from_header(&self, mut veader: ArrayReader<'a, 'b, E>) -> Object {
+    fn create_from_header(&self, veader: ArrayReader<'a, 'b, E>) -> Object {
         let result = Object::new();
+        let mut values = veader.values();
 
-        let key = JsValue::from_str(veader.next_value().unwrap().read_str().unwrap().as_ref());
-        let val = self.entry_to_js(None, veader.next_value().unwrap());
+        let key = JsValue::from_str(values.next().unwrap().read_str().unwrap().as_ref());
+        let val = self.entry_to_js(None, values.next().unwrap());
 
         result.set(key, val);
         result
@@ -140,7 +139,7 @@ where
     fn create_operator_object(&self, op: Operator, veader: ValueReader<'a, 'b, E>) -> Object {
         let result = Object::new();
         let val = self.entry_to_js(None, veader);
-        result.set(JsValue::from_str(op::operator_name(op)), val);
+        result.set(JsValue::from_str(op.name()), val);
         result
     }
 
@@ -175,27 +174,28 @@ where
         }
     }
 
-    fn create_object(&self, mut reader: ObjectReader<'a, 'b, E>) -> Object {
+    fn create_object(&self, reader: ObjectReader<'a, 'b, E>) -> Object {
         let result = Object::new();
-        while let Some((key, mut entries)) = reader.next_fields() {
+        let mut fields = reader.field_groups();
+        for (key, group) in fields.by_ref() {
             let key_js = self.scalar_to_key(key);
 
-            let value_js = if entries.len() == 1 {
-                let (op, value) = entries.pop().unwrap();
-                self.entry_to_js(op, value)
-            } else {
-                let arr = Array::new_with_length(entries.len() as u32);
-                for (i, (op, value)) in entries.drain(..).enumerate() {
-                    let v = self.entry_to_js(op, value);
-                    arr.set(i as u32, v);
+            let value_js = match group {
+                GroupEntry::One((op, value)) => self.entry_to_js(op, value),
+                GroupEntry::Multiple(mut values) => {
+                    let arr = Array::new_with_length(values.len() as u32);
+                    for (i, (op, value)) in values.drain(..).enumerate() {
+                        let v = self.entry_to_js(op, value);
+                        arr.set(i as u32, v);
+                    }
+                    arr.into()
                 }
-                arr.into()
             };
 
             result.set(key_js, value_js);
         }
 
-        if let Some(trailer) = reader.at_trailer() {
+        if let Some(trailer) = fields.at_trailer() {
             result.set(JsValue::from_str("trailer"), self.create_array(trailer));
         }
 
@@ -210,7 +210,7 @@ where
     ) -> JsValue {
         let mut values: Vec<JsValue> = Vec::new();
         let nested_need = rest.next();
-        while let Some((key, op, value)) = reader.next_field() {
+        for (key, op, value) in reader.fields() {
             if key.read_str() != needle {
                 continue;
             }
@@ -277,34 +277,36 @@ impl Query {
     }
 
     /// Convert the entire document into a JSON string
-    pub fn json(&self, pretty: bool, disambiguate: &str) -> Result<JsValue, JsValue> {
-        let disam_mode = match disambiguate {
-            "keys" => DisambiguateMode::Keys,
-            "typed" => DisambiguateMode::Typed,
-            _ => DisambiguateMode::None,
+    pub fn json(&self, pretty: bool, key_mode: &str) -> Result<JsValue, JsValue> {
+        let key_mode = match key_mode {
+            "preserve" => DuplicateKeyMode::Preserve,
+            "key-value-pairs" => DuplicateKeyMode::KeyValuePairs,
+            _ => DuplicateKeyMode::Group,
         };
+
+        let options = JsonOptions::new()
+            .with_prettyprint(pretty)
+            .with_duplicate_keys(key_mode);
 
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
-                let reader = SerTape::new(&self.tape, Windows1252Encoding::new(), disam_mode);
-                let result = if pretty {
-                    serde_json::to_string_pretty(&reader)
-                } else {
-                    serde_json::to_string(&reader)
-                };
-
-                let val = JsValue::from_str(&result.unwrap());
+                let out = self
+                    .tape
+                    .windows1252_reader()
+                    .json()
+                    .with_options(options)
+                    .to_string();
+                let val = JsValue::from_str(&out);
                 Ok(val)
             }
             _ => {
-                let reader = SerTape::new(&self.tape, Utf8Encoding::new(), disam_mode);
-                let result = if pretty {
-                    serde_json::to_string_pretty(&reader)
-                } else {
-                    serde_json::to_string(&reader)
-                };
-
-                let val = JsValue::from_str(&result.unwrap());
+                let out = self
+                    .tape
+                    .utf8_reader()
+                    .json()
+                    .with_options(options)
+                    .to_string();
+                let val = JsValue::from_str(&out);
                 Ok(val)
             }
         }
