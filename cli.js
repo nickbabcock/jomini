@@ -1,5 +1,5 @@
-const { readFileSync } = require("fs");
-const { Jomini } = require(".");
+import { readFileSync } from "fs";
+import { Jomini } from "jomini";
 const args = process.argv.slice(2);
 if (args.length !== 1) {
   console.info("expected one argument for the file path");
