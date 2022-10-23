@@ -9,11 +9,6 @@ use wasm_bindgen::prelude::*;
 mod errors;
 mod write;
 
-/// wee_alloc saved ~6kb in the wasm payload and there was no
-/// measurable performance difference
-#[global_allocator]
-static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
-
 /// Custom bindings to avoid using fallible `Reflect` for plain objects.
 /// Lifted from serde-wasm-bindgen where it brought a nice performance boost:
 /// https://github.com/cloudflare/serde-wasm-bindgen/commit/f763ead4b47d6cda5873d18f276be4fa6712f6a6
