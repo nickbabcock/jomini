@@ -144,8 +144,8 @@ where
         } else {
             match veader.token() {
                 TextToken::Quoted(_) | TextToken::Unquoted(_) => self.scalar_to_js_value(veader),
-                TextToken::Array(_) => self.create_array(veader.read_array().unwrap()),
-                TextToken::Object(_) | TextToken::HiddenObject(_) => {
+                TextToken::Array { .. } => self.create_array(veader.read_array().unwrap()),
+                TextToken::Object { .. } => {
                     self.create_object(veader.read_object().unwrap()).into()
                 }
                 TextToken::Header(_) => {
@@ -154,6 +154,7 @@ where
 
                 // parameters should not be seen as values
                 TextToken::End(_)
+                | TextToken::MixedContainer
                 | TextToken::Operator(_)
                 | TextToken::Parameter(_)
                 | TextToken::UndefinedParameter(_) => JsValue::null(),
@@ -190,8 +191,9 @@ where
             result.set(key_js, value_js);
         }
 
-        if let Some(trailer) = fields.at_trailer() {
-            result.set(JsValue::from_str("trailer"), self.create_array(trailer));
+        let remainder = fields.remainder();
+        if !remainder.is_empty() {
+            result.set(JsValue::from_str("remainder"), self.create_array(remainder));
         }
 
         result
