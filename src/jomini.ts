@@ -139,7 +139,7 @@ export type JsonOptions = {
 
   /**
    * Determines how duplicate keys are serialized
-   * 
+   *
    * @see {@link https://docs.rs/jomini/0.19.0/jomini/json/enum.DuplicateKeyMode.html}
    */
   duplicateKeyMode: "group" | "preserve" | "key-value-pairs";
@@ -188,8 +188,8 @@ export class Writer {
   /**
    * Write out the start of a hidden object
    */
-  write_hidden_object_start() {
-    this.writer.write_hidden_object_start();
+  start_mixed_mode() {
+    this.writer.start_mixed_mode();
   }
 
   /**
@@ -218,7 +218,7 @@ export class Writer {
    * Write out a non-equals operator
    * @param data operator to write out
    */
-  write_operator(data: ">" | ">=" | "<" | "<=") {
+  write_operator(data: ">" | ">=" | "<" | "<=" | "=") {
     this.writer.write_operator(data);
   }
 

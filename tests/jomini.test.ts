@@ -366,9 +366,9 @@ it("should handle back to backs", async () => {
   expect(await parse(str1 + str2)).toEqual(obj);
 });
 
-it("should understand object trailers", async () => {
+it("should understand mixed containers", async () => {
   expect(await parse("area = { color = { 10 } 1 2 }")).toEqual({
-    area: { color: [10], trailer: [1, 2] },
+    area: { color: [10], remainder: [1, 2] },
   });
 });
 
@@ -731,7 +731,7 @@ it("should serialize to json duplicate key mode typed arrays", async () => {
 it("should serialize object trailers to json", async () => {
   const jomini = await Jomini.initialize();
   const str = "area = { color = { 10 } 1 2 }";
-  const expected = '{"area":{"color":[10],"trailer":[1,2]}}';
+  const expected = '{"area":{"color":[10],"remainder":[1,2]}}';
   const out = jomini.parseText(utf8encode(str), {}, (q) => q.json());
   expect(out).toEqual(expected);
 });
@@ -739,7 +739,7 @@ it("should serialize object trailers to json", async () => {
 it("should serialize object trailers to json keys", async () => {
   const jomini = await Jomini.initialize();
   const str = "area = { color = { 10 } 1 2 }";
-  const expected = '{"area":{"color":[10],"trailer":[1,2]}}';
+  const expected = '{"area":{"color":[10],"remainder":[1,2]}}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
     q.json({ duplicateKeyMode: "preserve" })
   );
@@ -792,16 +792,18 @@ it("should write simple fields", async () => {
   expect(new TextDecoder().decode(out)).toEqual('1=2\nfoo="bar"');
 });
 
-it("should write hidden object", async () => {
+it("should write mixed object", async () => {
   const jomini = await Jomini.initialize();
   const out = jomini.write((writer) => {
     writer.write_unquoted("foo");
     writer.write_array_start();
     writer.write_integer(1);
-    writer.write_hidden_object_start();
+    writer.start_mixed_mode();
     writer.write_unquoted("qux");
+    writer.write_operator("=");
     writer.write_unquoted("bar");
     writer.write_unquoted("a");
+    writer.write_operator("=");
     writer.write_unquoted("b");
     writer.write_end();
     writer.write_unquoted("f");

@@ -20,10 +20,8 @@ impl WasmWriter {
             .map_err(errors::create_error_val)
     }
 
-    pub fn write_hidden_object_start(&mut self) -> Result<(), JsValue> {
-        self.writer
-            .write_hidden_object_start()
-            .map_err(errors::create_error_val)
+    pub fn start_mixed_mode(&mut self) {
+        self.writer.start_mixed_mode()
     }
 
     pub fn write_array_start(&mut self) -> Result<(), JsValue> {
@@ -47,6 +45,7 @@ impl WasmWriter {
             ">" => self.writer.write_operator(Operator::GreaterThan),
             ">=" => self.writer.write_operator(Operator::GreaterThanEqual),
             "<" => self.writer.write_operator(Operator::LessThan),
+            "=" => self.writer.write_operator(Operator::Equal),
             _ => self.writer.write_operator(Operator::LessThanEqual),
         };
 
