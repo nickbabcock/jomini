@@ -1,3 +1,10 @@
+## v0.8.0 - 2022-10-24
+
+- Bump internal parser to handle additional text formats
+- `write_hidden_object_start` has been replaced with `start_mixed_mode`
+- One can now write the equals operator (to be used with mixed mode only though)
+- Remove wee_alloc in favor of standard memory allocator
+
 ## v0.7.0 - 2022-07-07
 
 - Performance improvements in json and js object creation (avoid heap allocation
