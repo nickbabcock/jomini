@@ -31,6 +31,7 @@
   "scripts": {
     "build": "wasm-pack build -t web --out-dir ../src/pkg crate && rm -rf dist/ && rollup -c && cp src/pkg/jomini_js_bg.wasm dist/jomini.wasm",
     "build:minify": "npm run build && npx terser@latest --compress --mangle --output dist/cjs/index.cjs -- dist/cjs/index.cjs",
+    "format": "npx prettier@latest --write src/ tests/ package.json rollup.config.js tsconfig.json vite.config.ts cli.js",
     "pretest": "npm run build",
     "test": "vitest run && tsc",
     "prepublishOnly": "npm test"
