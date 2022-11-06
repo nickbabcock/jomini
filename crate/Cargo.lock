@@ -32,9 +32,9 @@ checksum = "112c678d4050afce233f4f2852bb2eb519230b3cf12f33585275537d7e41578d"
 
 [[package]]
 name = "jomini"
-version = "0.20.0"
+version = "0.20.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "62c072d9234b3deb0f732326e636672aa93f28ca7650dcff271b27fe775efaf1"
+checksum = "2e86d4b770f0ef605045a909617ffa9808e8e9ffa9a2d5457cc6d4df8c59b0d2"
 dependencies = [
  "jomini_derive",
  "serde",
@@ -120,6 +120,20 @@ name = "serde"
 version = "1.0.141"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7af873f2c95b99fcb0bd0fe622a43e29514658873c8ceba88c4cb88833a22500"
+dependencies = [
+ "serde_derive",
+]
+
+[[package]]
+name = "serde_derive"
+version = "1.0.141"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75743a150d003dd863b51dc809bcad0d73f2102c53632f1e954e738192a3413f"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "serde_json"

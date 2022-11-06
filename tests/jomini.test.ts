@@ -757,6 +757,44 @@ it("should serialize object trailers to json typed", async () => {
   expect(out).toEqual(expected);
 });
 
+it("should serialize mixed objects to json", async () => {
+  const jomini = await Jomini.initialize();
+  const str = `
+  on_actions = {
+    faith_holy_order_land_acquisition_pulse
+    delay = { days = { 5 10 }}
+    faith_heresy_events_pulse
+    delay = { days = { 15 20 }}
+    faith_fervor_events_pulse
+  }
+`;
+  const expected =
+    '{"on_actions":["faith_holy_order_land_acquisition_pulse",{"delay":{"days":[5,10]}},"faith_heresy_events_pulse",{"delay":{"days":[15,20]}},"faith_fervor_events_pulse"]}';
+
+  const out = jomini.parseText(utf8encode(str), {}, (q) => q.json());
+  expect(out).toEqual(expected);
+});
+
+it("should serialize mixed objects to json keys", async () => {
+  const jomini = await Jomini.initialize();
+  const str = `
+  on_actions = {
+    faith_holy_order_land_acquisition_pulse
+    delay = { days = { 5 10 }}
+    faith_heresy_events_pulse
+    delay = { days = { 15 20 }}
+    faith_fervor_events_pulse
+  }
+`;
+  const expected =
+    '{"on_actions":["faith_holy_order_land_acquisition_pulse",{"delay":{"days":[5,10]}},"faith_heresy_events_pulse",{"delay":{"days":[15,20]}},"faith_fervor_events_pulse"]}';
+
+  const out = jomini.parseText(utf8encode(str), {}, (q) =>
+    q.json({ duplicateKeyMode: "preserve" })
+  );
+  expect(out).toEqual(expected);
+});
+
 it("should serialize parameter definitions to json typed", async () => {
   const jomini = await Jomini.initialize();
   const str =
