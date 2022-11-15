@@ -23,7 +23,7 @@ Quick and easy way to add jomini to your project:
 
 ```html
 <body>
-  <script src="https://cdn.jsdelivr.net/npm/jomini@0.6.4/dist/umd/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jomini@0.8.0/dist/umd/index.min.js"></script>
   <script>
     jomini.Jomini.initialize().then((parser) => {
       const out = parser.parseText("foo=bar");
@@ -37,9 +37,9 @@ Or if you want a more efficient way to get started:
 
 ```html
 <script type="module">
-  import { Jomini } from 'https://cdn.jsdelivr.net/npm/jomini@0.6.4/dist/es-slim/index_slim.min.js';
+  import { Jomini } from 'https://cdn.jsdelivr.net/npm/jomini@0.8.0/dist/es-slim/index_slim.min.js';
 
-  const wasmUrl = 'https://cdn.jsdelivr.net/npm/jomini@0.6.4/dist/jomini.wasm';
+  const wasmUrl = 'https://cdn.jsdelivr.net/npm/jomini@0.8.0/dist/jomini.wasm';
   Jomini.initialize({ wasm: wasmUrl })
     .then((parser) => {
       const out = parser.parseText('foo=bar');
