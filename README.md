@@ -330,3 +330,21 @@ const data = `player="FRA"`;
 const parser = await Jomini.initialize({ wasm });
 const out = parser.parseText(data);
 ```
+
+## Deno
+
+Deno is currently supported through their npm specifier. Jomini requires `--allow-read` permissions.
+
+```ts
+import { Jomini } from "npm:jomini@0.8.0";
+
+const data = await Deno.readAll(Deno.stdin);
+const parser = await Jomini.initialize();
+const out = parser.parseText(
+  data,
+  { encoding: "windows1252" },
+  (query) => query.json(),
+);
+
+console.log(out);
+```
