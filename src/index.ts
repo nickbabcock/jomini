@@ -1,5 +1,4 @@
-export { Jomini, ParseOptions, Encoding, Query } from "./jomini";
-export { toArray } from "./toArray";
+export * from "./index_core";
 import jomini_wasm from "./pkg/jomini_js_bg.wasm";
 import { setWasmInit } from "./jomini";
 

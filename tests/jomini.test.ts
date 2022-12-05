@@ -1,5 +1,12 @@
 import { expect, it } from "vitest";
-import { Jomini, toArray, Query } from "..";
+import {
+  Jomini,
+  toArray,
+  Query,
+  Writer,
+  JominiLoadOptions,
+  JsonOptions,
+} from "..";
 import fs from "fs/promises";
 
 const encoder = new TextEncoder();
@@ -691,9 +698,8 @@ it("should serialize to json object pretty", async () => {
     }
   }
 }`;
-  const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ pretty: true })
-  );
+  const opts: JsonOptions = { pretty: true };
+  const out = jomini.parseText(utf8encode(str), {}, (q) => q.json(opts));
   expect(out).toEqual(expected);
 });
 
@@ -820,7 +826,7 @@ it("should serialize parameter definition value to json typed", async () => {
 
 it("should write simple fields", async () => {
   const jomini = await Jomini.initialize();
-  const out = jomini.write((writer) => {
+  const out = jomini.write((writer: Writer) => {
     writer.write_integer(1);
     writer.write_integer(2);
     writer.write_unquoted("foo");
@@ -907,7 +913,8 @@ it("should allow custom initialization", async () => {
   let jomini = await Jomini.initialize();
   Jomini.resetModule();
   const wasm = await fs.readFile("dist/jomini.wasm");
-  jomini = await Jomini.initialize({ wasm });
+  const opts: JominiLoadOptions = { wasm };
+  jomini = await Jomini.initialize(opts);
 
   const out = jomini.parseText("foo=bar");
   expect(out).toEqual({ foo: "bar" });

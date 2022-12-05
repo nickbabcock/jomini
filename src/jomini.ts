@@ -131,7 +131,7 @@ export class Jomini {
 /**
  * Tweaks the knobs used in JSON generation
  */
-export type JsonOptions = {
+export type JsonOptions = Partial<{
   /**
    * If the JSON should be pretty-printed. Defaults to false
    */
@@ -143,7 +143,7 @@ export type JsonOptions = {
    * @see {@link https://docs.rs/jomini/0.19.0/jomini/json/enum.DuplicateKeyMode.html}
    */
   duplicateKeyMode: "group" | "preserve" | "key-value-pairs";
-};
+}>;
 
 export class Query {
   constructor(private query: WasmQuery) {}
@@ -164,7 +164,7 @@ export class Query {
   }
 
   /** Convert the entire document into a JSON string */
-  json(options?: Partial<JsonOptions>): string {
+  json(options?: JsonOptions): string {
     return this.query.json(
       options?.pretty ?? false,
       options?.duplicateKeyMode ?? "group"
