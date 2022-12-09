@@ -8,16 +8,16 @@
   "type": "module",
   "main": "./dist/umd/index.js",
   "module": "./dist/es/index.js",
-  "types": "./dist/umd/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/cjs/index.d.ts",
+      "types": "./dist/types/index.d.ts",
       "node": "./dist/node/index.cjs",
       "import": "./dist/es/index.js",
       "default": "./dist/cjs/index.cjs"
     },
     "./slim": {
-      "types": "./dist/cjs-slim/index_slim.d.ts",
+      "types": "./dist/types/index.d.ts",
       "node": "./dist/node/index.cjs",
       "import": "./dist/es-slim/index_slim.js",
       "default": "./dist/cjs-slim/index_slim.cjs"

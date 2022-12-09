@@ -1,29 +1,16 @@
 {
   "include": ["src", "tests"],
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2022",
     "noEmit": true,
-    // what follows is from the tsdx project
-    "module": "esnext",
-    "lib": ["dom", "esnext"],
-    "importHelpers": true,
-    // output .d.ts declaration files for consumers
+    "module": "ES2022",
+    "lib": ["dom", "ES2022"],
     "declaration": true,
-    // stricter type-checking for stronger correctness. Recommended by TS
+    "declarationDir": "dist/types",
     "strict": true,
-    // linter checks for common issues
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    // noUnused* overlap with @typescript-eslint/no-unused-vars, can disable if duplicative
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    // use Node's module resolution algorithm, instead of the legacy TS one
     "moduleResolution": "node",
-    // interop between ESM and CJS modules. Recommended by TS
     "esModuleInterop": true,
-    // significant perf increase by skipping checking .d.ts files, particularly those in node_modules. Recommended by TS
     "skipLibCheck": true,
-    // error out if import and file system have a casing mismatch. Recommended by TS
     "forceConsistentCasingInFileNames": true
   }
 }

@@ -5,18 +5,19 @@ import fs from "fs";
 
 const outdir = (fmt, env) => {
   if (env == "node") {
-    return `dist/node`;
+    return `node`;
   } else {
-    return `dist/${fmt}${env == "slim" ? "-slim" : ""}`;
+    return `${fmt}${env == "slim" ? "-slim" : ""}`;
   }
 };
 
 const rolls = (fmt, env) => ({
   input: env !== "slim" ? "src/index.ts" : "src/index_slim.ts",
   output: {
-    dir: outdir(fmt, env),
+    dir: `dist`,
     format: fmt,
-    entryFileNames: `[name].${fmt === "cjs" ? "cjs" : "js"}`,
+    entryFileNames:
+      outdir(fmt, env) + `/[name].` + (fmt === "cjs" ? "cjs" : "js"),
     name: "jomini",
   },
   plugins: [
@@ -25,10 +26,14 @@ const rolls = (fmt, env) => ({
     env != "slim" &&
       wasm(
         env == "node"
-          ? { maxFileSize: 0, targetEnv: "node" }
+          ? { maxFileSize: 0, targetEnv: "node", publicPath: "../" }
           : { targetEnv: "auto-inline" }
       ),
-    typescript({ outDir: outdir(fmt, env), rootDir: "src" }),
+    typescript({
+      target: fmt == "es" ? "ES2022" : "ES2017",
+      outDir: `dist/${outdir(fmt, env)}`,
+      rootDir: "src",
+    }),
     {
       name: "copy-pkg",
 
@@ -44,11 +49,10 @@ const rolls = (fmt, env) => ({
         // copy the typescript definitions that wasm-bindgen creates into the
         // distribution so that downstream users can benefit from documentation
         // on the rust code
-        const dir = outdir(fmt, env);
-        fs.mkdirSync(path.resolve(`${dir}/pkg`), { recursive: true });
+        fs.mkdirSync(`./dist/types/pkg`, { recursive: true });
         fs.copyFileSync(
           path.resolve("./src/pkg/jomini_js.d.ts"),
-          path.resolve(`${dir}/pkg/jomini_js.d.ts`)
+          path.resolve(`./dist/types/pkg/jomini_js.d.ts`)
         );
       },
     },

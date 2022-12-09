@@ -6,5 +6,5 @@ export {
   JominiLoadOptions,
   JsonOptions,
   Writer,
-} from "./jomini";
-export { toArray } from "./toArray";
+} from "./jomini.js";
+export { toArray } from "./toArray.js";

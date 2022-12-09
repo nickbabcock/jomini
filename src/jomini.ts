@@ -4,7 +4,7 @@ import init, {
   Query as WasmQuery,
   WasmWriter,
   write_text,
-} from "./pkg/jomini_js";
+} from "./pkg/jomini_js.js";
 
 /**
  * Supported encodings: UTF8 and Windows1252
