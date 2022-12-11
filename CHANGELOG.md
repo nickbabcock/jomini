@@ -1,3 +1,9 @@
+## v0.8.1 - 2022-12-11
+
+- Correctly author ESM types for `/slim` users
+- Bump target of output destined for bundlers to ES2022
+- Expose additional types, previously unexposed
+
 ## v0.8.0 - 2022-10-24
 
 - Bump internal parser to handle additional text formats
