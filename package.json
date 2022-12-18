@@ -22,14 +22,14 @@
       "import": "./dist/es-slim/index_slim.js",
       "default": "./dist/cjs-slim/index_slim.cjs"
     },
-    "./jomini.wasm": "./dist/jomini.wasm",
+    "./jomini.wasm": "./dist/jomini_js_bg.wasm",
     "./package.json": "./package.json"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "wasm-pack build -t web --out-dir ../src/pkg crate && rm -rf dist/ && rollup -c && cp src/pkg/jomini_js_bg.wasm dist/jomini.wasm",
+    "build": "wasm-pack build -t web --out-dir ../src/pkg crate && rm -rf dist/ && rollup -c",
     "build:minify": "npm run build && npx terser@latest --compress --mangle --output dist/cjs/index.cjs -- dist/cjs/index.cjs",
     "format": "npx prettier@latest --write src/ tests/ package.json rollup.config.js tsconfig.json vite.config.ts cli.js",
     "pretest": "npm run build",
@@ -49,7 +49,7 @@
   ],
   "devDependencies": {
     "@rollup/plugin-typescript": "^10.0.1",
-    "@rollup/plugin-wasm": "^6.0.1",
+    "@rollup/plugin-wasm": "^6.1.1",
     "@types/node": "^18.11.10",
     "rollup": "^3.5.1",
     "tslib": "^2.4.1",
