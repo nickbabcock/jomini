@@ -7,6 +7,7 @@ import {
   JominiLoadOptions,
   JsonOptions,
 } from "..";
+import pkg from "../package.json";
 import fs from "fs/promises";
 
 const encoder = new TextEncoder();
@@ -912,7 +913,7 @@ it("should write escaped text", async () => {
 it("should allow custom initialization", async () => {
   let jomini = await Jomini.initialize();
   Jomini.resetModule();
-  const wasm = await fs.readFile("dist/jomini.wasm");
+  const wasm = await fs.readFile(pkg.exports["./jomini.wasm"]);
   const opts: JominiLoadOptions = { wasm };
   jomini = await Jomini.initialize(opts);
 
