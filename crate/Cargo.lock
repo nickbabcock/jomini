@@ -32,9 +32,9 @@ checksum = "4217ad341ebadf8d8e724e264f13e593e0648f5b3e94b3896a5df283be015ecc"
 
 [[package]]
 name = "jomini"
-version = "0.20.2"
+version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2e86d4b770f0ef605045a909617ffa9808e8e9ffa9a2d5457cc6d4df8c59b0d2"
+checksum = "d725fbaacebb9e663b0070ab631e18674c6e517dd40b23e4db04d49100a88a89"
 dependencies = [
  "jomini_derive",
  "serde",
