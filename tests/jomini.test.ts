@@ -825,6 +825,64 @@ it("should serialize parameter definition value to json typed", async () => {
   expect(out).toEqual(expected);
 });
 
+it("should narrow all by default", async () => {
+  const jomini = await Jomini.initialize();
+  const { root, json } = jomini.parseText(
+    'a="01" b=02 c="yes" d=no',
+    {},
+    (q) => ({ root: q.root(), json: q.json() })
+  );
+
+  expect(root).toEqual({
+    a: 1,
+    b: 2,
+    c: true,
+    d: false,
+  });
+
+  expect(json).toEqual('{"a":1,"b":2,"c":true,"d":false}');
+});
+
+it("should narrow only unquoted", async () => {
+  const jomini = await Jomini.initialize();
+  const { root, json } = jomini.parseText(
+    'a="01" b=02 c="yes" d=no',
+    {
+      typeNarrowing: "unquoted",
+    },
+    (q) => ({ root: q.root(), json: q.json() })
+  );
+
+  expect(root).toEqual({
+    a: "01",
+    b: 2,
+    c: "yes",
+    d: false,
+  });
+
+  expect(json).toEqual('{"a":"01","b":2,"c":"yes","d":false}');
+});
+
+it("should never narrow", async () => {
+  const jomini = await Jomini.initialize();
+  const { root, json } = jomini.parseText(
+    'a="01" b=02 c="yes" d=no',
+    {
+      typeNarrowing: "none",
+    },
+    (q) => ({ root: q.root(), json: q.json() })
+  );
+
+  expect(root).toEqual({
+    a: "01",
+    b: "02",
+    c: "yes",
+    d: "no",
+  });
+
+  expect(json).toEqual('{"a":"01","b":"02","c":"yes","d":"no"}');
+});
+
 it("should write simple fields", async () => {
   const jomini = await Jomini.initialize();
   const out = jomini.write((writer: Writer) => {

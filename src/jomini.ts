@@ -12,6 +12,15 @@ import init, {
 export type Encoding = "utf8" | "windows1252";
 
 /**
+ * When to narrow string types to a more specific type
+ *
+ * - all: For both quoted and unquoted values
+ * - unquoted: For only unquoted values
+ * - none: Never narrow
+ */
+export type TypeNarrowing = "all" | "unquoted" | "none";
+
+/**
  * Tweaks the knobs used in parsing
  */
 export type ParseOptions = {
@@ -19,6 +28,11 @@ export type ParseOptions = {
    * The encoding used to transform bytes to strings
    */
   encoding: Encoding;
+
+  /**
+   * The type desired narrowing scheme
+   */
+  typeNarrowing: TypeNarrowing;
 };
 
 /**
@@ -83,7 +97,11 @@ export class Jomini {
       var inp = data;
     }
 
-    const innerQuery = parse_text(inp, options?.encoding ?? "utf8");
+    const innerQuery = parse_text(
+      inp,
+      options?.encoding ?? "utf8",
+      options?.typeNarrowing ?? "all"
+    );
     const query = new Query(innerQuery);
 
     if (cb === undefined) {

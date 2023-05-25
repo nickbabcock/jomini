@@ -101,6 +101,30 @@ const out = jomini.parseText(data, { encoding: "windows1252" });
 // out = { ÿ: "Š" }
 ```
 
+## Type Narrowing
+
+By default, jomini will attempt to narrow all values to more specific types like numbers, dates, or booleans. Type narrowing can be configured to only occur for unquoted values or disabled altogether.
+
+```js
+const jomini = await Jomini.initialize();
+const { root, json } = jomini.parseText(
+  'a="01" b=02 c="yes" d=no',
+  {
+    typeNarrowing: "unquoted",
+  },
+  (q) => ({ root: q.root(), json: q.json() })
+);
+
+expect(root).toEqual({
+  a: "01",
+  b: 2,
+  c: "yes",
+  d: false,
+});
+
+expect(json).toEqual('{"a":"01","b":2,"c":"yes","d":false}');
+```
+
 ## Performance
 
 95-99% of the time it takes to parse a file is creating the Javascript object, so it is preferable if one can slim the object down as much as possible. This is why `parseText` accepts a callback where one can provide JSON pointer like strings to extract only the data that is necessary.
