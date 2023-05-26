@@ -1,6 +1,6 @@
 use jomini::{
     common::{PdsDate, RawDate},
-    json::{DuplicateKeyMode, JsonOptions},
+    json::{DuplicateKeyMode, JsonOptions, TypeNarrowing},
     text::{ArrayReader, GroupEntry, ObjectReader, Operator, ScalarReader, ValueReader},
     Encoding, TextTape, TextToken, TextWriterBuilder, Utf8Encoding, Windows1252Encoding,
 };
@@ -50,16 +50,17 @@ fn skip_header(data: &[u8]) -> &[u8] {
 #[derive(Debug)]
 struct InObjectifier<'a, 'b, E> {
     reader: ObjectReader<'a, 'b, E>,
+    type_narrowing: TypeNarrowing,
 }
 
 impl<'a, 'b, E: Encoding> InObjectifier<'a, 'b, E>
 where
     E: Clone,
 {
-    fn new(tape: &'b TextTape<'a>, encoding: E) -> Self {
+    fn new(tape: &'b TextTape<'a>, encoding: E, type_narrowing: TypeNarrowing) -> Self {
         let reader = ObjectReader::new(tape, encoding);
 
-        Self { reader }
+        Self { reader, type_narrowing }
     }
 
     fn create_from_root(&self) -> JsValue {
@@ -143,7 +144,13 @@ where
             self.create_operator_object(op, veader).into()
         } else {
             match veader.token() {
-                TextToken::Quoted(_) | TextToken::Unquoted(_) => self.scalar_to_js_value(veader),
+                TextToken::Unquoted(_) if self.type_narrowing != TypeNarrowing::None => {
+                    self.scalar_to_js_value(veader)
+                }
+                TextToken::Quoted(_) if self.type_narrowing == TypeNarrowing::All => {
+                    self.scalar_to_js_value(veader)
+                }
+                TextToken::Unquoted(_) | TextToken::Quoted(_) => JsValue::from_str(veader.read_str().unwrap().as_ref()),
                 TextToken::Array { .. } => self.create_array(veader.read_array().unwrap()),
                 TextToken::Object { .. } => {
                     self.create_object(veader.read_object().unwrap()).into()
@@ -255,6 +262,7 @@ pub struct Query {
     _backing_data: Vec<u8>,
     tape: TextTape<'static>,
     encoding: JsValue,
+    type_narrowing: TypeNarrowing,
 }
 
 #[wasm_bindgen]
@@ -263,11 +271,11 @@ impl Query {
     pub fn root(&self) -> Result<JsValue, JsValue> {
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
-                let io = InObjectifier::new(&self.tape, Windows1252Encoding::new());
+                let io = InObjectifier::new(&self.tape, Windows1252Encoding::new(), self.type_narrowing);
                 Ok(io.create_from_root())
             }
             _ => {
-                let io = InObjectifier::new(&self.tape, Utf8Encoding::new());
+                let io = InObjectifier::new(&self.tape, Utf8Encoding::new(), self.type_narrowing);
                 Ok(io.create_from_root())
             }
         }
@@ -283,6 +291,7 @@ impl Query {
 
         let options = JsonOptions::new()
             .with_prettyprint(pretty)
+            .with_type_narrowing(self.type_narrowing)
             .with_duplicate_keys(key_mode);
 
         match self.encoding.as_string().as_deref() {
@@ -318,11 +327,11 @@ impl Query {
     pub fn at(&self, query: &str) -> Result<JsValue, JsValue> {
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
-                let mut io = InObjectifier::new(&self.tape, Windows1252Encoding::new());
+                let mut io = InObjectifier::new(&self.tape, Windows1252Encoding::new(), self.type_narrowing);
                 Ok(io.find_query(query))
             }
             _ => {
-                let mut io = InObjectifier::new(&self.tape, Utf8Encoding::new());
+                let mut io = InObjectifier::new(&self.tape, Utf8Encoding::new(), self.type_narrowing);
                 Ok(io.find_query(query))
             }
         }
@@ -330,7 +339,7 @@ impl Query {
 }
 
 #[wasm_bindgen]
-pub fn parse_text(d: Vec<u8>, encoding: JsValue) -> Result<Query, JsValue> {
+pub fn parse_text(d: Vec<u8>, encoding: JsValue, type_narrowing: JsValue) -> Result<Query, JsValue> {
     let data = skip_header(d.as_slice());
 
     let tape = TextTape::from_slice(data).map_err(errors::create_error_val)?;
@@ -338,10 +347,17 @@ pub fn parse_text(d: Vec<u8>, encoding: JsValue) -> Result<Query, JsValue> {
     // Cast away the lifetime so that we can store it in a wasm-bindgen compatible struct
     let tape: TextTape<'static> = unsafe { std::mem::transmute(tape) };
 
+    let type_narrowing = match type_narrowing.as_string().as_deref() {
+        Some("unquoted") => TypeNarrowing::Unquoted,
+        Some("none") => TypeNarrowing::None,
+        _ => TypeNarrowing::All
+    };
+
     Ok(Query {
         tape,
         encoding,
         _backing_data: d,
+        type_narrowing,
     })
 }
 
