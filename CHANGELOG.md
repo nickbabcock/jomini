@@ -1,3 +1,7 @@
+## v0.9.0 - 2023-05-25
+
+Add a `typeNarrowing` property when parsing to dictate when a value should be attempted to be narrowed to a more specific type (ie: number, boolean, etc). The values are "all" (default), "unquoted", and "none"
+
 ## v0.8.1 - 2022-12-11
 
 - Correctly author ESM types for `/slim` users
