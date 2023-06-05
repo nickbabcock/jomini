@@ -340,6 +340,8 @@ color=rgb {
 start=1444.11.11
 ```
 
+There is not yet an official high level API to write out arbitrary objects; however, one can adapt [this solution](https://github.com/nickbabcock/jomini/issues/5#issuecomment-1564253958) until a high level API is decided to be implemented. 
+
 ## Slim Module
 
 By default, the `jomini` entrypoint includes Wasm that is base64 inlined. This is the default as most developers will probably not need to care. However some developers will care: those running the library in environments where Wasm is executable but not compilable or those who are ambitious about reducing compute and bandwidth costs for their users.
