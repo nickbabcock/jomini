@@ -48,12 +48,12 @@
     "javascript"
   ],
   "devDependencies": {
-    "@rollup/plugin-typescript": "^11.1.1",
+    "@rollup/plugin-typescript": "^11.1.2",
     "@rollup/plugin-wasm": "^6.1.3",
-    "@types/node": "^20.2.5",
-    "rollup": "^3.23.0",
-    "tslib": "^2.5.2",
-    "typescript": "^5.0.4",
-    "vitest": "^0.31.1"
+    "@types/node": "^20.4.2",
+    "rollup": "^3.26.2",
+    "tslib": "^2.6.0",
+    "typescript": "^5.1.6",
+    "vitest": "^0.33.0"
   }
 }
