@@ -233,7 +233,11 @@ export class Writer {
   }
 
   /**
-   * Write out a non-equals operator
+   * Write an operator. Writing an equal operator is optional whenever
+   * an object is being written.
+   *
+   * If an array was being written, the operator will switch to writing
+   * an object
    * @param data operator to write out
    */
   write_operator(data: ">" | ">=" | "<" | "<=" | "=") {
