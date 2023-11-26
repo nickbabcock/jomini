@@ -1,3 +1,7 @@
+## v0.9.1 - 2023-11-26
+
+- Improved writing operator compatibility 
+
 ## v0.9.0 - 2023-05-25
 
 Add a `typeNarrowing` property when parsing to dictate when a value should be attempted to be narrowed to a more specific type (ie: number, boolean, etc). The values are "all" (default), "unquoted", and "none"
