@@ -453,6 +453,12 @@ it("should handle rgb", async () => {
   });
 });
 
+it("should handle rgba", async () => {
+  expect(await parse("color = rgb { 100 200 150 10 }")).toEqual({
+    color: { rgb: [100, 200, 150, 10] },
+  });
+});
+
 it("should handle less than operator", async () => {
   expect(await parse("has_level < 2")).toEqual({ has_level: { LESS_THAN: 2 } });
 });
