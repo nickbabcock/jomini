@@ -114,11 +114,9 @@ where
         }
 
         let arr = Array::new_with_length(len as u32);
-        let mut pos = 0;
-        for x in reader.values() {
+        for (pos, x) in reader.values().enumerate() {
             let v = self.entry_to_js(None, x);
-            arr.set(pos, v);
-            pos += 1;
+            arr.set(pos as u32, v);
         }
 
         arr.into()
