@@ -60,7 +60,10 @@ where
     fn new(tape: &'b TextTape<'a>, encoding: E, type_narrowing: TypeNarrowing) -> Self {
         let reader = ObjectReader::new(tape, encoding);
 
-        Self { reader, type_narrowing }
+        Self {
+            reader,
+            type_narrowing,
+        }
     }
 
     fn create_from_root(&self) -> JsValue {
@@ -150,7 +153,9 @@ where
                 TextToken::Quoted(_) if self.type_narrowing == TypeNarrowing::All => {
                     self.scalar_to_js_value(veader)
                 }
-                TextToken::Unquoted(_) | TextToken::Quoted(_) => JsValue::from_str(veader.read_str().unwrap().as_ref()),
+                TextToken::Unquoted(_) | TextToken::Quoted(_) => {
+                    JsValue::from_str(veader.read_str().unwrap().as_ref())
+                }
                 TextToken::Array { .. } => self.create_array(veader.read_array().unwrap()),
                 TextToken::Object { .. } => {
                     self.create_object(veader.read_object().unwrap()).into()
@@ -271,7 +276,8 @@ impl Query {
     pub fn root(&self) -> Result<JsValue, JsValue> {
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
-                let io = InObjectifier::new(&self.tape, Windows1252Encoding::new(), self.type_narrowing);
+                let io =
+                    InObjectifier::new(&self.tape, Windows1252Encoding::new(), self.type_narrowing);
                 Ok(io.create_from_root())
             }
             _ => {
@@ -327,11 +333,13 @@ impl Query {
     pub fn at(&self, query: &str) -> Result<JsValue, JsValue> {
         match self.encoding.as_string().as_deref() {
             Some("windows1252") => {
-                let mut io = InObjectifier::new(&self.tape, Windows1252Encoding::new(), self.type_narrowing);
+                let mut io =
+                    InObjectifier::new(&self.tape, Windows1252Encoding::new(), self.type_narrowing);
                 Ok(io.find_query(query))
             }
             _ => {
-                let mut io = InObjectifier::new(&self.tape, Utf8Encoding::new(), self.type_narrowing);
+                let mut io =
+                    InObjectifier::new(&self.tape, Utf8Encoding::new(), self.type_narrowing);
                 Ok(io.find_query(query))
             }
         }
@@ -339,7 +347,11 @@ impl Query {
 }
 
 #[wasm_bindgen]
-pub fn parse_text(d: Vec<u8>, encoding: JsValue, type_narrowing: JsValue) -> Result<Query, JsValue> {
+pub fn parse_text(
+    d: Vec<u8>,
+    encoding: JsValue,
+    type_narrowing: JsValue,
+) -> Result<Query, JsValue> {
     let data = skip_header(d.as_slice());
 
     let tape = TextTape::from_slice(data).map_err(errors::create_error_val)?;
@@ -350,7 +362,7 @@ pub fn parse_text(d: Vec<u8>, encoding: JsValue, type_narrowing: JsValue) -> Res
     let type_narrowing = match type_narrowing.as_string().as_deref() {
         Some("unquoted") => TypeNarrowing::Unquoted,
         Some("none") => TypeNarrowing::None,
-        _ => TypeNarrowing::All
+        _ => TypeNarrowing::All,
     };
 
     Ok(Query {
