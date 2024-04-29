@@ -23,7 +23,7 @@ jobs:
     - name: Install Rust
       uses: dtolnay/rust-toolchain@stable
     - name: Install wasm-pack
-      run:  npm install -g wasm-pack@0.10.1
+      run:  npm install -g wasm-pack
     - name: npm install, build, and test
       run: |
         npm install
