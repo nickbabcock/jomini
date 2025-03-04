@@ -50,10 +50,10 @@
   "devDependencies": {
     "@rollup/plugin-typescript": "^12.1.2",
     "@rollup/plugin-wasm": "^6.2.2",
-    "@types/node": "^22.10.2",
-    "rollup": "^4.29.1",
+    "@types/node": "^22.13.9",
+    "rollup": "^4.34.9",
     "tslib": "^2.8.1",
-    "typescript": "^5.7.2",
-    "vitest": "^2.1.8"
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.7"
   }
 }
