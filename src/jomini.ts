@@ -130,7 +130,7 @@ export class Jomini {
     if (initialized === undefined) {
       //@ts-ignore
       const loadModule = options?.wasm ?? wasmInit();
-      initialized = init(loadModule).then(() => void 0);
+      initialized = init({ module_or_path: loadModule }).then(() => void 0);
     }
 
     await initialized;
