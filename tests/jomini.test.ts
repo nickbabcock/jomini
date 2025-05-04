@@ -218,7 +218,7 @@ it("should handle the object after empty object nested", async () => {
   };
 
   expect(await parse('religion={foo={} catholic={defender="me"}}')).toEqual(
-    obj
+    obj,
   );
 });
 
@@ -554,7 +554,7 @@ it("should parse with query callback", async () => {
 it("should parse with query callback number", async () => {
   const jomini = await Jomini.initialize();
   const out = jomini.parseText(utf8encode("foo=1 qux=baz"), {}, (q) =>
-    q.at("/foo")
+    q.at("/foo"),
   );
   expect(out).toEqual(1);
 });
@@ -562,7 +562,7 @@ it("should parse with query callback number", async () => {
 it("should parse with query callback date", async () => {
   const jomini = await Jomini.initialize();
   const out = jomini.parseText(utf8encode("foo=1444.11.11"), {}, (q) =>
-    q.at("/foo")
+    q.at("/foo"),
   );
   expect(out).toEqual(new Date(Date.UTC(1444, 10, 11)));
 });
@@ -570,7 +570,7 @@ it("should parse with query callback date", async () => {
 it("should parse with query callback object", async () => {
   const jomini = await Jomini.initialize();
   const out = jomini.parseText(utf8encode("foo={name=jim}"), {}, (q) =>
-    q.at("/foo")
+    q.at("/foo"),
   );
   expect(out).toEqual({ name: "jim" });
 });
@@ -578,7 +578,7 @@ it("should parse with query callback object", async () => {
 it("should parse with query callback nested object value", async () => {
   const jomini = await Jomini.initialize();
   const out = jomini.parseText(utf8encode("foo={name=jim}"), {}, (q) =>
-    q.at("/foo/name")
+    q.at("/foo/name"),
   );
   expect(out, "jim");
 });
@@ -715,7 +715,7 @@ it("should serialize to json duplicate key mode preserve", async () => {
   const str = "core=AAA core=BBB";
   const expected = '{"core":"AAA","core":"BBB"}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ duplicateKeyMode: "preserve" })
+    q.json({ duplicateKeyMode: "preserve" }),
   );
   expect(out).toEqual(expected);
 });
@@ -725,7 +725,7 @@ it("should serialize to json duplicate key mode typed", async () => {
   const str = "core=AAA core=BBB";
   const expected = '{"type":"obj","val":[["core","AAA"],["core","BBB"]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ duplicateKeyMode: "key-value-pairs" })
+    q.json({ duplicateKeyMode: "key-value-pairs" }),
   );
   expect(out).toEqual(expected);
 });
@@ -736,7 +736,7 @@ it("should serialize to json duplicate key mode typed arrays", async () => {
   const expected =
     '{"type":"obj","val":[["nums",{"type":"array","val":[1,2]}]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ duplicateKeyMode: "key-value-pairs" })
+    q.json({ duplicateKeyMode: "key-value-pairs" }),
   );
   expect(out).toEqual(expected);
 });
@@ -754,7 +754,7 @@ it("should serialize object trailers to json keys", async () => {
   const str = "area = { color = { 10 } 1 2 }";
   const expected = '{"area":{"color":[10],"remainder":[1,2]}}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ duplicateKeyMode: "preserve" })
+    q.json({ duplicateKeyMode: "preserve" }),
   );
   expect(out).toEqual(expected);
 });
@@ -765,7 +765,7 @@ it("should serialize object trailers to json typed", async () => {
   const expected =
     '{"type":"obj","val":[["area",{"type":"obj","val":[["color",{"type":"array","val":[10]}],[1,2]]}]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ duplicateKeyMode: "key-value-pairs" })
+    q.json({ duplicateKeyMode: "key-value-pairs" }),
   );
   expect(out).toEqual(expected);
 });
@@ -803,7 +803,7 @@ it("should serialize mixed objects to json keys", async () => {
     '{"on_actions":["faith_holy_order_land_acquisition_pulse",{"delay":{"days":[5,10]}},"faith_heresy_events_pulse",{"delay":{"days":[15,20]}},"faith_fervor_events_pulse"]}';
 
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ duplicateKeyMode: "preserve" })
+    q.json({ duplicateKeyMode: "preserve" }),
   );
   expect(out).toEqual(expected);
 });
@@ -815,7 +815,7 @@ it("should serialize parameter definitions to json typed", async () => {
   const expected =
     '{"type":"obj","val":[["generate_advisor",{"type":"obj","val":[["[scaled_skill]",{"type":"obj","val":[["a","b"]]}],["[!scaled_skill]",{"type":"obj","val":[["c","d"]]}]]}]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ duplicateKeyMode: "key-value-pairs" })
+    q.json({ duplicateKeyMode: "key-value-pairs" }),
   );
   expect(out).toEqual(expected);
 });
@@ -826,7 +826,7 @@ it("should serialize parameter definition value to json typed", async () => {
   const expected =
     '{"type":"obj","val":[["foo",{"type":"obj","val":[["[add]","$add$"]]}]]}';
   const out = jomini.parseText(utf8encode(str), {}, (q) =>
-    q.json({ duplicateKeyMode: "key-value-pairs" })
+    q.json({ duplicateKeyMode: "key-value-pairs" }),
   );
   expect(out).toEqual(expected);
 });
@@ -836,7 +836,7 @@ it("should narrow all by default", async () => {
   const { root, json } = jomini.parseText(
     'a="01" b=02 c="yes" d=no',
     {},
-    (q) => ({ root: q.root(), json: q.json() })
+    (q) => ({ root: q.root(), json: q.json() }),
   );
 
   expect(root).toEqual({
@@ -856,7 +856,7 @@ it("should narrow only unquoted", async () => {
     {
       typeNarrowing: "unquoted",
     },
-    (q) => ({ root: q.root(), json: q.json() })
+    (q) => ({ root: q.root(), json: q.json() }),
   );
 
   expect(root).toEqual({
@@ -876,7 +876,7 @@ it("should never narrow", async () => {
     {
       typeNarrowing: "none",
     },
-    (q) => ({ root: q.root(), json: q.json() })
+    (q) => ({ root: q.root(), json: q.json() }),
   );
 
   expect(root).toEqual({
@@ -920,7 +920,7 @@ it("should write mixed object", async () => {
   });
 
   expect(new TextDecoder().decode(out)).toEqual(
-    "foo={\n  1 qux=bar a=b\n}\nf=d"
+    "foo={\n  1 qux=bar a=b\n}\nf=d",
   );
 });
 
@@ -949,7 +949,7 @@ it("should write readme example", async () => {
   });
 
   expect(new TextDecoder().decode(out)).toEqual(
-    'data={\n  settings={\n    0 1\n  }\n  name="world"\n}\ncolor=rgb {\n  100 150 74\n}\nstart=1444.11.11'
+    'data={\n  settings={\n    0 1\n  }\n  name="world"\n}\ncolor=rgb {\n  100 150 74\n}\nstart=1444.11.11',
   );
 });
 

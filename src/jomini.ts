@@ -65,7 +65,7 @@ export class Jomini {
    */
   public parseText(
     data: Uint8Array | string,
-    options?: Partial<ParseOptions>
+    options?: Partial<ParseOptions>,
   ): ReturnType<Query["root"]>;
 
   /**
@@ -82,13 +82,13 @@ export class Jomini {
   public parseText<T>(
     data: Uint8Array | string,
     options: Partial<ParseOptions>,
-    cb: (arg0: Query) => T
+    cb: (arg0: Query) => T,
   ): T;
 
   public parseText<T>(
     data: Uint8Array | string,
     options?: Partial<ParseOptions>,
-    cb?: (arg0: Query) => T
+    cb?: (arg0: Query) => T,
   ) {
     if (typeof data === "string") {
       var inp = encoder.encode(data);
@@ -100,7 +100,7 @@ export class Jomini {
     const innerQuery = parse_text(
       inp,
       options?.encoding ?? "utf8",
-      options?.typeNarrowing ?? "all"
+      options?.typeNarrowing ?? "all",
     );
     const query = new Query(innerQuery);
 
@@ -185,7 +185,7 @@ export class Query {
   json(options?: JsonOptions): string {
     return this.query.json(
       options?.pretty ?? false,
-      options?.duplicateKeyMode ?? "group"
+      options?.duplicateKeyMode ?? "group",
     );
   }
 }
