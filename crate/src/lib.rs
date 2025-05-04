@@ -6,7 +6,6 @@ use jomini::{
 };
 use js_sys::{Array, Date};
 use wasm_bindgen::prelude::*;
-mod errors;
 mod write;
 
 /// Custom bindings to avoid using fallible `Reflect` for plain objects.
@@ -349,10 +348,10 @@ pub fn parse_text(
     d: Vec<u8>,
     encoding: JsValue,
     type_narrowing: JsValue,
-) -> Result<Query, JsValue> {
+) -> Result<Query, JsError> {
     let data = skip_header(d.as_slice());
 
-    let tape = TextTape::from_slice(data).map_err(errors::create_error_val)?;
+    let tape = TextTape::from_slice(data)?;
 
     // Cast away the lifetime so that we can store it in a wasm-bindgen compatible struct
     let tape: TextTape<'static> = unsafe { std::mem::transmute(tape) };
