@@ -984,3 +984,10 @@ it("should allow custom initialization", async () => {
   const out = jomini.parseText("foo=bar");
   expect(out).toEqual({ foo: "bar" });
 });
+
+it("should throw errors on invalid parsing", async () => {
+  const jomini = await Jomini.initialize();
+  expect(() => {
+    jomini.parseText("foo=bar\nline=");
+  }).toThrowError(new Error("unexpected end of file"));
+});
