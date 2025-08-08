@@ -91,14 +91,12 @@ export class Jomini {
     cb?: (arg0: Query) => T,
   ) {
     if (typeof data === "string") {
-      var inp = encoder.encode(data);
+      data = encoder.encode(data);
       options = { ...options, ...{ encoding: "utf8" } };
-    } else {
-      var inp = data;
     }
 
     const innerQuery = parse_text(
-      inp,
+      data,
       options?.encoding ?? "utf8",
       options?.typeNarrowing ?? "all",
     );
