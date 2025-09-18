@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Install Rust
-      uses: dtolnay/rust-toolchain@stable
     - name: Install wasm-pack
       run:  curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh 
+    - uses: jdx/mise-action@v2
+    - run: rustup target add wasm32-unknown-unknown
     - uses: preactjs/compressed-size-action@v2
       with:
        build-script: "build:minify"
