@@ -1,3 +1,7 @@
+## v0.10.0 - 2026-03-13
+
+- Update to latest jomini API to support EU5 saves
+
 ## v0.9.1 - 2023-11-26
 
 - Improved writing operator compatibility 
