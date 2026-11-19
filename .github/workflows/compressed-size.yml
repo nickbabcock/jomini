@@ -4,10 +4,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: jdx/mise-action@v2
-    - run: rustup target add wasm32-unknown-unknown
-    - uses: preactjs/compressed-size-action@v2
+    - uses: actions/checkout@v7.0.1
+    - uses: jdx/mise-action@v5.2.10
       with:
+        # Resolve tools from the current checkout after the size action switches branches.
+        export_path: false
+    - run: rustup target add wasm32-unknown-unknown
+    - uses: preactjs/compressed-size-action@2.10.0
+      with:
+       install-script: bash -c "mise install && npm install"
        build-script: "build:minify"
        pattern: "dist/cjs/index.cjs"
