@@ -6,6 +6,9 @@ jobs:
     steps:
     - uses: actions/checkout@v7.0.1
     - uses: jdx/mise-action@v5.2.10
+      with:
+        # Resolve tools from the current checkout after the size action switches branches.
+        export_path: false
     - run: rustup target add wasm32-unknown-unknown
     - uses: preactjs/compressed-size-action@2.10.0
       with:
