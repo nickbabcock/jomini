@@ -9,5 +9,6 @@ jobs:
     - run: rustup target add wasm32-unknown-unknown
     - uses: preactjs/compressed-size-action@v2
       with:
+       install-script: bash -c 'mise install && npm install'
        build-script: "build:minify"
        pattern: "dist/cjs/index.cjs"
