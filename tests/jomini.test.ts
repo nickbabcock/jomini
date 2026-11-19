@@ -6,7 +6,7 @@ import {
   Writer,
   JominiLoadOptions,
   JsonOptions,
-} from "..";
+} from "jomini";
 import pkg from "../package.json";
 import fs from "fs/promises";
 

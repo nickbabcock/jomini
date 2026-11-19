@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { toArray } from "..";
+import { toArray } from "jomini";
 
 it("should handle the easy case", () => {
   var obj = {

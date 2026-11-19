@@ -8,9 +8,9 @@ edition = "2018"
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-wasm-bindgen = "0.2.100"
-js-sys = "0.3"
-jomini = { version = "0.34", features = ["json"] }
+wasm-bindgen = "0.2.130"
+js-sys = "0.3.107"
+jomini = { version = "0.37.2", features = ["json"] }
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.50"
+wasm-bindgen-test = "0.3.80"

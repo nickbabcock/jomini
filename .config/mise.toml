@@ -1,5 +1,5 @@
 [tools]
 "node" = { version = "22.18.0" }
 "rust" = { version = "1.88.0", targets = "wasm32-unknown-unknown" }
-"ubi:rustwasm/wasm-bindgen" = { version = "0.2.100", extract_all = "true" }
-"ubi:WebAssembly/binaryen" = { version = "version_123", extract_all = "true", bin_path = "bin" }
+"github:wasm-bindgen/wasm-bindgen" = { version = "0.2.130" }
+"github:WebAssembly/binaryen" = { version = "133", version_prefix = "version_", strip_components = 1, bin_path = "bin" }
