@@ -1,3 +1,9 @@
+## v0.11.0 - 2026-11-20
+
+- Update the Rust parser to jomini 0.38.0. The input `=="bar"` now produces `{ "": { EXACT: "bar" } }`.
+- Preserve escaped backslashes in object and JSON output for UTF-8 and Windows-1252.
+- Preserve negative years when writing dates with or without hours.
+
 ## v0.10.0 - 2026-03-13
 
 - Update to latest jomini API to support EU5 saves
