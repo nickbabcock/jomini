@@ -74,11 +74,13 @@ impl WasmWriter {
     }
 
     pub fn write_date(&mut self, data: Date, hour: bool) -> Result<(), JsError> {
+        // js-sys returns a u32, so negative JavaScript years wrap at the binding.
+        let year = data.get_utc_full_year() as i32;
         if hour {
             write!(
                 self.writer,
                 "{}.{}.{}.{}",
-                data.get_utc_full_year(),
+                year,
                 data.get_utc_month() + 1,
                 data.get_utc_date(),
                 data.get_utc_hours() + 1,
@@ -88,7 +90,7 @@ impl WasmWriter {
             write!(
                 self.writer,
                 "{}.{}.{}",
-                data.get_utc_full_year(),
+                year,
                 data.get_utc_month() + 1,
                 data.get_utc_date()
             )
