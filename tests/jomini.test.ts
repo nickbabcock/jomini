@@ -974,6 +974,22 @@ it("should write escaped text", async () => {
   expect(new TextDecoder().decode(out)).toEqual('name="Project \\"Eagle\\""');
 });
 
+it.each(["utf8", "windows1252"] as const)(
+  "should round-trip escaped backslashes in %s",
+  async (encoding) => {
+    const jomini = await Jomini.initialize();
+    const path = String.raw`C:\Users\me`;
+    const out = jomini.write((writer) => {
+      writer.write_unquoted("path");
+      writer.write_quoted(path);
+    });
+
+    expect(jomini.parseText(out, { encoding })).toEqual({ path });
+    const json = jomini.parseText(out, { encoding }, (q) => q.json());
+    expect(JSON.parse(json)).toEqual({ path });
+  },
+);
+
 it("should allow custom initialization", async () => {
   let jomini = await Jomini.initialize();
   Jomini.resetModule();
