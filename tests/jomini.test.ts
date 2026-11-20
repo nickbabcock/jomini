@@ -964,6 +964,20 @@ it("should read and write hour date", async () => {
   expect(new TextDecoder().decode(out)).toEqual("start_date=1936.1.1.1");
 });
 
+it.each([
+  [false, "birth_date=-17.1.1"],
+  [true, "birth_date=-17.1.1.4"],
+] as const)("should round-trip a negative year with hour=%s", async (hour, input) => {
+  const jomini = await Jomini.initialize();
+  const { birth_date } = jomini.parseText(input);
+  const out = jomini.write((writer) => {
+    writer.write_unquoted("birth_date");
+    writer.write_date(birth_date, { hour });
+  });
+
+  expect(new TextDecoder().decode(out)).toEqual(input);
+});
+
 it("should write escaped text", async () => {
   const jomini = await Jomini.initialize();
   const out = jomini.write((writer) => {
