@@ -157,7 +157,7 @@ where
                 TextToken::Object { .. } => {
                     self.create_object(veader.read_object().unwrap()).into()
                 }
-                TextToken::Header(_) => {
+                TextToken::Header(_) | TextToken::QuotedHeader(_) => {
                     self.create_from_header(veader.read_array().unwrap()).into()
                 }
 
