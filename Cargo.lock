@@ -74,9 +74,9 @@ checksum = "3bd1574e617a9a6c1f8f8181bd7e841e1f20e4277607ef28945765188d6284d4"
 
 [[package]]
 name = "jomini"
-version = "0.38.0"
+version = "0.39.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5f871f2204fb8dfc02da4e5d4823f06aff062cfba7b8f5d079c98dee956ea9a0"
+checksum = "8d784acae093b765c1d8512a1bf59153289f371588ef786027e06454304cc9d5"
 dependencies = [
  "itoa",
  "jomini_derive",
